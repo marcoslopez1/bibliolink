@@ -24,7 +24,8 @@ const BookGrid = () => {
 
       let query = supabase
         .from("books")
-        .select("book_id, title, author, image_url, genre, status", { count: "exact" });
+        .select("book_id, title, author, image_url, genre, status", { count: "exact" })
+        .order('id', { ascending: false });
 
       if (searchQuery) {
         query = query.or(

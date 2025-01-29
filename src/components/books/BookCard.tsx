@@ -10,6 +10,8 @@ export interface Book {
 }
 
 const BookCard = ({ book }: { book: Book }) => {
+  const placeholderImage = "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b";
+
   return (
     <Link
       to={`/book/${book.book_id}`}
@@ -18,7 +20,7 @@ const BookCard = ({ book }: { book: Book }) => {
       <div className="relative">
         <div className="aspect-[2/3] relative overflow-hidden">
           <img
-            src={book.image_url}
+            src={book.image_url || placeholderImage}
             alt={book.title}
             className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-300"
             loading="lazy"
@@ -33,6 +35,11 @@ const BookCard = ({ book }: { book: Book }) => {
             }`}
           >
             {book.status}
+          </span>
+        </div>
+        <div className="absolute top-4 left-4">
+          <span className="px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+            #{book.book_id}
           </span>
         </div>
       </div>
