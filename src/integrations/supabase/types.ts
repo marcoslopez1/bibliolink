@@ -22,6 +22,7 @@ export type Database = {
           image_url: string | null
           pages: number
           publication_year: number
+          status: string
           title: string
         }
         Insert: {
@@ -36,6 +37,7 @@ export type Database = {
           image_url?: string | null
           pages: number
           publication_year: number
+          status?: string
           title: string
         }
         Update: {
@@ -50,6 +52,7 @@ export type Database = {
           image_url?: string | null
           pages?: number
           publication_year?: number
+          status?: string
           title?: string
         }
         Relationships: []
