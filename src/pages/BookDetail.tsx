@@ -121,7 +121,7 @@ const BookDetail = () => {
           title: "Success",
           description: "Book reserved successfully",
         });
-      } else if (book?.status === "reserved" && reservation?.user_id === session.user.id) {
+      } else if (book?.status === "reserved") {
         // Update existing reservation
         const { error: returnError } = await supabase
           .from("book_reservations")
@@ -174,10 +174,8 @@ const BookDetail = () => {
     );
   }
 
-  const canManageReservation =
-    session?.user &&
-    (book.status === "available" ||
-      (book.status === "reserved" && reservation?.user_id === session.user.id));
+  // Show button for authenticated users, regardless of book status
+  const showButton = session?.user;
 
   return (
     <div className="container px-6 py-4">
@@ -200,7 +198,7 @@ const BookDetail = () => {
               className="object-cover w-full h-full"
             />
           </div>
-          {canManageReservation && (
+          {showButton && (
             <Button
               className="w-full mt-4"
               size="sm"
