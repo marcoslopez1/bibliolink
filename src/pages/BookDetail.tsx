@@ -121,7 +121,7 @@ const BookDetail = () => {
           title: "Success",
           description: "Book reserved successfully",
         });
-      } else {
+      } else if (book?.status === "reserved" && reservation?.user_id === session.user.id) {
         // Update existing reservation
         const { error: returnError } = await supabase
           .from("book_reservations")
@@ -149,6 +149,7 @@ const BookDetail = () => {
         });
       }
     } catch (error) {
+      console.error("Error updating book status:", error);
       toast({
         title: "Error",
         description: "Failed to update book status",
@@ -176,7 +177,7 @@ const BookDetail = () => {
   const canManageReservation =
     session?.user &&
     (book.status === "available" ||
-      (reservation?.user_id === session.user.id && book.status === "reserved"));
+      (book.status === "reserved" && reservation?.user_id === session.user.id));
 
   return (
     <div className="container px-6 py-4">
