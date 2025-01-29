@@ -12,6 +12,7 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { session } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const isAuthPage = location.pathname.startsWith('/auth/');
 
   const handleSignOut = async () => {
@@ -24,10 +25,10 @@ const Navbar = () => {
       });
     } else {
       toast({
-        variant: "success",
         title: "Success",
         description: "You have been signed out successfully",
       });
+      navigate('/catalog');
     }
   };
 

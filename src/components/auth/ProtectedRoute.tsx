@@ -12,6 +12,11 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }
 
   if (!session) {
+    // Store the current location in sessionStorage before redirecting
+    if (location.pathname.startsWith('/book/')) {
+      sessionStorage.setItem('redirectAfterAuth', location.pathname);
+    }
+    
     toast({
       title: "Authentication required",
       description: "Please sign in to access this page",

@@ -6,6 +6,7 @@ import { ExternalLink, ArrowLeft, BookOpen, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/providers/AuthProvider";
 import { useEffect } from "react";
+import { format } from "date-fns";
 
 const BookDetail = () => {
   const { id } = useParams();
@@ -95,18 +96,13 @@ const BookDetail = () => {
 
     try {
       if (book?.status === "available") {
-        // First update the book status
         const { error: bookError } = await supabase
           .from("books")
           .update({ status: "reserved" })
           .eq("book_id", id);
 
-        if (bookError) {
-          console.error("Error updating book status:", bookError);
-          throw bookError;
-        }
+        if (bookError) throw bookError;
 
-        // Then create the reservation
         const { error: reservationError } = await supabase
           .from("book_reservations")
           .insert({
@@ -114,38 +110,27 @@ const BookDetail = () => {
             user_id: session.user.id,
           });
 
-        if (reservationError) {
-          console.error("Error creating reservation:", reservationError);
-          throw reservationError;
-        }
+        if (reservationError) throw reservationError;
 
         toast({
           title: "Success",
           description: "Book reserved successfully",
         });
       } else if (book?.status === "reserved") {
-        // First update the reservation
         const { error: returnError } = await supabase
           .from("book_reservations")
           .update({ returned_at: new Date().toISOString() })
           .eq("book_id", id)
           .is("returned_at", null);
 
-        if (returnError) {
-          console.error("Error updating reservation:", returnError);
-          throw returnError;
-        }
+        if (returnError) throw returnError;
 
-        // Then update the book status
         const { error: bookError } = await supabase
           .from("books")
           .update({ status: "available" })
           .eq("book_id", id);
 
-        if (bookError) {
-          console.error("Error updating book status:", bookError);
-          throw bookError;
-        }
+        if (bookError) throw bookError;
 
         toast({
           title: "Success",
@@ -153,7 +138,6 @@ const BookDetail = () => {
         });
       }
 
-      // Invalidate queries to refresh the UI
       queryClient.invalidateQueries({ queryKey: ["book", id] });
       queryClient.invalidateQueries({ queryKey: ["reservation", id] });
     } catch (error) {
@@ -182,7 +166,6 @@ const BookDetail = () => {
     );
   }
 
-  // Show button for authenticated users
   const showButton = session?.user;
 
   return (
@@ -208,9 +191,11 @@ const BookDetail = () => {
           </div>
           {showButton && (
             <Button
-              className="w-full mt-4"
+              className={`w-full mt-4 ${
+                book.status === "reserved" ? "border-2 border-black" : ""
+              }`}
               size="sm"
-              variant={book.status === "available" ? "default" : "destructive"}
+              variant={book.status === "available" ? "default" : "outline"}
               onClick={handleStatusChange}
             >
               <BookOpen className="mr-2 h-4 w-4" />
@@ -248,7 +233,8 @@ const BookDetail = () => {
               <User className="h-4 w-4" />
               <span>
                 Reserved by: {reservation.profiles.first_name}{" "}
-                {reservation.profiles.last_name}
+                {reservation.profiles.last_name} ({reservation.profiles.email}) on{" "}
+                {format(new Date(reservation.reserved_at), "MMMM d, yyyy")}
               </span>
             </div>
           )}

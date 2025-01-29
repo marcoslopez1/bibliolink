@@ -34,7 +34,15 @@ const SignIn = () => {
         title: "Success",
         description: "You have been signed in successfully",
       });
-      navigate("/");
+      
+      // Check if there's a stored redirect path
+      const redirectPath = sessionStorage.getItem('redirectAfterAuth');
+      if (redirectPath) {
+        sessionStorage.removeItem('redirectAfterAuth');
+        navigate(redirectPath);
+      } else {
+        navigate("/");
+      }
     }
 
     setLoading(false);
