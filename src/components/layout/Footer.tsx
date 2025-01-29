@@ -6,8 +6,11 @@ const Footer = () => {
   return (
     <footer className="bg-background border-t">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div className="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
-          <div className="flex items-center space-x-6 order-1 md:order-none">
+        <div className="flex flex-col-reverse md:flex-row justify-between items-center space-y-2 md:space-y-0">
+          <div className="text-sm text-muted-foreground order-2 md:order-1">
+            © {currentYear} Library App. All rights reserved.
+          </div>
+          <div className="flex items-center space-x-6 order-1 md:order-2">
             <a
               href="https://github.com/marcoslopez1/library-app/"
               target="_blank"
@@ -16,9 +19,6 @@ const Footer = () => {
             >
               <Github className="h-5 w-5" />
             </a>
-          </div>
-          <div className="text-sm text-muted-foreground">
-            © {currentYear} Library App. All rights reserved.
           </div>
         </div>
       </div>
