@@ -13,7 +13,7 @@ const BookGrid = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const { ref, inView } = useInView();
 
-  const { data, isLoading, isFetching, hasNextPage } = useQuery({
+  const { data, isLoading, isFetching } = useQuery({
     queryKey: ["books", page],
     queryFn: async () => {
       const from = (page - 1) * BOOKS_PER_PAGE;
@@ -31,7 +31,6 @@ const BookGrid = () => {
         count,
       };
     },
-    keepPreviousData: true,
   });
 
   useEffect(() => {
