@@ -2,11 +2,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, ArrowLeft, BookOpen, User } from "lucide-react";
+import { ExternalLink, ArrowLeft, BookOpen } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/providers/AuthProvider";
 import { useEffect } from "react";
-import { format } from "date-fns";
+import { BookHeader } from "@/components/books/BookHeader";
+import { BookDetails } from "@/components/books/BookDetails";
+import { Separator } from "@/components/ui/separator";
 
 const BookDetail = () => {
   const { id } = useParams();
@@ -183,7 +185,7 @@ const BookDetail = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
         <div className="md:col-span-1">
-          <div className="max-h-[300px] overflow-hidden rounded-lg">
+          <div className="max-h-[500px] overflow-hidden rounded-lg">
             <img
               src={book.image_url || "/placeholder.svg"}
               alt={book.title}
@@ -193,7 +195,9 @@ const BookDetail = () => {
           {showButton && (
             <Button
               className={`w-full mt-4 ${
-                book.status === "reserved" ? "border-2 border-black" : ""
+                book.status === "reserved"
+                  ? "border-2 border-black hover:bg-secondary"
+                  : ""
               }`}
               size="sm"
               variant={book.status === "available" ? "default" : "outline"}
@@ -206,64 +210,24 @@ const BookDetail = () => {
         </div>
 
         <div className="md:col-span-3 space-y-6">
-          <div>
-            <div className="flex items-start justify-between mb-4">
-              <div>
-                <p className="text-sm font-medium text-gray-500">
-                  Book ID: {book.book_id}
-                </p>
-                <h1 className="text-3xl font-bold text-gray-900 mt-1">
-                  {book.title}
-                </h1>
-                <p className="text-xl text-gray-600 mt-2">{book.author}</p>
-              </div>
-              <span
-                className={`px-3 py-1 rounded-full text-sm font-medium ${
-                  book.status === "available"
-                    ? "bg-green-100 text-green-700"
-                    : "bg-red-100 text-red-700"
-                }`}
-              >
-                {book.status}
-              </span>
-            </div>
-          </div>
+          <BookHeader
+            bookId={book.book_id}
+            title={book.title}
+            author={book.author}
+            status={book.status}
+            reservation={reservation}
+          />
 
-          {reservation && (
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <User className="h-4 w-4" />
-              <span>
-                Reserved by: {reservation.profiles.first_name}{" "}
-                {reservation.profiles.last_name} ({reservation.profiles.email}) on{" "}
-                {format(new Date(reservation.reserved_at), "MMMM d, yyyy")}
-              </span>
-            </div>
-          )}
+          <Separator />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div>
-              <h3 className="text-sm font-medium text-gray-500">Genre</h3>
-              <p className="mt-1">{book.genre}</p>
-            </div>
-            <div>
-              <h3 className="text-sm font-medium text-gray-500">Category</h3>
-              <p className="mt-1">{book.category}</p>
-            </div>
-            <div>
-              <h3 className="text-sm font-medium text-gray-500">Pages</h3>
-              <p className="mt-1">{book.pages}</p>
-            </div>
-            <div>
-              <h3 className="text-sm font-medium text-gray-500">
-                Publication Year
-              </h3>
-              <p className="mt-1">{book.publication_year}</p>
-            </div>
-            <div>
-              <h3 className="text-sm font-medium text-gray-500">Editorial</h3>
-              <p className="mt-1">{book.editorial}</p>
-            </div>
-          </div>
+          <BookDetails
+            genre={book.genre}
+            category={book.category}
+            pages={book.pages}
+            publicationYear={book.publication_year}
+            editorial={book.editorial}
+            building={book.building}
+          />
 
           {book.external_url && (
             <div className="pt-4">
