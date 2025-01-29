@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { Mail, Lock, User } from "lucide-react";
+import { useAuth } from "@/providers/AuthProvider";
+import { useTranslation } from "react-i18next";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -14,6 +16,14 @@ const SignUp = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { session } = useAuth();
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    if (session) {
+      navigate('/');
+    }
+  }, [session, navigate]);
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,13 +43,13 @@ const SignUp = () => {
     if (error) {
       toast({
         variant: "destructive",
-        title: "Error signing up",
-        description: error.message,
+        title: t("auth.error"),
+        description: t("auth.signUpError"),
       });
     } else {
       toast({
-        title: "Success",
-        description: "Please check your email to confirm your account",
+        title: t("auth.success"),
+        description: t("auth.signUpSuccess"),
       });
       navigate("/auth/signin");
     }
@@ -51,8 +61,8 @@ const SignUp = () => {
     <div className="min-h-[80vh] flex items-center justify-center">
       <div className="w-full max-w-md space-y-8 p-8 bg-white rounded-lg shadow-lg animate-fade-up">
         <div className="text-center">
-          <h2 className="text-3xl font-bold text-primary">Sign Up</h2>
-          <p className="mt-2 text-gray-600">Create your account</p>
+          <h2 className="text-3xl font-bold text-primary">{t("auth.signUp")}</h2>
+          <p className="mt-2 text-gray-600">{t("auth.createAccount")}</p>
         </div>
 
         <form onSubmit={handleSignUp} className="space-y-6">
@@ -61,7 +71,7 @@ const SignUp = () => {
               <User className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
               <Input
                 type="text"
-                placeholder="First Name"
+                placeholder={t("auth.firstName")}
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 className="pl-10"
@@ -73,7 +83,7 @@ const SignUp = () => {
               <User className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
               <Input
                 type="text"
-                placeholder="Last Name"
+                placeholder={t("auth.lastName")}
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 className="pl-10"
@@ -85,7 +95,7 @@ const SignUp = () => {
               <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
               <Input
                 type="email"
-                placeholder="Email"
+                placeholder={t("auth.email")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="pl-10"
@@ -97,7 +107,7 @@ const SignUp = () => {
               <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
               <Input
                 type="password"
-                placeholder="Password"
+                placeholder={t("auth.password")}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="pl-10"
@@ -112,13 +122,13 @@ const SignUp = () => {
               className="w-full"
               disabled={loading}
             >
-              {loading ? "Signing up..." : "Sign Up"}
+              {loading ? t("auth.signingUp") : t("auth.signUp")}
             </Button>
 
             <p className="text-center text-sm text-gray-600">
-              Already have an account?{" "}
+              {t("auth.haveAccount")}{" "}
               <Link to="/auth/signin" className="text-accent hover:underline">
-                Sign In
+                {t("auth.signIn")}
               </Link>
             </p>
           </div>

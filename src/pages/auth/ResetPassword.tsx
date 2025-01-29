@@ -1,15 +1,26 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { Mail } from "lucide-react";
+import { useAuth } from "@/providers/AuthProvider";
+import { useTranslation } from "react-i18next";
 
 const ResetPassword = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const { session } = useAuth();
+  const navigate = useNavigate();
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    if (session) {
+      navigate('/');
+    }
+  }, [session, navigate]);
 
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,14 +33,13 @@ const ResetPassword = () => {
     if (error) {
       toast({
         variant: "destructive",
-        title: "Error resetting password",
-        description: error.message,
+        title: t("auth.error"),
+        description: t("auth.resetPasswordError"),
       });
     } else {
       toast({
-        variant: "success",
-        title: "Success",
-        description: "Check your email for the password reset link",
+        title: t("auth.success"),
+        description: t("auth.resetPasswordSuccess"),
       });
     }
 
@@ -40,8 +50,8 @@ const ResetPassword = () => {
     <div className="min-h-[80vh] flex items-center justify-center">
       <div className="w-full max-w-md space-y-8 p-8 bg-white rounded-lg shadow-lg animate-fade-up">
         <div className="text-center">
-          <h2 className="text-3xl font-bold text-primary">Reset Password</h2>
-          <p className="mt-2 text-gray-600">Enter your email to reset your password</p>
+          <h2 className="text-3xl font-bold text-primary">{t("auth.resetPassword")}</h2>
+          <p className="mt-2 text-gray-600">{t("auth.resetPasswordInstructions")}</p>
         </div>
 
         <form onSubmit={handleResetPassword} className="space-y-6">
@@ -50,7 +60,7 @@ const ResetPassword = () => {
               <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
               <Input
                 type="email"
-                placeholder="Email"
+                placeholder={t("auth.email")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="pl-10"
@@ -65,13 +75,13 @@ const ResetPassword = () => {
               className="w-full"
               disabled={loading}
             >
-              {loading ? "Sending reset link..." : "Send Reset Link"}
+              {loading ? t("auth.sendingResetLink") : t("auth.sendResetLink")}
             </Button>
 
             <p className="text-center text-sm text-gray-600">
-              Remember your password?{" "}
+              {t("auth.rememberPassword")}{" "}
               <Link to="/auth/signin" className="text-accent hover:underline">
-                Sign In
+                {t("auth.signIn")}
               </Link>
             </p>
           </div>

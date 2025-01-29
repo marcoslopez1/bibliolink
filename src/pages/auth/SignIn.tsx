@@ -1,17 +1,30 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { Mail, Lock } from "lucide-react";
+import { useAuth } from "@/providers/AuthProvider";
+import { useTranslation } from "react-i18next";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
+  const { session } = useAuth();
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    if (session) {
+      const redirectPath = sessionStorage.getItem('redirectAfterAuth') || '/';
+      sessionStorage.removeItem('redirectAfterAuth');
+      navigate(redirectPath);
+    }
+  }, [session, navigate]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,17 +38,15 @@ const SignIn = () => {
     if (error) {
       toast({
         variant: "destructive",
-        title: "Error signing in",
-        description: error.message,
+        title: t("auth.error"),
+        description: t("auth.signInError"),
       });
     } else {
       toast({
-        variant: "success",
-        title: "Success",
-        description: "You have been signed in successfully",
+        title: t("auth.success"),
+        description: t("auth.signInSuccess"),
       });
       
-      // Check if there's a stored redirect path
       const redirectPath = sessionStorage.getItem('redirectAfterAuth');
       if (redirectPath) {
         sessionStorage.removeItem('redirectAfterAuth');
@@ -52,8 +63,8 @@ const SignIn = () => {
     <div className="min-h-[80vh] flex items-center justify-center">
       <div className="w-full max-w-md space-y-8 p-8 bg-white rounded-lg shadow-lg animate-fade-up">
         <div className="text-center">
-          <h2 className="text-3xl font-bold text-primary">Sign In</h2>
-          <p className="mt-2 text-gray-600">Welcome back!</p>
+          <h2 className="text-3xl font-bold text-primary">{t("auth.signIn")}</h2>
+          <p className="mt-2 text-gray-600">{t("auth.welcomeBack")}</p>
         </div>
 
         <form onSubmit={handleSignIn} className="space-y-6">
@@ -62,7 +73,7 @@ const SignIn = () => {
               <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
               <Input
                 type="email"
-                placeholder="Email"
+                placeholder={t("auth.email")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="pl-10"
@@ -74,7 +85,7 @@ const SignIn = () => {
               <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
               <Input
                 type="password"
-                placeholder="Password"
+                placeholder={t("auth.password")}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="pl-10"
@@ -88,7 +99,7 @@ const SignIn = () => {
               to="/auth/reset-password"
               className="text-sm text-accent hover:underline"
             >
-              Forgot your password?
+              {t("auth.forgotPassword")}
             </Link>
           </div>
 
@@ -98,13 +109,13 @@ const SignIn = () => {
               className="w-full"
               disabled={loading}
             >
-              {loading ? "Signing in..." : "Sign In"}
+              {loading ? t("auth.signingIn") : t("auth.signIn")}
             </Button>
 
             <p className="text-center text-sm text-gray-600">
-              Don't have an account?{" "}
+              {t("auth.noAccount")}{" "}
               <Link to="/auth/signup" className="text-accent hover:underline">
-                Sign Up
+                {t("auth.signUp")}
               </Link>
             </p>
           </div>
