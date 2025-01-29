@@ -25,14 +25,12 @@ export const BookHeader = ({
 }: BookHeaderProps) => {
   return (
     <div>
-      <div className="flex items-start justify-between mb-4">
-        <div>
-          <p className="text-sm font-medium text-gray-500">Book ID: {bookId}</p>
-          <h1 className="text-3xl font-bold text-gray-900 mt-1">{title}</h1>
-          <p className="text-xl text-gray-600 mt-2">{author}</p>
-        </div>
+      <div className="flex flex-col mb-4">
+        <p className="text-sm font-medium text-gray-500">Book ID: {bookId}</p>
+        <h1 className="text-3xl font-bold text-gray-900 mt-1">{title}</h1>
+        <p className="text-xl text-gray-600 mt-2">{author}</p>
         <span
-          className={`px-3 py-1 rounded-full text-sm font-medium ${
+          className={`mt-2 w-fit px-3 py-1 rounded-full text-sm font-medium ${
             status === "available"
               ? "bg-green-100 text-green-700"
               : "bg-red-100 text-red-700"

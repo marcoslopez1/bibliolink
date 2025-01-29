@@ -20,8 +20,7 @@ export const BookDetails = ({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-semibold mb-4">Book details</h2>
-        <Separator className="mb-6" />
+        <h2 className="text-2xl font-semibold">Book details</h2>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <div>
@@ -49,6 +48,7 @@ export const BookDetails = ({
           <p className="mt-1">{building}</p>
         </div>
       </div>
+      <Separator className="my-6" />
     </div>
   );
 };
