@@ -62,6 +62,17 @@ const BookDetail = () => {
         },
         () => {
           queryClient.invalidateQueries({ queryKey: ["book", id] });
+        }
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "book_reservations",
+          filter: `book_id=eq.${id}`,
+        },
+        () => {
           queryClient.invalidateQueries({ queryKey: ["reservation", id] });
         }
       )
@@ -102,6 +113,10 @@ const BookDetail = () => {
 
         if (bookError) throw bookError;
 
+        // Invalidate queries to refresh the UI
+        queryClient.invalidateQueries({ queryKey: ["book", id] });
+        queryClient.invalidateQueries({ queryKey: ["reservation", id] });
+
         toast({
           title: "Success",
           description: "Book reserved successfully",
@@ -123,6 +138,10 @@ const BookDetail = () => {
           .eq("book_id", id);
 
         if (bookError) throw bookError;
+
+        // Invalidate queries to refresh the UI
+        queryClient.invalidateQueries({ queryKey: ["book", id] });
+        queryClient.invalidateQueries({ queryKey: ["reservation", id] });
 
         toast({
           title: "Success",
@@ -154,10 +173,10 @@ const BookDetail = () => {
     );
   }
 
-  const canManageReservation = 
-    session?.user && 
-    (book.status === "available" || 
-    (reservation?.user_id === session.user.id));
+  const canManageReservation =
+    session?.user &&
+    (book.status === "available" ||
+      (reservation?.user_id === session.user.id && book.status === "reserved"));
 
   return (
     <div className="container px-6 py-4">
