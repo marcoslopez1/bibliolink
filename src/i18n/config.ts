@@ -4,7 +4,6 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import en from './locales/en.json';
 import es from './locales/es.json';
 
-// Initialize i18n
 i18n
   .use(LanguageDetector)
   .use(initReactI18next)
@@ -17,10 +16,8 @@ i18n
     supportedLngs: ['en', 'es'],
     detection: {
       order: ['localStorage', 'navigator'],
-      caches: ['localStorage'], // Store detected language
+      caches: ['localStorage'],
       lookupLocalStorage: 'preferredLanguage',
-      checkWhitelist: true,
-      cleanCode: true, // Normalize lang codes (e.g., 'es-ES' -> 'es')
     },
     interpolation: {
       escapeValue: false,
