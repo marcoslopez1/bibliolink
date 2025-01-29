@@ -1,16 +1,20 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, ArrowLeft } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { ExternalLink, ArrowLeft, BookOpen, User } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/providers/AuthProvider";
+import { useEffect } from "react";
 
 const BookDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { session } = useAuth();
+  const queryClient = useQueryClient();
 
-  const { data: book, isLoading, refetch } = useQuery({
+  const { data: book, isLoading } = useQuery({
     queryKey: ["book", id],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -24,27 +28,114 @@ const BookDetail = () => {
     },
   });
 
-  const handleStatusChange = async () => {
-    const newStatus = book?.status === "available" ? "reserved" : "available";
-    const { error } = await supabase
-      .from("books")
-      .update({ status: newStatus })
-      .eq("book_id", id);
+  const { data: reservation } = useQuery({
+    queryKey: ["reservation", id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("book_reservations")
+        .select(`
+          *,
+          profiles:user_id (
+            first_name,
+            last_name
+          )
+        `)
+        .eq("book_id", id)
+        .is("returned_at", null)
+        .maybeSingle();
 
-    if (error) {
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  useEffect(() => {
+    const channel = supabase
+      .channel("schema-db-changes")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "books",
+          filter: `book_id=eq.${id}`,
+        },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ["book", id] });
+          queryClient.invalidateQueries({ queryKey: ["reservation", id] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [id, queryClient]);
+
+  const handleStatusChange = async () => {
+    if (!session?.user) {
       toast({
+        title: "Authentication required",
+        description: "Please sign in to reserve books",
         variant: "destructive",
-        title: "Error",
-        description: "Failed to update book status",
       });
       return;
     }
 
-    toast({
-      title: "Success",
-      description: `Book ${newStatus === "available" ? "returned" : "reserved"} successfully`,
-    });
-    refetch();
+    try {
+      if (book?.status === "available") {
+        // Create reservation
+        const { error: reservationError } = await supabase
+          .from("book_reservations")
+          .insert({
+            book_id: id,
+            user_id: session.user.id,
+          });
+
+        if (reservationError) throw reservationError;
+
+        // Update book status
+        const { error: bookError } = await supabase
+          .from("books")
+          .update({ status: "reserved" })
+          .eq("book_id", id);
+
+        if (bookError) throw bookError;
+
+        toast({
+          title: "Success",
+          description: "Book reserved successfully",
+        });
+      } else {
+        // Update existing reservation
+        const { error: returnError } = await supabase
+          .from("book_reservations")
+          .update({ returned_at: new Date().toISOString() })
+          .eq("book_id", id)
+          .is("returned_at", null);
+
+        if (returnError) throw returnError;
+
+        // Update book status
+        const { error: bookError } = await supabase
+          .from("books")
+          .update({ status: "available" })
+          .eq("book_id", id);
+
+        if (bookError) throw bookError;
+
+        toast({
+          title: "Success",
+          description: "Book returned successfully",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update book status",
+        variant: "destructive",
+      });
+    }
   };
 
   if (isLoading) {
@@ -63,6 +154,11 @@ const BookDetail = () => {
     );
   }
 
+  const canManageReservation = 
+    session?.user && 
+    (book.status === "available" || 
+    (reservation?.user_id === session.user.id));
+
   return (
     <div className="container px-6 py-4">
       <Button
@@ -79,27 +175,34 @@ const BookDetail = () => {
         <div className="md:col-span-1">
           <div className="max-h-[300px] overflow-hidden rounded-lg">
             <img
-              src={book.image_url}
+              src={book.image_url || "/placeholder.svg"}
               alt={book.title}
               className="object-cover w-full h-full"
             />
           </div>
-          <Button
-            className="w-full mt-4"
-            size="sm"
-            variant={book.status === "available" ? "default" : "destructive"}
-            onClick={handleStatusChange}
-          >
-            {book.status === "available" ? "Reserve Book" : "Return Book"}
-          </Button>
+          {canManageReservation && (
+            <Button
+              className="w-full mt-4"
+              size="sm"
+              variant={book.status === "available" ? "default" : "destructive"}
+              onClick={handleStatusChange}
+            >
+              <BookOpen className="mr-2 h-4 w-4" />
+              {book.status === "available" ? "Reserve Book" : "Return Book"}
+            </Button>
+          )}
         </div>
 
         <div className="md:col-span-3 space-y-6">
           <div>
             <div className="flex items-start justify-between mb-4">
               <div>
-                <p className="text-sm font-medium text-gray-500">Book ID: {book.book_id}</p>
-                <h1 className="text-3xl font-bold text-gray-900 mt-1">{book.title}</h1>
+                <p className="text-sm font-medium text-gray-500">
+                  Book ID: {book.book_id}
+                </p>
+                <h1 className="text-3xl font-bold text-gray-900 mt-1">
+                  {book.title}
+                </h1>
                 <p className="text-xl text-gray-600 mt-2">{book.author}</p>
               </div>
               <span
@@ -113,6 +216,16 @@ const BookDetail = () => {
               </span>
             </div>
           </div>
+
+          {reservation && (
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <User className="h-4 w-4" />
+              <span>
+                Reserved by: {reservation.profiles.first_name}{" "}
+                {reservation.profiles.last_name}
+              </span>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <div>
@@ -128,7 +241,9 @@ const BookDetail = () => {
               <p className="mt-1">{book.pages}</p>
             </div>
             <div>
-              <h3 className="text-sm font-medium text-gray-500">Publication Year</h3>
+              <h3 className="text-sm font-medium text-gray-500">
+                Publication Year
+              </h3>
               <p className="mt-1">{book.publication_year}</p>
             </div>
             <div>
