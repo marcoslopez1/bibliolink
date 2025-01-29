@@ -58,7 +58,11 @@
     },
     "actions": {
       "reserve": "Reservar Libro",
-      "return": "Devolver Libro"
+      "return": "Devolver Libro",
+      "reserveSuccessTitle": "Listo",
+      "reserveSuccessDescription": "Libro reservado correctamente",
+      "returnSuccessTitle": "Listo",
+      "returnSuccessDescription": "Libro devuelto correctamente"
     },
     "details": "Detalles del libro",
     "reservedBy": "Reservado por",
