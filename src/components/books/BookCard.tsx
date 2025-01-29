@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export interface Book {
   book_id: string;
@@ -10,6 +11,7 @@ export interface Book {
 }
 
 const BookCard = ({ book }: { book: Book }) => {
+  const { t } = useTranslation();
   const placeholderImage = "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b";
 
   return (
@@ -34,7 +36,7 @@ const BookCard = ({ book }: { book: Book }) => {
                 : 'bg-red-100 text-red-700'
             }`}
           >
-            {book.status}
+            {book.status === 'available' ? t("book.status.available") : t("book.status.reserved")}
           </span>
         </div>
         <div className="absolute top-4 left-4">

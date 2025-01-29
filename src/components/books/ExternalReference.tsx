@@ -10,10 +10,13 @@ export const ExternalReference = ({ url }: ExternalReferenceProps) => {
   
   if (!url) return null;
 
+  // Ensure URL is absolute
+  const absoluteUrl = url.startsWith('http') ? url : `https://${url}`;
+
   return (
     <div className="pt-4">
       <a
-        href={url}
+        href={absoluteUrl}
         target="_blank"
         rel="noopener noreferrer"
         className="text-accent hover:text-accent/80 inline-flex items-center gap-1"

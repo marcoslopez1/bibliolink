@@ -7,7 +7,8 @@
     "signIn": "Iniciar Sesión",
     "signUp": "Registrarse",
     "signOut": "Cerrar Sesión",
-    "copyright": "© {{year}} Biblioteca App. Todos los derechos reservados."
+    "copyright": "© {{year}} Biblioteca App. Todos los derechos reservados.",
+    "back": "Volver"
   },
   "auth": {
     "success": "Listo",

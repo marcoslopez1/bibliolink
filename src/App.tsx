@@ -6,7 +6,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/providers/AuthProvider";
 import Layout from "./components/layout/Layout";
 import Catalog from "./pages/Catalog";
-import Latest from "./pages/Latest";
 import HowItWorks from "./pages/HowItWorks";
 import NotFound from "./pages/NotFound";
 import BookDetail from "./pages/BookDetail";
@@ -28,7 +27,6 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Catalog />} />
               <Route path="/catalog" element={<Catalog />} />
-              <Route path="/latest" element={<Latest />} />
               <Route path="/how-it-works" element={<HowItWorks />} />
               <Route path="/auth/signin" element={<SignIn />} />
               <Route path="/auth/signup" element={<SignUp />} />

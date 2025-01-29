@@ -182,7 +182,7 @@ const BookDetail = () => {
         onClick={() => navigate(-1)}
       >
         <ArrowLeft className="mr-2 h-4 w-4" />
-        Back
+        {t("common.back")}
       </Button>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
