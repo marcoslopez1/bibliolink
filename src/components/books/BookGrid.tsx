@@ -14,15 +14,22 @@ const BookGrid = () => {
   const { ref, inView } = useInView();
 
   const { data, isLoading, isFetching } = useQuery({
-    queryKey: ["books", page],
+    queryKey: ["books", page, searchQuery],
     queryFn: async () => {
       const from = (page - 1) * BOOKS_PER_PAGE;
       const to = from + BOOKS_PER_PAGE - 1;
 
-      const { data, error, count } = await supabase
+      let query = supabase
         .from("books")
-        .select("book_id, title, author, image_url, genre, status", { count: "exact" })
-        .range(from, to);
+        .select("book_id, title, author, image_url, genre, status", { count: "exact" });
+
+      if (searchQuery) {
+        query = query.or(
+          `title.ilike.%${searchQuery}%,author.ilike.%${searchQuery}%,genre.ilike.%${searchQuery}%`
+        );
+      }
+
+      const { data, error, count } = await query.range(from, to);
 
       if (error) throw error;
       
@@ -34,26 +41,21 @@ const BookGrid = () => {
   });
 
   useEffect(() => {
-    if (data?.books) {
+    if (searchQuery) {
+      setBooks([]);
+      setPage(1);
+    } else if (data?.books) {
       setBooks((prev) => [...prev, ...data.books]);
     }
-  }, [data]);
+  }, [data, searchQuery]);
 
   useEffect(() => {
-    if (inView && !isLoading && !isFetching && data?.count && books.length < data.count) {
+    if (inView && !isLoading && !isFetching && data?.count && books.length < data.count && !searchQuery) {
       setPage((prev) => prev + 1);
     }
-  }, [inView, isLoading, data?.count, books.length, isFetching]);
+  }, [inView, isLoading, data?.count, books.length, isFetching, searchQuery]);
 
-  const filteredBooks = books?.filter((book) => {
-    const searchLower = searchQuery.toLowerCase();
-    return (
-      !searchQuery ||
-      book.title.toLowerCase().includes(searchLower) ||
-      book.author.toLowerCase().includes(searchLower) ||
-      book.genre.toLowerCase().includes(searchLower)
-    );
-  });
+  const displayBooks = searchQuery ? data?.books || [] : books;
 
   return (
     <div className="space-y-8">
@@ -63,7 +65,7 @@ const BookGrid = () => {
         </div>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
-        {filteredBooks?.map((book) => (
+        {displayBooks?.map((book) => (
           <BookCard key={book.book_id} book={book} />
         ))}
       </div>
