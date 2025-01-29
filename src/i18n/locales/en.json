@@ -58,7 +58,11 @@
     },
     "actions": {
       "reserve": "Reserve Book",
-      "return": "Return Book"
+      "return": "Return Book",
+      "reserveSuccessTitle": "Success",
+      "reserveSuccessDescription": "Book reserved successfully",
+      "returnSuccessTitle": "Success",
+      "returnSuccessDescription": "Book returned successfully"
     },
     "details": "Book details",
     "reservedBy": "Reserved by",
