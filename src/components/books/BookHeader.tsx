@@ -1,14 +1,11 @@
 import { format } from "date-fns";
-import { User, BookOpen } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { User } from "lucide-react";
 
 interface BookHeaderProps {
   bookId: string;
   title: string;
   author: string;
   status: string;
-  showButton?: boolean;
-  onStatusChange?: () => void;
   reservation?: {
     profiles: {
       first_name: string;
@@ -24,8 +21,6 @@ export const BookHeader = ({
   title,
   author,
   status,
-  showButton,
-  onStatusChange,
   reservation,
 }: BookHeaderProps) => {
   return (
@@ -54,20 +49,6 @@ export const BookHeader = ({
             {format(new Date(reservation.reserved_at), "MMMM d, yyyy")}
           </span>
         </div>
-      )}
-
-      {showButton && (
-        <Button
-          className={`w-full mt-4 ${
-            status === "reserved" ? "border-2 border-black hover:bg-secondary" : ""
-          }`}
-          size="sm"
-          variant={status === "available" ? "default" : "outline"}
-          onClick={onStatusChange}
-        >
-          <BookOpen className="mr-2 h-4 w-4" />
-          {status === "available" ? "Reserve Book" : "Return Book"}
-        </Button>
       )}
     </div>
   );

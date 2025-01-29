@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, ArrowLeft } from "lucide-react";
+import { ExternalLink, ArrowLeft, BookOpen } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/providers/AuthProvider";
 import { useEffect } from "react";
@@ -184,39 +184,41 @@ const BookDetail = () => {
       </Button>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-        <div className="md:col-span-1 flex md:block">
-          <div className="w-1/3 md:w-full max-h-[500px] overflow-hidden rounded-lg">
+        <div className="md:col-span-1">
+          <div className="max-h-[500px] overflow-hidden rounded-lg">
             <img
               src={book.image_url || "/placeholder.svg"}
               alt={book.title}
               className="object-cover w-full h-full"
             />
           </div>
-          <div className="w-2/3 pl-4 md:hidden">
-            <BookHeader
-              bookId={book.book_id}
-              title={book.title}
-              author={book.author}
-              status={book.status}
-              reservation={reservation}
-              showButton={showButton}
-              onStatusChange={handleStatusChange}
-            />
-          </div>
+          {showButton && (
+            <Button
+              className={`w-full mt-4 ${
+                book.status === "reserved"
+                  ? "border-2 border-black hover:bg-secondary"
+                  : ""
+              }`}
+              size="sm"
+              variant={book.status === "available" ? "default" : "outline"}
+              onClick={handleStatusChange}
+            >
+              <BookOpen className="mr-2 h-4 w-4" />
+              {book.status === "available" ? "Reserve Book" : "Return Book"}
+            </Button>
+          )}
         </div>
 
         <div className="md:col-span-3 space-y-6">
-          <div className="hidden md:block">
-            <BookHeader
-              bookId={book.book_id}
-              title={book.title}
-              author={book.author}
-              status={book.status}
-              reservation={reservation}
-              showButton={showButton}
-              onStatusChange={handleStatusChange}
-            />
-          </div>
+          <BookHeader
+            bookId={book.book_id}
+            title={book.title}
+            author={book.author}
+            status={book.status}
+            reservation={reservation}
+          />
+
+          <Separator />
 
           <BookDetails
             genre={book.genre}
