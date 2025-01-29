@@ -6,6 +6,7 @@ import { useAuth } from "@/providers/AuthProvider";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 const Navbar = () => {
   const location = useLocation();
@@ -86,14 +87,18 @@ const Navbar = () => {
                 </>
               )
             )}
+            <LanguageSwitcher />
           </div>
 
-          <button 
-            className="sm:hidden p-2 rounded-md"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            <Menu className="h-6 w-6" />
-          </button>
+          <div className="sm:hidden flex items-center gap-4">
+            <LanguageSwitcher />
+            <button 
+              className="p-2 rounded-md"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              <Menu className="h-6 w-6" />
+            </button>
+          </div>
         </div>
       </div>
 
