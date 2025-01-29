@@ -1,0 +1,66 @@
+{
+  "common": {
+    "library": "Library",
+    "catalog": "Catalog",
+    "latest": "Latest",
+    "howItWorks": "How It Works",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out",
+    "copyright": "© {{year}} Library App. All rights reserved."
+  },
+  "auth": {
+    "success": "Success",
+    "error": "Error",
+    "signOutSuccess": "You have been signed out successfully",
+    "signOutError": "Error signing out"
+  },
+  "book": {
+    "bookId": "Book ID",
+    "title": "Title",
+    "author": "Author",
+    "genre": "Genre",
+    "category": "Category",
+    "pages": "Pages",
+    "publicationYear": "Publication Year",
+    "editorial": "Editorial",
+    "building": "Building",
+    "status": {
+      "available": "Available",
+      "reserved": "Reserved"
+    },
+    "actions": {
+      "reserve": "Reserve Book",
+      "return": "Return Book"
+    },
+    "details": "Book details",
+    "reservedBy": "Reserved by",
+    "on": "on",
+    "externalReference": "External Reference"
+  },
+  "search": {
+    "placeholder": "Search by title, author, genre or category..."
+  },
+  "howItWorks": {
+    "title": "How It Works",
+    "subtitle": "Our library management system makes it easy to discover, borrow, and enjoy books. Here's how to get started.",
+    "features": {
+      "browse": {
+        "title": "Browse the Catalog",
+        "description": "Explore our extensive collection of books across various genres and topics."
+      },
+      "account": {
+        "title": "Create an Account",
+        "description": "Sign up to reserve books, track your reading history, and get personalized recommendations."
+      },
+      "reserve": {
+        "title": "Reserve & Borrow",
+        "description": "Reserve books online and pick them up at your convenience."
+      },
+      "share": {
+        "title": "Share & Review",
+        "description": "Share your favorite books and help others discover great reads."
+      }
+    }
+  }
+}

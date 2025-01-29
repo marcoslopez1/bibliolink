@@ -1,36 +1,38 @@
 import { BookOpen, Users, Clock, Heart } from "lucide-react";
-
-const features = [
-  {
-    icon: BookOpen,
-    title: "Browse the Catalog",
-    description: "Explore our extensive collection of books across various genres and topics.",
-  },
-  {
-    icon: Users,
-    title: "Create an Account",
-    description: "Sign up to reserve books, track your reading history, and get personalized recommendations.",
-  },
-  {
-    icon: Clock,
-    title: "Reserve & Borrow",
-    description: "Reserve books online and pick them up at your convenience.",
-  },
-  {
-    icon: Heart,
-    title: "Share & Review",
-    description: "Share your favorite books and help others discover great reads.",
-  },
-];
+import { useTranslation } from "react-i18next";
 
 const HowItWorks = () => {
+  const { t } = useTranslation();
+
+  const features = [
+    {
+      icon: BookOpen,
+      title: t("howItWorks.features.browse.title"),
+      description: t("howItWorks.features.browse.description"),
+    },
+    {
+      icon: Users,
+      title: t("howItWorks.features.account.title"),
+      description: t("howItWorks.features.account.description"),
+    },
+    {
+      icon: Clock,
+      title: t("howItWorks.features.reserve.title"),
+      description: t("howItWorks.features.reserve.description"),
+    },
+    {
+      icon: Heart,
+      title: t("howItWorks.features.share.title"),
+      description: t("howItWorks.features.share.description"),
+    },
+  ];
+
   return (
     <div className="space-y-16">
       <div className="text-center space-y-4">
-        <h1 className="text-4xl font-semibold text-primary">How It Works</h1>
+        <h1 className="text-4xl font-semibold text-primary">{t("howItWorks.title")}</h1>
         <p className="text-gray-600 max-w-2xl mx-auto">
-          Our library management system makes it easy to discover, borrow, and enjoy books.
-          Here's how to get started.
+          {t("howItWorks.subtitle")}
         </p>
       </div>
 

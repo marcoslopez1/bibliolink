@@ -1,4 +1,5 @@
 import { Separator } from "@/components/ui/separator";
+import { useTranslation } from "react-i18next";
 
 interface BookDetailsProps {
   genre: string;
@@ -17,34 +18,36 @@ export const BookDetails = ({
   editorial,
   building,
 }: BookDetailsProps) => {
+  const { t } = useTranslation();
+
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-semibold">Book details</h2>
+        <h2 className="text-2xl font-semibold">{t("book.details")}</h2>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         <div>
-          <h3 className="text-sm font-medium text-gray-500">Genre</h3>
+          <h3 className="text-sm font-medium text-gray-500">{t("book.genre")}</h3>
           <p className="mt-1">{genre}</p>
         </div>
         <div>
-          <h3 className="text-sm font-medium text-gray-500">Category</h3>
+          <h3 className="text-sm font-medium text-gray-500">{t("book.category")}</h3>
           <p className="mt-1">{category}</p>
         </div>
         <div>
-          <h3 className="text-sm font-medium text-gray-500">Pages</h3>
+          <h3 className="text-sm font-medium text-gray-500">{t("book.pages")}</h3>
           <p className="mt-1">{pages}</p>
         </div>
         <div>
-          <h3 className="text-sm font-medium text-gray-500">Publication Year</h3>
+          <h3 className="text-sm font-medium text-gray-500">{t("book.publicationYear")}</h3>
           <p className="mt-1">{publicationYear}</p>
         </div>
         <div>
-          <h3 className="text-sm font-medium text-gray-500">Editorial</h3>
+          <h3 className="text-sm font-medium text-gray-500">{t("book.editorial")}</h3>
           <p className="mt-1">{editorial}</p>
         </div>
         <div>
-          <h3 className="text-sm font-medium text-gray-500">Building</h3>
+          <h3 className="text-sm font-medium text-gray-500">{t("book.building")}</h3>
           <p className="mt-1">{building}</p>
         </div>
       </div>

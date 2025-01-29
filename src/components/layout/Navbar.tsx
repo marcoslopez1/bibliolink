@@ -1,6 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, LogIn, LogOut, UserPlus } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/providers/AuthProvider";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
@@ -13,6 +14,7 @@ const Navbar = () => {
   const { session } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const isAuthPage = location.pathname.startsWith('/auth/');
 
   const handleSignOut = async () => {
@@ -20,13 +22,13 @@ const Navbar = () => {
     if (error) {
       toast({
         variant: "destructive",
-        title: "Error signing out",
-        description: error.message,
+        title: t("auth.error"),
+        description: t("auth.signOutError"),
       });
     } else {
       toast({
-        title: "Success",
-        description: "You have been signed out successfully",
+        title: t("auth.success"),
+        description: t("auth.signOutSuccess"),
       });
       navigate('/catalog');
     }
@@ -38,14 +40,14 @@ const Navbar = () => {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
-              <span className="text-xl font-semibold text-primary">Library</span>
+              <span className="text-xl font-semibold text-primary">{t("common.library")}</span>
             </Link>
           </div>
           
           <div className="hidden sm:flex sm:items-center sm:space-x-8">
-            <NavLink to="/catalog" active={isActive("/catalog")}>Catalog</NavLink>
-            <NavLink to="/latest" active={isActive("/latest")}>Latest</NavLink>
-            <NavLink to="/how-it-works" active={isActive("/how-it-works")}>How It Works</NavLink>
+            <NavLink to="/catalog" active={isActive("/catalog")}>{t("common.catalog")}</NavLink>
+            <NavLink to="/latest" active={isActive("/latest")}>{t("common.latest")}</NavLink>
+            <NavLink to="/how-it-works" active={isActive("/how-it-works")}>{t("common.howItWorks")}</NavLink>
             
             {!isAuthPage && (
               session ? (
@@ -56,7 +58,7 @@ const Navbar = () => {
                   className="flex items-center gap-2"
                 >
                   <LogOut className="h-4 w-4" />
-                  Sign Out
+                  {t("common.signOut")}
                 </Button>
               ) : (
                 <>
@@ -68,7 +70,7 @@ const Navbar = () => {
                   >
                     <Link to="/auth/signin">
                       <LogIn className="h-4 w-4" />
-                      Sign In
+                      {t("common.signIn")}
                     </Link>
                   </Button>
                   <Button
@@ -78,7 +80,7 @@ const Navbar = () => {
                   >
                     <Link to="/auth/signup">
                       <UserPlus className="h-4 w-4" />
-                      Sign Up
+                      {t("common.signUp")}
                     </Link>
                   </Button>
                 </>
@@ -103,21 +105,21 @@ const Navbar = () => {
               active={isActive("/catalog")}
               onClick={() => setIsMenuOpen(false)}
             >
-              Catalog
+              {t("common.catalog")}
             </MobileNavLink>
             <MobileNavLink 
               to="/latest" 
               active={isActive("/latest")}
               onClick={() => setIsMenuOpen(false)}
             >
-              Latest
+              {t("common.latest")}
             </MobileNavLink>
             <MobileNavLink 
               to="/how-it-works" 
               active={isActive("/how-it-works")}
               onClick={() => setIsMenuOpen(false)}
             >
-              How It Works
+              {t("common.howItWorks")}
             </MobileNavLink>
             
             {!isAuthPage && (
@@ -130,7 +132,7 @@ const Navbar = () => {
                     setIsMenuOpen(false);
                   }}
                 >
-                  Sign Out
+                  {t("common.signOut")}
                 </MobileNavLink>
               ) : (
                 <>
@@ -139,14 +141,14 @@ const Navbar = () => {
                     active={isActive("/auth/signin")}
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    Sign In
+                    {t("common.signIn")}
                   </MobileNavLink>
                   <MobileNavLink 
                     to="/auth/signup"
                     active={isActive("/auth/signup")}
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    Sign Up
+                    {t("common.signUp")}
                   </MobileNavLink>
                 </>
               )

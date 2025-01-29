@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { BookOpen } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface BookActionsProps {
   showButton: boolean;
@@ -8,6 +9,8 @@ interface BookActionsProps {
 }
 
 export const BookActions = ({ showButton, status, onStatusChange }: BookActionsProps) => {
+  const { t } = useTranslation();
+  
   if (!showButton) return null;
 
   return (
@@ -22,7 +25,7 @@ export const BookActions = ({ showButton, status, onStatusChange }: BookActionsP
       onClick={onStatusChange}
     >
       <BookOpen className="mr-2 h-4 w-4" />
-      {status === "available" ? "Reserve Book" : "Return Book"}
+      {status === "available" ? t("book.actions.reserve") : t("book.actions.return")}
     </Button>
   );
 };

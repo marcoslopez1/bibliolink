@@ -1,0 +1,66 @@
+{
+  "common": {
+    "library": "Biblioteca",
+    "catalog": "Catálogo",
+    "latest": "Últimos",
+    "howItWorks": "Cómo Funciona",
+    "signIn": "Iniciar Sesión",
+    "signUp": "Registrarse",
+    "signOut": "Cerrar Sesión",
+    "copyright": "© {{year}} Biblioteca App. Todos los derechos reservados."
+  },
+  "auth": {
+    "success": "Éxito",
+    "error": "Error",
+    "signOutSuccess": "Has cerrado sesión exitosamente",
+    "signOutError": "Error al cerrar sesión"
+  },
+  "book": {
+    "bookId": "ID del Libro",
+    "title": "Título",
+    "author": "Autor",
+    "genre": "Género",
+    "category": "Categoría",
+    "pages": "Páginas",
+    "publicationYear": "Año de Publicación",
+    "editorial": "Editorial",
+    "building": "Edificio",
+    "status": {
+      "available": "Disponible",
+      "reserved": "Reservado"
+    },
+    "actions": {
+      "reserve": "Reservar Libro",
+      "return": "Devolver Libro"
+    },
+    "details": "Detalles del libro",
+    "reservedBy": "Reservado por",
+    "on": "el",
+    "externalReference": "Referencia Externa"
+  },
+  "search": {
+    "placeholder": "Buscar por título, autor, género o categoría..."
+  },
+  "howItWorks": {
+    "title": "Cómo Funciona",
+    "subtitle": "Nuestro sistema de gestión de biblioteca facilita descubrir, tomar prestados y disfrutar libros. Así es como empezar.",
+    "features": {
+      "browse": {
+        "title": "Explorar el Catálogo",
+        "description": "Explora nuestra extensa colección de libros en varios géneros y temas."
+      },
+      "account": {
+        "title": "Crear una Cuenta",
+        "description": "Regístrate para reservar libros, seguir tu historial de lectura y obtener recomendaciones personalizadas."
+      },
+      "reserve": {
+        "title": "Reservar y Tomar Prestado",
+        "description": "Reserva libros en línea y recógelos cuando te convenga."
+      },
+      "share": {
+        "title": "Compartir y Reseñar",
+        "description": "Comparte tus libros favoritos y ayuda a otros a descubrir grandes lecturas."
+      }
+    }
+  }
+}
