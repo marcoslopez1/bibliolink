@@ -95,7 +95,18 @@ const BookDetail = () => {
 
     try {
       if (book?.status === "available") {
-        // Create reservation
+        // First update the book status
+        const { error: bookError } = await supabase
+          .from("books")
+          .update({ status: "reserved" })
+          .eq("book_id", id);
+
+        if (bookError) {
+          console.error("Error updating book status:", bookError);
+          throw bookError;
+        }
+
+        // Then create the reservation
         const { error: reservationError } = await supabase
           .from("book_reservations")
           .insert({
@@ -103,51 +114,48 @@ const BookDetail = () => {
             user_id: session.user.id,
           });
 
-        if (reservationError) throw reservationError;
-
-        // Update book status
-        const { error: bookError } = await supabase
-          .from("books")
-          .update({ status: "reserved" })
-          .eq("book_id", id);
-
-        if (bookError) throw bookError;
-
-        // Invalidate queries to refresh the UI
-        queryClient.invalidateQueries({ queryKey: ["book", id] });
-        queryClient.invalidateQueries({ queryKey: ["reservation", id] });
+        if (reservationError) {
+          console.error("Error creating reservation:", reservationError);
+          throw reservationError;
+        }
 
         toast({
           title: "Success",
           description: "Book reserved successfully",
         });
       } else if (book?.status === "reserved") {
-        // Update existing reservation
+        // First update the reservation
         const { error: returnError } = await supabase
           .from("book_reservations")
           .update({ returned_at: new Date().toISOString() })
           .eq("book_id", id)
           .is("returned_at", null);
 
-        if (returnError) throw returnError;
+        if (returnError) {
+          console.error("Error updating reservation:", returnError);
+          throw returnError;
+        }
 
-        // Update book status
+        // Then update the book status
         const { error: bookError } = await supabase
           .from("books")
           .update({ status: "available" })
           .eq("book_id", id);
 
-        if (bookError) throw bookError;
-
-        // Invalidate queries to refresh the UI
-        queryClient.invalidateQueries({ queryKey: ["book", id] });
-        queryClient.invalidateQueries({ queryKey: ["reservation", id] });
+        if (bookError) {
+          console.error("Error updating book status:", bookError);
+          throw bookError;
+        }
 
         toast({
           title: "Success",
           description: "Book returned successfully",
         });
       }
+
+      // Invalidate queries to refresh the UI
+      queryClient.invalidateQueries({ queryKey: ["book", id] });
+      queryClient.invalidateQueries({ queryKey: ["reservation", id] });
     } catch (error) {
       console.error("Error updating book status:", error);
       toast({
@@ -174,7 +182,7 @@ const BookDetail = () => {
     );
   }
 
-  // Show button for authenticated users, regardless of book status
+  // Show button for authenticated users
   const showButton = session?.user;
 
   return (
