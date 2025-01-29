@@ -7,6 +7,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { session, loading } = useAuth();
   const location = useLocation();
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   if (loading) {
     return <div>Loading...</div>;
