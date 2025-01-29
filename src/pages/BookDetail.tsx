@@ -1,7 +1,6 @@
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, ArrowLeft } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
@@ -9,7 +8,6 @@ import { useToast } from "@/components/ui/use-toast";
 const BookDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
   const { toast } = useToast();
 
   const { data: book, isLoading, refetch } = useQuery({
@@ -66,31 +64,35 @@ const BookDetail = () => {
   }
 
   return (
-    <div className="container max-w-4xl mx-auto py-8">
+    <div className="container px-4 py-4">
       <Button
         variant="ghost"
-        className="mb-6"
+        className="mb-4"
         onClick={() => navigate(-1)}
       >
         <ArrowLeft className="mr-2 h-4 w-4" />
-        Back to Catalog
+        Back
       </Button>
 
-      <Card>
-        <CardContent className="p-6">
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="aspect-[2/3] relative overflow-hidden rounded-lg">
+      <div className="space-y-6">
+        <div className="flex flex-col md:flex-row gap-6">
+          <div className="w-full md:w-1/3 lg:w-1/4">
+            <div className="aspect-[3/4] relative overflow-hidden rounded-lg">
               <img
                 src={book.image_url}
                 alt={book.title}
                 className="object-cover w-full h-full"
               />
             </div>
-            <div className="md:col-span-2 space-y-6">
-              <div className="flex justify-between items-start">
+          </div>
+          
+          <div className="flex-1 space-y-4">
+            <div className="space-y-2">
+              <div className="flex items-start justify-between">
                 <div>
+                  <p className="text-sm text-gray-500">{book.book_id}</p>
                   <h1 className="text-3xl font-bold text-gray-900">{book.title}</h1>
-                  <p className="text-xl text-gray-600 mt-1">{book.author}</p>
+                  <p className="text-xl text-gray-600">{book.author}</p>
                 </div>
                 <span
                   className={`px-3 py-1 rounded-full text-sm font-medium ${
@@ -110,8 +112,11 @@ const BookDetail = () => {
               >
                 {book.status === "available" ? "Reserve Book" : "Return Book"}
               </Button>
+            </div>
 
-              <div className="grid grid-cols-2 gap-6">
+            <div className="pt-6">
+              <h2 className="text-xl font-semibold mb-4">Book Details</h2>
+              <div className="grid grid-cols-2 gap-y-4">
                 <div>
                   <h3 className="text-sm font-medium text-gray-500">Genre</h3>
                   <p className="mt-1">{book.genre}</p>
@@ -137,24 +142,21 @@ const BookDetail = () => {
               </div>
 
               {book.external_url && (
-                <div>
-                  <h3 className="text-sm font-medium text-gray-500">
-                    External Reference
-                  </h3>
+                <div className="mt-4">
                   <a
                     href={book.external_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-1 text-accent hover:text-accent/80 inline-flex items-center gap-1"
+                    className="text-accent hover:text-accent/80 inline-flex items-center gap-1"
                   >
-                    Visit reference <ExternalLink className="h-4 w-4" />
+                    External Reference <ExternalLink className="h-4 w-4" />
                   </a>
                 </div>
               )}
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 };
