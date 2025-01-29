@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
+import { useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import BookCard, { Book } from "./BookCard";
 import BookSearch from "./BookSearch";
@@ -8,7 +9,9 @@ import BookSearch from "./BookSearch";
 const BOOKS_PER_PAGE = 10;
 
 const BookGrid = () => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialSearchQuery = searchParams.get("q") || "";
+  const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
   const [page, setPage] = useState(1);
   const [books, setBooks] = useState<Book[]>([]);
   const { ref, inView } = useInView();
@@ -38,7 +41,13 @@ const BookGrid = () => {
         count,
       };
     },
+    staleTime: 5 * 60 * 1000, // Keep the data fresh for 5 minutes
   });
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    setSearchParams(query ? { q: query } : {});
+  };
 
   useEffect(() => {
     if (searchQuery) {
@@ -61,7 +70,7 @@ const BookGrid = () => {
     <div className="space-y-8">
       <div className="flex justify-center">
         <div className="w-full max-w-2xl">
-          <BookSearch onSearch={setSearchQuery} />
+          <BookSearch onSearch={handleSearch} initialValue={searchQuery} />
         </div>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
