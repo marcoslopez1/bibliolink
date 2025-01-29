@@ -11,6 +11,7 @@ import { BookDetails } from "@/components/books/BookDetails";
 import { BookImage } from "@/components/books/BookImage";
 import { BookActions } from "@/components/books/BookActions";
 import { ExternalReference } from "@/components/books/ExternalReference";
+import { useTranslation } from "react-i18next";
 
 const BookDetail = () => {
   const { id } = useParams();
@@ -18,6 +19,7 @@ const BookDetail = () => {
   const { toast } = useToast();
   const { session } = useAuth();
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
 
   const { data: book, isLoading } = useQuery({
     queryKey: ["book", id],
@@ -118,8 +120,8 @@ const BookDetail = () => {
         if (reservationError) throw reservationError;
 
         toast({
-          title: "Success",
-          description: "Book reserved successfully",
+          title: t("book.actions.reserveSuccessTitle"),
+          description: t("book.actions.reserveSuccessDescription"),
         });
       } else if (book?.status === "reserved") {
         const { error: returnError } = await supabase
@@ -138,8 +140,8 @@ const BookDetail = () => {
         if (bookError) throw bookError;
 
         toast({
-          title: "Success",
-          description: "Book returned successfully",
+          title: t("book.actions.returnSuccessTitle"),
+          description: t("book.actions.returnSuccessDescription"),
         });
       }
 
