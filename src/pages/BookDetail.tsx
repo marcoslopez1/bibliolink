@@ -66,10 +66,10 @@ const BookDetail = () => {
   }
 
   return (
-    <div className="container mx-auto py-4">
+    <div className="container max-w-4xl mx-auto py-8">
       <Button
         variant="ghost"
-        className="mb-4"
+        className="mb-6"
         onClick={() => navigate(-1)}
       >
         <ArrowLeft className="mr-2 h-4 w-4" />
@@ -79,7 +79,7 @@ const BookDetail = () => {
       <Card>
         <CardContent className="p-6">
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="aspect-[2/3] relative overflow-hidden rounded-lg max-h-[500px]">
+            <div className="aspect-[2/3] relative overflow-hidden rounded-lg">
               <img
                 src={book.image_url}
                 alt={book.title}
