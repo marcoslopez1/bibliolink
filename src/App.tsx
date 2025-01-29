@@ -8,6 +8,7 @@ import Catalog from "./pages/Catalog";
 import Latest from "./pages/Latest";
 import HowItWorks from "./pages/HowItWorks";
 import NotFound from "./pages/NotFound";
+import BookDetail from "./pages/BookDetail";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
             <Route path="/catalog" element={<Catalog />} />
             <Route path="/latest" element={<Latest />} />
             <Route path="/how-it-works" element={<HowItWorks />} />
+            <Route path="/book/:id" element={<BookDetail />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
