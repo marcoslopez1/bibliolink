@@ -12,7 +12,7 @@ const Footer = () => {
           </div>
           <div className="flex items-center space-x-6">
             <a
-              href="https://github.com/lovable-labs/library-app"
+              href="https://github.com/marcoslopez1/library-app/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-primary transition-colors"
