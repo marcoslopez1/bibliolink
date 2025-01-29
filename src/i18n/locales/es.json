@@ -19,6 +19,8 @@
     "signOutError": "Error al cerrar sesión",
     "signInSuccess": "Has iniciado sesión exitosamente",
     "signInError": "Error al iniciar sesión",
+    "signInRequiredTitle": "Es necesario identificarse",
+    "signInRequiredDescription": "Por favor inicia sesión en esta página",
     "signUpSuccess": "Por favor, revisa tu correo para confirmar tu cuenta",
     "signUpError": "Error al registrarse",
     "welcomeBack": "¡Bienvenido de nuevo!",
