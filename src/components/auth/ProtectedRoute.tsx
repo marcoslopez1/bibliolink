@@ -1,32 +1,24 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/providers/AuthProvider";
 import { useToast } from "@/components/ui/use-toast";
 
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { session, loading } = useAuth();
-  const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
 
-  useEffect(() => {
-    if (!loading && !session) {
-      toast({
-        title: "Authentication required",
-        description: "Please sign in to view this page",
-      });
-      navigate("/auth/signin");
-    }
-  }, [session, loading, navigate, toast]);
-
   if (loading) {
-    return (
-      <div className="min-h-[50vh] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
+    return <div>Loading...</div>;
   }
 
-  return session ? <>{children}</> : null;
-};
+  if (!session) {
+    toast({
+      title: "Authentication required",
+      description: "Please sign in to access this page",
+      variant: "default",
+    });
+    return <Navigate to="/auth/signin" state={{ from: location }} replace />;
+  }
 
-export default ProtectedRoute;
+  return <>{children}</>;
+};
