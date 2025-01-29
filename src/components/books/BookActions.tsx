@@ -12,7 +12,7 @@ export const BookActions = ({ showButton, status, onStatusChange }: BookActionsP
 
   return (
     <Button
-      className={`w-full mt-4 ${
+      className={`md:w-auto w-full mt-4 ${
         status === "reserved"
           ? "border-2 border-black hover:bg-secondary text-black hover:text-black"
           : ""
