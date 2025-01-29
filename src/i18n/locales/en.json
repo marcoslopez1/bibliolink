@@ -19,6 +19,8 @@
     "signOutError": "Error signing out",
     "signInSuccess": "You have been signed in successfully",
     "signInError": "Error signing in",
+    "signInRequiredTitle": "Authentication required",
+    "signInRequiredDescription": "Please sign in to access this page",
     "signUpSuccess": "Please check your email to confirm your account",
     "signUpError": "Error signing up",
     "welcomeBack": "Welcome back!",
