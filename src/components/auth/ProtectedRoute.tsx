@@ -1,6 +1,7 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/providers/AuthProvider";
 import { useToast } from "@/components/ui/use-toast";
+import { useTranslation } from "react-i18next";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { session, loading } = useAuth();
@@ -18,8 +19,8 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     }
     
     toast({
-      title: "Authentication required",
-      description: "Please sign in to access this page",
+      title: t("auth.signInRequiredTitle"),
+      description: t("auth.signInRequiredTitle"),
       variant: "default",
     });
     return <Navigate to="/auth/signin" state={{ from: location }} replace />;
