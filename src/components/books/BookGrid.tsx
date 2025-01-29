@@ -39,7 +39,11 @@ const BookGrid = () => {
 
   return (
     <div className="space-y-8">
-      <BookSearch onSearch={setSearchQuery} />
+      <div className="flex justify-center">
+        <div className="w-full max-w-2xl">
+          <BookSearch onSearch={setSearchQuery} />
+        </div>
+      </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
         {filteredBooks?.map((book) => (
           <BookCard key={book.book_id} book={book} />
