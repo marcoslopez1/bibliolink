@@ -2,13 +2,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, ArrowLeft, BookOpen } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/providers/AuthProvider";
 import { useEffect } from "react";
 import { BookHeader } from "@/components/books/BookHeader";
 import { BookDetails } from "@/components/books/BookDetails";
-import { Separator } from "@/components/ui/separator";
+import { BookImage } from "@/components/books/BookImage";
+import { BookActions } from "@/components/books/BookActions";
+import { ExternalReference } from "@/components/books/ExternalReference";
 
 const BookDetail = () => {
   const { id } = useParams();
@@ -169,14 +171,12 @@ const BookDetail = () => {
     );
   }
 
-  const showButton = session?.user;
-
   return (
     <div className="container px-6 py-4">
       <Button
         variant="ghost"
         size="sm"
-        className="mb-6"
+        className="mb-4"
         onClick={() => navigate(-1)}
       >
         <ArrowLeft className="mr-2 h-4 w-4" />
@@ -184,30 +184,11 @@ const BookDetail = () => {
       </Button>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-        <div className="md:col-span-1">
-          <div className="max-h-[500px] overflow-hidden rounded-lg">
-            <img
-              src={book.image_url || "/placeholder.svg"}
-              alt={book.title}
-              className="object-cover w-full h-full"
-            />
-          </div>
-          {showButton && (
-            <Button
-              className={`w-full mt-4 ${
-                book.status === "reserved"
-                  ? "border-2 border-black hover:bg-secondary"
-                  : ""
-              }`}
-              size="sm"
-              variant={book.status === "available" ? "default" : "outline"}
-              onClick={handleStatusChange}
-            >
-              <BookOpen className="mr-2 h-4 w-4" />
-              {book.status === "available" ? "Reserve Book" : "Return Book"}
-            </Button>
-          )}
-        </div>
+        <BookImage
+          imageUrl={book.image_url}
+          title={book.title}
+          status={book.status}
+        />
 
         <div className="md:col-span-3 space-y-6">
           <BookHeader
@@ -218,7 +199,11 @@ const BookDetail = () => {
             reservation={reservation}
           />
 
-          <Separator />
+          <BookActions
+            showButton={!!session?.user}
+            status={book.status}
+            onStatusChange={handleStatusChange}
+          />
 
           <BookDetails
             genre={book.genre}
@@ -229,18 +214,7 @@ const BookDetail = () => {
             building={book.building}
           />
 
-          {book.external_url && (
-            <div className="pt-4">
-              <a
-                href={book.external_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-accent hover:text-accent/80 inline-flex items-center gap-1"
-              >
-                External Reference <ExternalLink className="h-4 w-4" />
-              </a>
-            </div>
-          )}
+          <ExternalReference url={book.external_url} />
         </div>
       </div>
     </div>
