@@ -21,7 +21,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     
     toast({
       title: t("auth.signInRequiredTitle"),
-      description: t("auth.signInRequiredTitle"),
+      description: t("auth.signInRequiredDescription"),
       variant: "default",
     });
     return <Navigate to="/auth/signin" state={{ from: location }} replace />;
