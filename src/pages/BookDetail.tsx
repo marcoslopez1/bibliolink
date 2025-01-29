@@ -38,7 +38,8 @@ const BookDetail = () => {
           *,
           profiles:user_id (
             first_name,
-            last_name
+            last_name,
+            email
           )
         `)
         .eq("book_id", id)
