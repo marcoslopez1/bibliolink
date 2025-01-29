@@ -1,13 +1,18 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ExternalLink } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ExternalLink, ArrowLeft } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 const BookDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { toast } = useToast();
 
-  const { data: book, isLoading } = useQuery({
+  const { data: book, isLoading, refetch } = useQuery({
     queryKey: ["book", id],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -20,6 +25,29 @@ const BookDetail = () => {
       return data;
     },
   });
+
+  const handleStatusChange = async () => {
+    const newStatus = book?.status === "available" ? "reserved" : "available";
+    const { error } = await supabase
+      .from("books")
+      .update({ status: newStatus })
+      .eq("book_id", id);
+
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to update book status",
+      });
+      return;
+    }
+
+    toast({
+      title: "Success",
+      description: `Book ${newStatus === "available" ? "returned" : "reserved"} successfully`,
+    });
+    refetch();
+  };
 
   if (isLoading) {
     return (
@@ -39,70 +67,90 @@ const BookDetail = () => {
 
   return (
     <div className="container max-w-4xl mx-auto py-8">
+      <Button
+        variant="ghost"
+        className="mb-6"
+        onClick={() => navigate(-1)}
+      >
+        <ArrowLeft className="mr-2 h-4 w-4" />
+        Back to Catalog
+      </Button>
+
       <Card>
-        <CardHeader>
-          <CardTitle className="text-3xl">{book.title}</CardTitle>
-        </CardHeader>
-        <CardContent className="grid md:grid-cols-2 gap-8">
-          <div className="aspect-[2/3] relative overflow-hidden rounded-lg">
-            <img
-              src={book.image_url}
-              alt={book.title}
-              className="object-cover w-full h-full"
-            />
-          </div>
-          <div className="space-y-4">
-            <div>
-              <h3 className="text-lg font-semibold">Book Details</h3>
-              <dl className="mt-2 space-y-3">
+        <CardContent className="p-6">
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="aspect-[2/3] relative overflow-hidden rounded-lg">
+              <img
+                src={book.image_url}
+                alt={book.title}
+                className="object-cover w-full h-full"
+              />
+            </div>
+            <div className="md:col-span-2 space-y-6">
+              <div className="flex justify-between items-start">
                 <div>
-                  <dt className="text-sm font-medium text-gray-500">Book ID</dt>
-                  <dd className="mt-1">{book.book_id}</dd>
+                  <h1 className="text-3xl font-bold text-gray-900">{book.title}</h1>
+                  <p className="text-xl text-gray-600 mt-1">{book.author}</p>
+                </div>
+                <span
+                  className={`px-3 py-1 rounded-full text-sm font-medium ${
+                    book.status === "available"
+                      ? "bg-green-100 text-green-700"
+                      : "bg-red-100 text-red-700"
+                  }`}
+                >
+                  {book.status}
+                </span>
+              </div>
+
+              <Button
+                className="w-full"
+                variant={book.status === "available" ? "default" : "destructive"}
+                onClick={handleStatusChange}
+              >
+                {book.status === "available" ? "Reserve Book" : "Return Book"}
+              </Button>
+
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <h3 className="text-sm font-medium text-gray-500">Genre</h3>
+                  <p className="mt-1">{book.genre}</p>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-gray-500">Author</dt>
-                  <dd className="mt-1">{book.author}</dd>
+                  <h3 className="text-sm font-medium text-gray-500">Category</h3>
+                  <p className="mt-1">{book.category}</p>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-gray-500">Genre</dt>
-                  <dd className="mt-1">{book.genre}</dd>
+                  <h3 className="text-sm font-medium text-gray-500">Pages</h3>
+                  <p className="mt-1">{book.pages}</p>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-gray-500">Category</dt>
-                  <dd className="mt-1">{book.category}</dd>
-                </div>
-                <div>
-                  <dt className="text-sm font-medium text-gray-500">Pages</dt>
-                  <dd className="mt-1">{book.pages}</dd>
-                </div>
-                <div>
-                  <dt className="text-sm font-medium text-gray-500">
+                  <h3 className="text-sm font-medium text-gray-500">
                     Publication Year
-                  </dt>
-                  <dd className="mt-1">{book.publication_year}</dd>
+                  </h3>
+                  <p className="mt-1">{book.publication_year}</p>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-gray-500">Editorial</dt>
-                  <dd className="mt-1">{book.editorial}</dd>
+                  <h3 className="text-sm font-medium text-gray-500">Editorial</h3>
+                  <p className="mt-1">{book.editorial}</p>
                 </div>
-                {book.external_url && (
-                  <div>
-                    <dt className="text-sm font-medium text-gray-500">
-                      External Reference
-                    </dt>
-                    <dd className="mt-1">
-                      <a
-                        href={book.external_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-accent hover:text-accent/80 inline-flex items-center gap-1"
-                      >
-                        Visit reference <ExternalLink className="h-4 w-4" />
-                      </a>
-                    </dd>
-                  </div>
-                )}
-              </dl>
+              </div>
+
+              {book.external_url && (
+                <div>
+                  <h3 className="text-sm font-medium text-gray-500">
+                    External Reference
+                  </h3>
+                  <a
+                    href={book.external_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-1 text-accent hover:text-accent/80 inline-flex items-center gap-1"
+                  >
+                    Visit reference <ExternalLink className="h-4 w-4" />
+                  </a>
+                </div>
+              )}
             </div>
           </div>
         </CardContent>
