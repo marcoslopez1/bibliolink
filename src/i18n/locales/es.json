@@ -83,7 +83,7 @@
       },
       "account": {
         "title": "Crear una Cuenta",
-        "description": "<a href='auth/signup'>Regístrate</a> para reservar libros, seguir tu historial de lectura y obtener recomendaciones personalizadas. Algunas funcionalidades próximamente."
+        "description": "Regístrate para reservar libros, seguir tu historial de lectura y obtener recomendaciones personalizadas. Algunas funcionalidades próximamente."
       },
       "reserve": {
         "title": "Reservar y Tomar Prestado",
