@@ -83,15 +83,15 @@
       },
       "account": {
         "title": "Crear una Cuenta",
-        "description": "Regístrate para reservar libros, seguir tu historial de lectura y obtener recomendaciones personalizadas."
+        "description": "<a href='../auth/signup'>Regístrate</a> para reservar libros, seguir tu historial de lectura y obtener recomendaciones personalizadas. Algunas funcionalidades próximamente."
       },
       "reserve": {
         "title": "Reservar y Tomar Prestado",
         "description": "Reserva libros en línea y recógelos cuando te convenga."
       },
       "share": {
-        "title": "Compartir y Reseñar",
-        "description": "Comparte tus libros favoritos y ayuda a otros a descubrir grandes lecturas."
+        "title": "Comparte con otros",
+        "description": "Recomienda tus libros favoritos y ayuda a otros a descubrir grandes lecturas."
       }
     }
   }
