@@ -83,7 +83,7 @@
       },
       "account": {
         "title": "Create an Account",
-        "description": "<a href='auth/signup'>Sign up</a> to reserve books, track your reading history, and get personalized recommendations. Some of these features comming soon."
+        "description": "Sign up to reserve books, track your reading history, and get personalized recommendations. Some of these features comming soon."
       },
       "reserve": {
         "title": "Reserve & Borrow",
