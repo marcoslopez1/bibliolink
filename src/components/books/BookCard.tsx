@@ -12,7 +12,7 @@ export interface Book {
 
 const BookCard = ({ book }: { book: Book }) => {
   const { t } = useTranslation();
-  const placeholderImage = "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b";
+  const placeholderImage = "https://media.istockphoto.com/id/626462142/photo/red-book.jpg?s=612x612&w=0&k=20&c=6GQND0qF5JAhrm1g_cZzXHQVRkkaA_625VXjfy9MtxA=";
 
   return (
     <Link
