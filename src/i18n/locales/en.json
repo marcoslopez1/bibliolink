@@ -83,15 +83,15 @@
       },
       "account": {
         "title": "Create an Account",
-        "description": "Sign up to reserve books, track your reading history, and get personalized recommendations."
+        "description": "<a href='../auth/signup'>Sign up</a> to reserve books, track your reading history, and get personalized recommendations. Some of these features comming soon."
       },
       "reserve": {
         "title": "Reserve & Borrow",
         "description": "Reserve books online and pick them up at your convenience."
       },
       "share": {
-        "title": "Share & Review",
-        "description": "Share your favorite books and help others discover great reads."
+        "title": "Share with others",
+        "description": "Recommend your favorite books and help others discover great reads."
       }
     }
   }
