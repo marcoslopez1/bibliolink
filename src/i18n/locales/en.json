@@ -1,11 +1,66 @@
 {
+  "nav": {
+    "home": "Home",
+    "howItWorks": "How It Works"
+  },
   "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out",
+    "email": "Email",
+    "password": "Password",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "error": "Error",
+    "success": "Success",
+    "signInError": "Failed to sign in. Please check your credentials.",
+    "signUpError": "Failed to sign up. Please try again.",
+    "signInSuccess": "Successfully signed in!",
+    "signUpSuccess": "Successfully signed up!",
+    "createAccount": "Create a new account",
+    "haveAccount": "Already have an account?",
+    "noAccount": "Don't have an account?",
+    "forgotPassword": "Forgot password?",
+    "signingIn": "Signing in...",
+    "signingUp": "Signing up...",
+    "welcomeBack": "Welcome back!",
     "signInRequiredTitle": "Sign In Required",
     "signInRequiredDescription": "You need to sign in to access this section.",
     "adminRequiredTitle": "Admin Access Required",
     "adminRequiredDescription": "You need admin privileges to access this section."
   },
+  "book": {
+    "bookId": "Book ID",
+    "status": {
+      "available": "Available",
+      "reserved": "Reserved"
+    },
+    "reservedBy": "Reserved by",
+    "on": "on"
+  },
   "admin": {
     "booksManagement": "Books Management"
+  },
+  "howItWorks": {
+    "title": "How It Works",
+    "subtitle": "Learn how our library system makes book management easy and efficient",
+    "features": {
+      "browse": {
+        "title": "Browse Books",
+        "description": "Explore our extensive collection of books across various genres and categories"
+      },
+      "account": {
+        "title": "Create Account",
+        "description": "Sign up for an account to start reserving and managing your book loans"
+      },
+      "reserve": {
+        "title": "Reserve Books",
+        "description": "Reserve books online and pick them up at your convenience"
+      },
+      "share": {
+        "title": "Share Knowledge",
+        "description": "Be part of our community and help spread knowledge through books"
+      }
+    }
   }
 }

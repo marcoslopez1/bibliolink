@@ -1,9 +1,66 @@
 {
+  "nav": {
+    "home": "Inicio",
+    "howItWorks": "Cómo Funciona"
+  },
   "auth": {
-    "adminRequiredTitle": "Se requiere acceso de administrador",
+    "signIn": "Iniciar Sesión",
+    "signUp": "Registrarse",
+    "signOut": "Cerrar Sesión",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "error": "Error",
+    "success": "Éxito",
+    "signInError": "Error al iniciar sesión. Por favor, verifica tus credenciales.",
+    "signUpError": "Error al registrarse. Por favor, intenta de nuevo.",
+    "signInSuccess": "¡Sesión iniciada exitosamente!",
+    "signUpSuccess": "¡Registro exitoso!",
+    "createAccount": "Crear una nueva cuenta",
+    "haveAccount": "¿Ya tienes una cuenta?",
+    "noAccount": "¿No tienes una cuenta?",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "signingIn": "Iniciando sesión...",
+    "signingUp": "Registrando...",
+    "welcomeBack": "¡Bienvenido de nuevo!",
+    "signInRequiredTitle": "Inicio de Sesión Requerido",
+    "signInRequiredDescription": "Necesitas iniciar sesión para acceder a esta sección.",
+    "adminRequiredTitle": "Acceso de Administrador Requerido",
     "adminRequiredDescription": "Necesitas privilegios de administrador para acceder a esta sección."
+  },
+  "book": {
+    "bookId": "ID del Libro",
+    "status": {
+      "available": "Disponible",
+      "reserved": "Reservado"
+    },
+    "reservedBy": "Reservado por",
+    "on": "el"
   },
   "admin": {
     "booksManagement": "Gestión de Libros"
+  },
+  "howItWorks": {
+    "title": "Cómo Funciona",
+    "subtitle": "Aprende cómo nuestro sistema de biblioteca hace que la gestión de libros sea fácil y eficiente",
+    "features": {
+      "browse": {
+        "title": "Explorar Libros",
+        "description": "Explora nuestra extensa colección de libros en varios géneros y categorías"
+      },
+      "account": {
+        "title": "Crear Cuenta",
+        "description": "Regístrate para comenzar a reservar y gestionar tus préstamos de libros"
+      },
+      "reserve": {
+        "title": "Reservar Libros",
+        "description": "Reserva libros en línea y recógelos cuando te sea conveniente"
+      },
+      "share": {
+        "title": "Compartir Conocimiento",
+        "description": "Sé parte de nuestra comunidad y ayuda a difundir el conocimiento a través de los libros"
+      }
+    }
   }
 }
