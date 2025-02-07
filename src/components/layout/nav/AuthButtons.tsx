@@ -20,6 +20,20 @@ export const AuthButtons = ({ session }: AuthButtonsProps) => {
 
   const handleSignOut = async () => {
     try {
+      // First check if we have a session
+      const { data: { session: currentSession } } = await supabase.auth.getSession();
+      
+      if (!currentSession) {
+        // If no session, just redirect and show message
+        navigate('/auth/signin');
+        toast({
+          description: t("auth.sessionExpired"),
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // If we have a session, proceed with sign out
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
       
@@ -28,10 +42,13 @@ export const AuthButtons = ({ session }: AuthButtonsProps) => {
         description: t("auth.signOutSuccess"),
       });
     } catch (error: any) {
+      console.error("Sign out error:", error);
       toast({
         variant: "destructive",
         description: error.message,
       });
+      // In case of error, redirect to sign in
+      navigate('/auth/signin');
     }
   };
 
