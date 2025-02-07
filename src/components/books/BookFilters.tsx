@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Filter, ChevronUp, ChevronDown } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -8,6 +9,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface FilterState {
   genre: string;
@@ -22,6 +29,8 @@ interface BookFiltersProps {
 
 const BookFilters = ({ books, onFilterChange }: BookFiltersProps) => {
   const { t } = useTranslation();
+  const isMobile = useIsMobile();
+  const [isOpen, setIsOpen] = useState(false);
   const [filters, setFilters] = useState<FilterState>({
     genre: "all",
     category: "all",
@@ -44,58 +53,86 @@ const BookFilters = ({ books, onFilterChange }: BookFiltersProps) => {
     onFilterChange(newFilters);
   };
 
+  const activeFiltersCount = Object.values(filters).filter(
+    (value) => value !== "all"
+  ).length;
+
   return (
-    <div className="flex flex-wrap gap-4 mb-6">
-      <Select
-        value={filters.genre}
-        onValueChange={(value) => handleFilterChange(value, "genre")}
+    <div className="mb-6">
+      <Collapsible
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        className="w-full space-y-2"
       >
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder={t("book.genre")} />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">All Genres</SelectItem>
-          {uniqueValues.genre.map((genre) => (
-            <SelectItem key={genre} value={genre}>
-              {genre}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+        <div className="flex items-center justify-between">
+          <CollapsibleTrigger className="flex items-center gap-2 group hover:text-accent transition-colors">
+            <Filter className="h-5 w-5" />
+            <span className="font-medium">
+              Filters {activeFiltersCount > 0 && `(${activeFiltersCount})`}
+            </span>
+            {isOpen ? (
+              <ChevronUp className="h-4 w-4 transition-transform" />
+            ) : (
+              <ChevronDown className="h-4 w-4 transition-transform" />
+            )}
+          </CollapsibleTrigger>
+        </div>
 
-      <Select
-        value={filters.category}
-        onValueChange={(value) => handleFilterChange(value, "category")}
-      >
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder={t("book.category")} />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">All Categories</SelectItem>
-          {uniqueValues.category.map((category) => (
-            <SelectItem key={category} value={category}>
-              {category}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+        <CollapsibleContent className="space-y-4">
+          <div className={`flex ${isMobile ? 'flex-col' : 'flex-row'} gap-4`}>
+            <Select
+              value={filters.genre}
+              onValueChange={(value) => handleFilterChange(value, "genre")}
+            >
+              <SelectTrigger className={isMobile ? "w-full" : "w-[180px]"}>
+                <SelectValue placeholder={t("book.genre")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Genres</SelectItem>
+                {uniqueValues.genre.map((genre) => (
+                  <SelectItem key={genre} value={genre}>
+                    {genre}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
-      <Select
-        value={filters.building}
-        onValueChange={(value) => handleFilterChange(value, "building")}
-      >
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder={t("book.building")} />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">All Buildings</SelectItem>
-          {uniqueValues.building.map((building) => (
-            <SelectItem key={building} value={building}>
-              {building}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+            <Select
+              value={filters.category}
+              onValueChange={(value) => handleFilterChange(value, "category")}
+            >
+              <SelectTrigger className={isMobile ? "w-full" : "w-[180px]"}>
+                <SelectValue placeholder={t("book.category")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Categories</SelectItem>
+                {uniqueValues.category.map((category) => (
+                  <SelectItem key={category} value={category}>
+                    {category}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select
+              value={filters.building}
+              onValueChange={(value) => handleFilterChange(value, "building")}
+            >
+              <SelectTrigger className={isMobile ? "w-full" : "w-[180px]"}>
+                <SelectValue placeholder={t("book.building")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Buildings</SelectItem>
+                {uniqueValues.building.map((building) => (
+                  <SelectItem key={building} value={building}>
+                    {building}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
     </div>
   );
 };
