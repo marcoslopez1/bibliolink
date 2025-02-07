@@ -1,3 +1,4 @@
+
 import { Navigate } from "react-router-dom";
 import { useAuth } from "@/providers/AuthProvider";
 import { useToast } from "@/components/ui/use-toast";
@@ -11,7 +12,7 @@ const AdminRoute = ({ children }: { children: React.ReactNode }) => {
   const { toast } = useToast();
   const { t } = useTranslation();
 
-  const { data: profile, isLoading, error } = useQuery({
+  const { data: profile, isLoading } = useQuery({
     queryKey: ["profile", session?.user.id],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -20,26 +21,21 @@ const AdminRoute = ({ children }: { children: React.ReactNode }) => {
         .eq("id", session?.user.id)
         .maybeSingle();
 
-      if (error) {
-        console.error("Error fetching admin status:", error);
-        throw error;
-      }
-      
-      console.log("Admin status:", data);
+      if (error) throw error;
       return data;
     },
     enabled: !!session?.user.id,
-    retry: 1,
+    staleTime: 30000, // Cache for 30 seconds
+    retry: false,
   });
 
-  if (error) {
-    console.error("Error in AdminRoute:", error);
+  if (!session) {
     toast({
-      title: t("error.title"),
-      description: t("error.description"),
+      title: t("auth.signInRequiredTitle"),
+      description: t("auth.signInRequiredDescription"),
       variant: "destructive",
     });
-    return <Navigate to="/" replace />;
+    return <Navigate to="/auth/signin" replace />;
   }
 
   if (isLoading) {
@@ -50,8 +46,7 @@ const AdminRoute = ({ children }: { children: React.ReactNode }) => {
     );
   }
 
-  if (!session || !profile?.is_admin) {
-    console.log("Access denied. Session:", !!session, "Is admin:", profile?.is_admin);
+  if (!profile?.is_admin) {
     toast({
       title: t("auth.adminRequiredTitle"),
       description: t("auth.adminRequiredDescription"),
