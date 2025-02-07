@@ -87,7 +87,7 @@ const BookFilters = ({ books, onFilterChange }: BookFiltersProps) => {
               <SelectTrigger className={isMobile ? "w-full" : "w-[180px]"}>
                 <SelectValue placeholder={t("book.genre")} />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white border shadow-lg z-50">
                 <SelectItem value="all">All Genres</SelectItem>
                 {uniqueValues.genre.map((genre) => (
                   <SelectItem key={genre} value={genre}>
@@ -104,7 +104,7 @@ const BookFilters = ({ books, onFilterChange }: BookFiltersProps) => {
               <SelectTrigger className={isMobile ? "w-full" : "w-[180px]"}>
                 <SelectValue placeholder={t("book.category")} />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white border shadow-lg z-50">
                 <SelectItem value="all">All Categories</SelectItem>
                 {uniqueValues.category.map((category) => (
                   <SelectItem key={category} value={category}>
@@ -121,7 +121,7 @@ const BookFilters = ({ books, onFilterChange }: BookFiltersProps) => {
               <SelectTrigger className={isMobile ? "w-full" : "w-[180px]"}>
                 <SelectValue placeholder={t("book.building")} />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white border shadow-lg z-50">
                 <SelectItem value="all">All Buildings</SelectItem>
                 {uniqueValues.building.map((building) => (
                   <SelectItem key={building} value={building}>
@@ -138,3 +138,4 @@ const BookFilters = ({ books, onFilterChange }: BookFiltersProps) => {
 };
 
 export default BookFilters;
+
