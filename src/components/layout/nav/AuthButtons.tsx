@@ -7,9 +7,10 @@ import { useToast } from "@/hooks/use-toast";
 
 interface AuthButtonsProps {
   session: boolean;
+  onItemClick?: () => void;
 }
 
-export const AuthButtons = ({ session }: AuthButtonsProps) => {
+export const AuthButtons = ({ session, onItemClick }: AuthButtonsProps) => {
   const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
@@ -23,8 +24,6 @@ export const AuthButtons = ({ session }: AuthButtonsProps) => {
       const { error } = await supabase.auth.signOut();
       
       if (error) {
-        // If there's an error but it's a session not found error, 
-        // we still want to clear the UI state and redirect
         if (error.message.includes('session_not_found')) {
           navigate('/auth/signin');
           toast({
@@ -32,18 +31,19 @@ export const AuthButtons = ({ session }: AuthButtonsProps) => {
           });
           return;
         }
-        // For other errors, show the error message
         throw error;
       }
       
-      // Successful logout
       navigate('/');
       toast({
         description: t("auth.signOutSuccess"),
       });
+      
+      if (onItemClick) {
+        onItemClick();
+      }
     } catch (error: any) {
       console.error("Sign out error:", error);
-      // For any other errors, show error message and redirect to sign in
       toast({
         description: error.message,
         variant: "destructive",
@@ -65,6 +65,7 @@ export const AuthButtons = ({ session }: AuthButtonsProps) => {
       <Link 
         to="/auth/signin" 
         className="inline-flex items-center space-x-2 text-gray-600 hover:text-primary"
+        onClick={onItemClick}
       >
         <LogIn className="h-4 w-4" />
         <span>{t("auth.signIn")}</span>
@@ -72,6 +73,7 @@ export const AuthButtons = ({ session }: AuthButtonsProps) => {
       <Link 
         to="/auth/signup" 
         className="inline-flex items-center space-x-2 text-gray-600 hover:text-primary"
+        onClick={onItemClick}
       >
         <UserPlus className="h-4 w-4" />
         <span>{t("auth.signUp")}</span>

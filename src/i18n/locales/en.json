@@ -1,4 +1,3 @@
-
 {
   "nav": {
     "home": "Home",
@@ -28,7 +27,8 @@
     "signInRequiredTitle": "Sign In Required",
     "signInRequiredDescription": "You need to sign in to access this section.",
     "adminRequiredTitle": "Admin Access Required",
-    "adminRequiredDescription": "You need admin privileges to access this section."
+    "adminRequiredDescription": "You need admin privileges to access this section.",
+    "signOutSuccess": "Successfully signed out!"
   },
   "book": {
     "bookId": "Book ID",
@@ -49,7 +49,11 @@
     "on": "on",
     "actions": {
       "reserve": "Reserve",
-      "return": "Return"
+      "return": "Return",
+      "reserveSuccessTitle": "Book Reserved",
+      "reserveSuccessDescription": "You have successfully reserved this book",
+      "returnSuccessTitle": "Book Returned",
+      "returnSuccessDescription": "You have successfully returned this book"
     }
   },
   "admin": {
@@ -71,7 +75,8 @@
     "copyright": "© 2024 Library App. All rights reserved.",
     "loading": "Loading...",
     "save": "Save",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "back": "Back"
   },
   "howItWorks": {
     "title": "How It Works",

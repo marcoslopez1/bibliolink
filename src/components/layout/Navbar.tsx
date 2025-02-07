@@ -47,7 +47,7 @@ const Navbar = () => {
           <div className="flex items-center space-x-4">
             <LanguageSwitcher />
             <div className="hidden sm:flex">
-              <AuthButtons session={!!session} />
+              <AuthButtons session={!!session} onItemClick={closeMenu} />
             </div>
             <button
               className="sm:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
@@ -58,14 +58,13 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Mobile menu */}
         {isMobile && isMenuOpen && (
           <div className="sm:hidden">
             <div className="pt-2 pb-3 space-y-1">
               <NavLinks isAdmin={profile?.is_admin} isMobile onItemClick={closeMenu} />
             </div>
             <div className="pt-4 pb-3 border-t border-gray-200">
-              <AuthButtons session={!!session} />
+              <AuthButtons session={!!session} onItemClick={closeMenu} />
             </div>
           </div>
         )}
