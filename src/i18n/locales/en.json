@@ -31,12 +31,25 @@
   },
   "book": {
     "bookId": "Book ID",
+    "title": "Title",
+    "author": "Author",
+    "genre": "Genre",
+    "category": "Category",
+    "pages": "Pages",
+    "publicationYear": "Publication Year",
+    "editorial": "Editorial",
+    "building": "Building",
+    "details": "Book Details",
     "status": {
       "available": "Available",
       "reserved": "Reserved"
     },
     "reservedBy": "Reserved by",
-    "on": "on"
+    "on": "on",
+    "actions": {
+      "reserve": "Reserve",
+      "return": "Return"
+    }
   },
   "admin": {
     "booksManagement": "Books Management",
@@ -46,8 +59,14 @@
     "delete": "Delete",
     "search": "Search books..."
   },
+  "search": {
+    "placeholder": "Search by title, author..."
+  },
   "common": {
-    "copyright": "© {year} Library App. All rights reserved."
+    "copyright": "© 2024 Library App. All rights reserved.",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel"
   },
   "howItWorks": {
     "title": "How It Works",

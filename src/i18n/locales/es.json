@@ -31,12 +31,25 @@
   },
   "book": {
     "bookId": "ID del Libro",
+    "title": "Título",
+    "author": "Autor",
+    "genre": "Género",
+    "category": "Categoría",
+    "pages": "Páginas",
+    "publicationYear": "Año de Publicación",
+    "editorial": "Editorial",
+    "building": "Edificio",
+    "details": "Detalles del Libro",
     "status": {
       "available": "Disponible",
       "reserved": "Reservado"
     },
     "reservedBy": "Reservado por",
-    "on": "el"
+    "on": "el",
+    "actions": {
+      "reserve": "Reservar",
+      "return": "Devolver"
+    }
   },
   "admin": {
     "booksManagement": "Gestión de Libros",
@@ -46,8 +59,14 @@
     "delete": "Eliminar",
     "search": "Buscar libros..."
   },
+  "search": {
+    "placeholder": "Buscar por título, autor..."
+  },
   "common": {
-    "copyright": "© {year} Biblioteca. Todos los derechos reservados."
+    "copyright": "© 2024 Biblioteca. Todos los derechos reservados.",
+    "loading": "Cargando...",
+    "save": "Guardar",
+    "cancel": "Cancelar"
   },
   "howItWorks": {
     "title": "Cómo Funciona",
