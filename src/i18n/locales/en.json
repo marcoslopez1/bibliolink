@@ -39,7 +39,15 @@
     "on": "on"
   },
   "admin": {
-    "booksManagement": "Books Management"
+    "booksManagement": "Books Management",
+    "downloadSelected": "Download Selected Books",
+    "newEntry": "New Entry",
+    "edit": "Edit",
+    "delete": "Delete",
+    "search": "Search books..."
+  },
+  "common": {
+    "copyright": "© {year} Library App. All rights reserved."
   },
   "howItWorks": {
     "title": "How It Works",

@@ -39,7 +39,15 @@
     "on": "el"
   },
   "admin": {
-    "booksManagement": "Gestión de Libros"
+    "booksManagement": "Gestión de Libros",
+    "downloadSelected": "Descargar Libros Seleccionados",
+    "newEntry": "Nueva Entrada",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "search": "Buscar libros..."
+  },
+  "common": {
+    "copyright": "© {year} Biblioteca. Todos los derechos reservados."
   },
   "howItWorks": {
     "title": "Cómo Funciona",
