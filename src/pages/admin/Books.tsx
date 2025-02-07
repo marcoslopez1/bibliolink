@@ -43,7 +43,7 @@ const ITEMS_PER_PAGE = 10;
 const AdminBooks = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
-  const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
+  const [debouncedSearchQuery] = useDebounce(searchQuery, 300);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState<any>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -54,10 +54,14 @@ const AdminBooks = () => {
   const { session } = useAuth();
 
   useEffect(() => {
-    if (!session) {
-      navigate('/');
-    }
-  }, [session, navigate]);
+    const checkAuth = async () => {
+      const { data: { session: currentSession } } = await supabase.auth.getSession();
+      if (!currentSession) {
+        navigate('/');
+      }
+    };
+    checkAuth();
+  }, [navigate]);
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["admin-books", currentPage, debouncedSearchQuery],
@@ -75,15 +79,18 @@ const AdminBooks = () => {
         );
       }
 
-      const { data: books, count } = await query
+      const { data: books, count, error } = await query
         .range(start, end)
         .order("id", { ascending: false });
+
+      if (error) throw error;
 
       return {
         books,
         totalPages: Math.ceil((count || 0) / ITEMS_PER_PAGE),
       };
     },
+    staleTime: 1000,
   });
 
   const handleDownload = async () => {

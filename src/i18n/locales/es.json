@@ -1,3 +1,4 @@
+
 {
   "nav": {
     "home": "Inicio",
@@ -40,10 +41,7 @@
     "editorial": "Editorial",
     "building": "Edificio",
     "details": "Detalles del Libro",
-    "status": {
-      "available": "Disponible",
-      "reserved": "Reservado"
-    },
+    "status": "Estado",
     "reservedBy": "Reservado por",
     "on": "el",
     "actions": {
