@@ -13,12 +13,20 @@ const BookGrid = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(0);
+  const [totalCount, setTotalCount] = useState<number | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get("q") || "";
   const { ref, inView } = useInView();
 
   const fetchBooks = async (start: number, searchTerm: string) => {
     try {
+      // If we already know the total count and we're trying to fetch beyond it, stop
+      if (totalCount !== null && start >= totalCount) {
+        setHasMore(false);
+        setIsLoading(false);
+        return;
+      }
+
       let query = supabase
         .from("books")
         .select("book_id, title, author, image_url, genre, status", { count: "exact" })
@@ -34,7 +42,6 @@ const BookGrid = () => {
         .range(start, start + ITEMS_PER_PAGE - 1);
 
       if (error) {
-        // If we get a range error, it means we've reached the end
         if (error.code === 'PGRST103') {
           setHasMore(false);
           setIsLoading(false);
@@ -43,13 +50,18 @@ const BookGrid = () => {
         throw error;
       }
 
+      // Store the total count when we get it
+      if (count !== null) {
+        setTotalCount(count);
+      }
+
       if (start === 0) {
         setBooks(data || []);
       } else {
         setBooks((prev) => [...prev, ...(data || [])]);
       }
 
-      // Only set hasMore to true if we have more items to fetch
+      // Check if we have more items to fetch
       setHasMore(count ? start + ITEMS_PER_PAGE < count : false);
       setIsLoading(false);
     } catch (error) {
@@ -64,16 +76,22 @@ const BookGrid = () => {
     setBooks([]);
     setHasMore(true);
     setIsLoading(true);
+    setTotalCount(null);
     fetchBooks(0, searchQuery);
   }, [searchQuery]);
 
   useEffect(() => {
     if (inView && hasMore && !isLoading) {
       const nextPage = page + 1;
-      setPage(nextPage);
-      fetchBooks(nextPage * ITEMS_PER_PAGE, searchQuery);
+      const nextStart = nextPage * ITEMS_PER_PAGE;
+      
+      // Double check we're not trying to fetch beyond total count
+      if (totalCount === null || nextStart < totalCount) {
+        setPage(nextPage);
+        fetchBooks(nextStart, searchQuery);
+      }
     }
-  }, [inView, hasMore, isLoading, page, searchQuery]);
+  }, [inView, hasMore, isLoading, page, searchQuery, totalCount]);
 
   const handleSearch = (term: string) => {
     setSearchParams(term ? { q: term } : {});
