@@ -2,30 +2,14 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/components/ui/use-toast";
-import { Input } from "@/components/ui/input";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { supabase } from "@/integrations/supabase/client";
 import { useDebounce } from "use-debounce";
+import { supabase } from "@/integrations/supabase/client";
 import BookForm from "@/components/admin/BookForm";
 import BookList from "@/components/admin/books/BookList";
 import BookHeader from "@/components/admin/books/BookHeader";
+import BookSearch from "@/components/admin/books/BookSearch";
+import BookPagination from "@/components/admin/books/BookPagination";
+import BookDeleteDialog from "@/components/admin/books/BookDeleteDialog";
 import { useBooks } from "@/hooks/admin/useBooks";
 
 const AdminBooks = () => {
@@ -112,12 +96,7 @@ const AdminBooks = () => {
         }}
       />
 
-      <Input
-        placeholder={t("admin.search")}
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        className="max-w-sm"
-      />
+      <BookSearch value={searchQuery} onChange={setSearchQuery} />
 
       <BookList
         books={data?.books || []}
@@ -131,38 +110,11 @@ const AdminBooks = () => {
         }}
       />
 
-      <Pagination>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
-            />
-          </PaginationItem>
-          {Array.from({ length: data?.totalPages || 0 }).map((_, index) => (
-            <PaginationItem key={index}>
-              <PaginationLink
-                onClick={() => setCurrentPage(index + 1)}
-                isActive={currentPage === index + 1}
-              >
-                {index + 1}
-              </PaginationLink>
-            </PaginationItem>
-          ))}
-          <PaginationItem>
-            <PaginationNext
-              onClick={() =>
-                setCurrentPage((p) => Math.min(data?.totalPages || 1, p + 1))
-              }
-              className={
-                currentPage === data?.totalPages
-                  ? "pointer-events-none opacity-50"
-                  : ""
-              }
-            />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+      <BookPagination
+        currentPage={currentPage}
+        totalPages={data?.totalPages || 1}
+        onPageChange={setCurrentPage}
+      />
 
       <BookForm
         book={selectedBook}
@@ -174,25 +126,11 @@ const AdminBooks = () => {
         onSave={refetch}
       />
 
-      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t("admin.delete")}</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to delete this book? This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
-            <AlertDialogAction 
-              onClick={handleDelete}
-              className="bg-[#ea384c] hover:bg-[#ea384c]/90"
-            >
-              {t("admin.delete")}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <BookDeleteDialog
+        isOpen={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+        onConfirm={handleDelete}
+      />
     </div>
   );
 };
