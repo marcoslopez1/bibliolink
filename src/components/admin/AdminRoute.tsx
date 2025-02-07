@@ -11,14 +11,14 @@ const AdminRoute = ({ children }: { children: React.ReactNode }) => {
   const { toast } = useToast();
   const { t } = useTranslation();
 
-  const { data: profile, isLoading } = useQuery({
+  const { data: profile, isLoading, error } = useQuery({
     queryKey: ["profile", session?.user.id],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
         .select("is_admin")
         .eq("id", session?.user.id)
-        .single();
+        .maybeSingle();
 
       if (error) {
         console.error("Error fetching admin status:", error);
@@ -29,7 +29,18 @@ const AdminRoute = ({ children }: { children: React.ReactNode }) => {
       return data;
     },
     enabled: !!session?.user.id,
+    retry: 1,
   });
+
+  if (error) {
+    console.error("Error in AdminRoute:", error);
+    toast({
+      title: t("error.title"),
+      description: t("error.description"),
+      variant: "destructive",
+    });
+    return <Navigate to="/" replace />;
+  }
 
   if (isLoading) {
     return (

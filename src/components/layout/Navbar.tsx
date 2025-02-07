@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "./LanguageSwitcher";
+import { LogIn, LogOut, BookCopy } from "lucide-react";
 
 const Navbar = () => {
   const location = useLocation();
@@ -17,9 +18,14 @@ const Navbar = () => {
         .from("profiles")
         .select("is_admin")
         .eq("id", session?.user.id)
-        .single();
+        .maybeSingle();
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching profile:", error);
+        throw error;
+      }
+      
+      console.log("Profile data:", data);
       return data;
     },
     enabled: !!session?.user.id,
@@ -55,9 +61,10 @@ const Navbar = () => {
               {profile?.is_admin && (
                 <Link
                   to="/admin/books"
-                  className={`inline-flex items-center px-1 pt-1 ${isActive("/admin/books")}`}
+                  className={`inline-flex items-center px-1 pt-1 space-x-2 ${isActive("/admin/books")}`}
                 >
-                  {t("admin.booksManagement")}
+                  <BookCopy className="h-4 w-4" />
+                  <span>{t("admin.booksManagement")}</span>
                 </Link>
               )}
             </div>
@@ -70,13 +77,18 @@ const Navbar = () => {
                 onClick={async () => {
                   await supabase.auth.signOut();
                 }}
-                className="text-gray-600 hover:text-primary"
+                className="inline-flex items-center space-x-2 text-gray-600 hover:text-primary"
               >
-                {t("auth.signOut")}
+                <LogOut className="h-4 w-4" />
+                <span>{t("auth.signOut")}</span>
               </Link>
             ) : (
-              <Link to="/auth/signin" className="text-gray-600 hover:text-primary">
-                {t("auth.signIn")}
+              <Link 
+                to="/auth/signin" 
+                className="inline-flex items-center space-x-2 text-gray-600 hover:text-primary"
+              >
+                <LogIn className="h-4 w-4" />
+                <span>{t("auth.signIn")}</span>
               </Link>
             )}
           </div>
