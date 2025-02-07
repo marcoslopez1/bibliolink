@@ -30,6 +30,8 @@ const Navbar = () => {
     enabled: !!session?.user.id,
   });
 
+  const closeMenu = () => setIsMenuOpen(false);
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -60,7 +62,7 @@ const Navbar = () => {
         {isMobile && isMenuOpen && (
           <div className="sm:hidden">
             <div className="pt-2 pb-3 space-y-1">
-              <NavLinks isAdmin={profile?.is_admin} isMobile />
+              <NavLinks isAdmin={profile?.is_admin} isMobile onItemClick={closeMenu} />
             </div>
             <div className="pt-4 pb-3 border-t border-gray-200">
               <AuthButtons session={!!session} />

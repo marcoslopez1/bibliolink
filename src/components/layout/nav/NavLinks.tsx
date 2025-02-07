@@ -6,9 +6,10 @@ import { BookCopy } from "lucide-react";
 interface NavLinksProps {
   isAdmin?: boolean;
   isMobile?: boolean;
+  onItemClick?: () => void;
 }
 
-export const NavLinks = ({ isAdmin, isMobile }: NavLinksProps) => {
+export const NavLinks = ({ isAdmin, isMobile, onItemClick }: NavLinksProps) => {
   const location = useLocation();
   const { t } = useTranslation();
 
@@ -21,14 +22,25 @@ export const NavLinks = ({ isAdmin, isMobile }: NavLinksProps) => {
     ? "block px-3 py-2 text-base font-medium"
     : "inline-flex items-center px-1 pt-1";
 
+  const handleClick = () => {
+    if (onItemClick) {
+      onItemClick();
+    }
+  };
+
   return (
     <div className={isMobile ? "space-y-1" : "hidden sm:ml-6 sm:flex sm:space-x-8"}>
-      <Link to="/" className={`${baseStyles} ${isActive("/")}`}>
+      <Link 
+        to="/" 
+        className={`${baseStyles} ${isActive("/")}`}
+        onClick={handleClick}
+      >
         {t("nav.home")}
       </Link>
       <Link
         to="/how-it-works"
         className={`${baseStyles} ${isActive("/how-it-works")}`}
+        onClick={handleClick}
       >
         {t("nav.howItWorks")}
       </Link>
@@ -36,6 +48,7 @@ export const NavLinks = ({ isAdmin, isMobile }: NavLinksProps) => {
         <Link
           to="/admin/books"
           className={`${baseStyles} ${isActive("/admin/books")} space-x-2`}
+          onClick={handleClick}
         >
           <BookCopy className="h-4 w-4 inline-block" />
           <span>{t("admin.booksManagement")}</span>
