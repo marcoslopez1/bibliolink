@@ -23,9 +23,9 @@ interface BookFiltersProps {
 const BookFilters = ({ books, onFilterChange }: BookFiltersProps) => {
   const { t } = useTranslation();
   const [filters, setFilters] = useState<FilterState>({
-    genre: "",
-    category: "",
-    building: "",
+    genre: "all",
+    category: "all",
+    building: "all",
   });
 
   // Get unique values for each filter
@@ -54,7 +54,7 @@ const BookFilters = ({ books, onFilterChange }: BookFiltersProps) => {
           <SelectValue placeholder={t("book.genre")} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">All Genres</SelectItem>
+          <SelectItem value="all">All Genres</SelectItem>
           {uniqueValues.genre.map((genre) => (
             <SelectItem key={genre} value={genre}>
               {genre}
@@ -71,7 +71,7 @@ const BookFilters = ({ books, onFilterChange }: BookFiltersProps) => {
           <SelectValue placeholder={t("book.category")} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">All Categories</SelectItem>
+          <SelectItem value="all">All Categories</SelectItem>
           {uniqueValues.category.map((category) => (
             <SelectItem key={category} value={category}>
               {category}
@@ -88,7 +88,7 @@ const BookFilters = ({ books, onFilterChange }: BookFiltersProps) => {
           <SelectValue placeholder={t("book.building")} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">All Buildings</SelectItem>
+          <SelectItem value="all">All Buildings</SelectItem>
           {uniqueValues.building.map((building) => (
             <SelectItem key={building} value={building}>
               {building}

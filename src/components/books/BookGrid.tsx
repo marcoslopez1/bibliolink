@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { useSearchParams } from "react-router-dom";
@@ -25,9 +24,9 @@ const BookGrid = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get("q") || "";
   const [filters, setFilters] = useState<FilterState>({
-    genre: "",
-    category: "",
-    building: "",
+    genre: "all",
+    category: "all",
+    building: "all",
   });
   const { ref, inView } = useInView();
 
@@ -50,14 +49,14 @@ const BookGrid = () => {
         );
       }
 
-      // Apply filters
-      if (filters.genre) {
+      // Apply filters only if they're not set to "all"
+      if (filters.genre !== "all") {
         query = query.eq('genre', filters.genre);
       }
-      if (filters.category) {
+      if (filters.category !== "all") {
         query = query.eq('category', filters.category);
       }
-      if (filters.building) {
+      if (filters.building !== "all") {
         query = query.eq('building', filters.building);
       }
 
@@ -141,4 +140,3 @@ const BookGrid = () => {
 };
 
 export default BookGrid;
-
