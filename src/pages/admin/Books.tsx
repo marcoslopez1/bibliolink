@@ -11,6 +11,7 @@ import BookSearch from "@/components/admin/books/BookSearch";
 import BookPagination from "@/components/admin/books/BookPagination";
 import BookDeleteDialog from "@/components/admin/books/BookDeleteDialog";
 import { useBooks } from "@/hooks/admin/useBooks";
+import { downloadBooks } from "@/utils/download";
 
 const AdminBooks = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -28,24 +29,7 @@ const AdminBooks = () => {
   const handleDownload = async () => {
     try {
       if (!data?.books) return;
-
-      const csvContent = [
-        Object.keys(data.books[0]).join(","),
-        ...data.books.map((book) =>
-          Object.values(book)
-            .map((value) => `"${value}"`)
-            .join(",")
-        ),
-      ].join("\n");
-
-      const blob = new Blob([csvContent], { type: "text/csv" });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "books.csv");
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+      downloadBooks(data.books);
     } catch (error: any) {
       toast({
         variant: "destructive",
