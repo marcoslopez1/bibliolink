@@ -1,3 +1,4 @@
+
 {
   "nav": {
     "home": "Home",
@@ -57,7 +58,11 @@
     "newEntry": "New Entry",
     "edit": "Edit",
     "delete": "Delete",
-    "search": "Search books..."
+    "search": "Search books...",
+    "bookCreated": "Book created successfully",
+    "bookUpdated": "Book updated successfully",
+    "editBookDescription": "Make changes to this book's information below.",
+    "newBookDescription": "Add a new book to the library by filling out the information below."
   },
   "search": {
     "placeholder": "Search by title, author..."

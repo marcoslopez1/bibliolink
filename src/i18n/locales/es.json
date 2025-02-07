@@ -55,7 +55,11 @@
     "newEntry": "Nueva Entrada",
     "edit": "Editar",
     "delete": "Eliminar",
-    "search": "Buscar libros..."
+    "search": "Buscar libros...",
+    "bookCreated": "Libro creado exitosamente",
+    "bookUpdated": "Libro actualizado exitosamente",
+    "editBookDescription": "Realiza cambios en la información del libro a continuación.",
+    "newBookDescription": "Agrega un nuevo libro a la biblioteca completando la información a continuación."
   },
   "search": {
     "placeholder": "Buscar por título, autor..."
