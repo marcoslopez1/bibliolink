@@ -1,98 +1,11 @@
 {
-  "common": {
-    "library": "Library",
-    "catalog": "Catalog",
-    "latest": "Latest",
-    "howItWorks": "How It Works",
-    "signIn": "Sign In",
-    "signUp": "Sign Up",
-    "signOut": "Sign Out",
-    "copyright": "© {{year}} Library App. All rights reserved.",
-    "back": "Back"
-  },
   "auth": {
-    "success": "Success",
-    "error": "Error",
-    "signIn": "Sign In",
-    "signUp": "Sign Up",
-    "signOut": "Sign Out",
-    "signOutSuccess": "You have been signed out successfully",
-    "signOutError": "Error signing out",
-    "signInSuccess": "You have been signed in successfully",
-    "signInError": "Error signing in",
-    "signInRequiredTitle": "Authentication required",
-    "signInRequiredDescription": "Please sign in to access this page",
-    "signUpSuccess": "Please check your email to confirm your account",
-    "signUpError": "Error signing up",
-    "welcomeBack": "Welcome back!",
-    "createAccount": "Create your account",
-    "email": "Email",
-    "password": "Password",
-    "firstName": "First Name",
-    "lastName": "Last Name",
-    "forgotPassword": "Forgot your password?",
-    "signingIn": "Signing in...",
-    "signingUp": "Signing up...",
-    "noAccount": "Don't have an account?",
-    "haveAccount": "Already have an account?",
-    "resetPassword": "Reset Password",
-    "resetPasswordInstructions": "Enter your email to reset your password",
-    "resetPasswordSuccess": "Check your email for the password reset link",
-    "resetPasswordError": "Error resetting password",
-    "sendResetLink": "Send Reset Link",
-    "sendingResetLink": "Sending reset link...",
-    "rememberPassword": "Remember your password?"
+    "signInRequiredTitle": "Sign In Required",
+    "signInRequiredDescription": "You need to sign in to access this section.",
+    "adminRequiredTitle": "Admin Access Required",
+    "adminRequiredDescription": "You need admin privileges to access this section."
   },
-  "book": {
-    "bookId": "Book ID",
-    "title": "Title",
-    "author": "Author",
-    "genre": "Genre",
-    "category": "Category",
-    "pages": "Pages",
-    "publicationYear": "Publication Year",
-    "editorial": "Editorial",
-    "building": "Building",
-    "status": {
-      "available": "Available",
-      "reserved": "Reserved"
-    },
-    "actions": {
-      "reserve": "Reserve Book",
-      "return": "Return Book",
-      "reserveSuccessTitle": "Success",
-      "reserveSuccessDescription": "Book reserved successfully",
-      "returnSuccessTitle": "Success",
-      "returnSuccessDescription": "Book returned successfully"
-    },
-    "details": "Book details",
-    "reservedBy": "Reserved by",
-    "on": "on",
-    "externalReference": "External Reference"
-  },
-  "search": {
-    "placeholder": "Search by title, author, genre or category..."
-  },
-  "howItWorks": {
-    "title": "How It Works",
-    "subtitle": "Our library management system makes it easy to discover, borrow, and enjoy books. Here's how to get started.",
-    "features": {
-      "browse": {
-        "title": "Browse the Catalog",
-        "description": "Explore our extensive collection of books across various genres and topics."
-      },
-      "account": {
-        "title": "Create an Account",
-        "description": "Sign up to reserve books, track your reading history, and get personalized recommendations. Some of these features comming soon."
-      },
-      "reserve": {
-        "title": "Reserve & Borrow",
-        "description": "Reserve books online and pick them up at your convenience."
-      },
-      "share": {
-        "title": "Share with others",
-        "description": "Recommend your favorite books and help others discover great reads."
-      }
-    }
+  "admin": {
+    "booksManagement": "Books Management"
   }
 }

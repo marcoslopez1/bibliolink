@@ -105,6 +105,7 @@ export type Database = {
           email: string
           first_name: string
           id: string
+          is_admin: boolean
           last_name: string
           updated_at: string
         }
@@ -113,6 +114,7 @@ export type Database = {
           email: string
           first_name: string
           id: string
+          is_admin?: boolean
           last_name: string
           updated_at?: string
         }
@@ -121,6 +123,7 @@ export type Database = {
           email?: string
           first_name?: string
           id?: string
+          is_admin?: boolean
           last_name?: string
           updated_at?: string
         }

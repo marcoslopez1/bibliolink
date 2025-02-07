@@ -13,6 +13,8 @@ import SignIn from "./pages/auth/SignIn";
 import SignUp from "./pages/auth/SignUp";
 import ResetPassword from "./pages/auth/ResetPassword";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import AdminRoute from "./components/admin/AdminRoute";
+import AdminBooks from "./pages/admin/Books";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +39,14 @@ const App = () => (
                   <ProtectedRoute>
                     <BookDetail />
                   </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/books"
+                element={
+                  <AdminRoute>
+                    <AdminBooks />
+                  </AdminRoute>
                 }
               />
               <Route path="*" element={<NotFound />} />
