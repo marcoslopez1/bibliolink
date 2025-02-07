@@ -10,6 +10,12 @@ import BookFilters from "./BookFilters";
 
 const ITEMS_PER_PAGE = 12;
 
+interface FilterState {
+  genre: string;
+  category: string;
+  building: string;
+}
+
 const BookGrid = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -18,7 +24,7 @@ const BookGrid = () => {
   const [totalCount, setTotalCount] = useState<number | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get("q") || "";
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<FilterState>({
     genre: "",
     category: "",
     building: "",
@@ -111,7 +117,7 @@ const BookGrid = () => {
     setSearchParams(term ? { q: term } : {});
   };
 
-  const handleFilterChange = (newFilters: { [key: string]: string }) => {
+  const handleFilterChange = (newFilters: FilterState) => {
     setFilters(newFilters);
   };
 
@@ -135,3 +141,4 @@ const BookGrid = () => {
 };
 
 export default BookGrid;
+

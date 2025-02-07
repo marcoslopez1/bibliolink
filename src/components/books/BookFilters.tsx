@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Select,
   SelectContent,
@@ -7,16 +7,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useTranslation } from "react-i18next";
+
+interface FilterState {
+  genre: string;
+  category: string;
+  building: string;
+}
 
 interface BookFiltersProps {
   books: any[];
-  onFilterChange: (filters: { [key: string]: string }) => void;
+  onFilterChange: (filters: FilterState) => void;
 }
 
 const BookFilters = ({ books, onFilterChange }: BookFiltersProps) => {
   const { t } = useTranslation();
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<FilterState>({
     genre: "",
     category: "",
     building: "",
@@ -29,7 +34,7 @@ const BookFilters = ({ books, onFilterChange }: BookFiltersProps) => {
     building: Array.from(new Set(books.map((book) => book.building))),
   };
 
-  const handleFilterChange = (value: string, type: string) => {
+  const handleFilterChange = (value: string, type: keyof FilterState) => {
     const newFilters = {
       ...filters,
       [type]: value,
@@ -95,3 +100,4 @@ const BookFilters = ({ books, onFilterChange }: BookFiltersProps) => {
 };
 
 export default BookFilters;
+
