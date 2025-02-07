@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -34,17 +34,26 @@ const BookForm = ({ book, isOpen, onClose, onSave }: BookFormProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      // Convert numeric fields to integers
+      const processedData = {
+        ...formData,
+        pages: parseInt(formData.pages.toString()),
+        publication_year: parseInt(formData.publication_year.toString())
+      };
+
       if (book) {
         const { error } = await supabase
           .from("books")
-          .update(formData)
+          .update(processedData)
           .eq("id", book.id);
         if (error) throw error;
-        toast({ description: "Book updated successfully" });
+        toast({ description: t("admin.bookUpdated") });
       } else {
-        const { error } = await supabase.from("books").insert([formData]);
+        const { error } = await supabase
+          .from("books")
+          .insert([processedData]);
         if (error) throw error;
-        toast({ description: "Book created successfully" });
+        toast({ description: t("admin.bookCreated") });
       }
       onSave();
       onClose();
@@ -63,6 +72,9 @@ const BookForm = ({ book, isOpen, onClose, onSave }: BookFormProps) => {
           <DialogTitle>
             {book ? t("admin.edit") : t("admin.newEntry")}
           </DialogTitle>
+          <DialogDescription>
+            {book ? t("admin.editBookDescription") : t("admin.newBookDescription")}
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <BookFormFields formData={formData} setFormData={setFormData} />
@@ -74,4 +86,3 @@ const BookForm = ({ book, isOpen, onClose, onSave }: BookFormProps) => {
 };
 
 export default BookForm;
-
