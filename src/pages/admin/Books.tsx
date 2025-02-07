@@ -1,7 +1,5 @@
 
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useDebounce } from "use-debounce";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
@@ -24,6 +22,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { supabase } from "@/integrations/supabase/client";
+import { useDebounce } from "use-debounce";
 import BookForm from "@/components/admin/BookForm";
 import BookList from "@/components/admin/books/BookList";
 import BookHeader from "@/components/admin/books/BookHeader";
@@ -39,17 +38,6 @@ const AdminBooks = () => {
   const [bookToDelete, setBookToDelete] = useState<any>(null);
   const { t } = useTranslation();
   const { toast } = useToast();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      const { data: { session: currentSession } } = await supabase.auth.getSession();
-      if (!currentSession) {
-        navigate('/');
-      }
-    };
-    checkAuth();
-  }, [navigate]);
 
   const { data, isLoading, refetch } = useBooks(currentPage, debouncedSearchQuery);
 

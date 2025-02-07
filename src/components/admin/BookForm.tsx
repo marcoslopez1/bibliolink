@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/components/ui/use-toast";
@@ -18,23 +18,58 @@ const BookForm = ({ book, isOpen, onClose, onSave }: BookFormProps) => {
   const { t } = useTranslation();
   const { toast } = useToast();
   const [formData, setFormData] = useState({
-    title: book?.title || "",
-    author: book?.author || "",
-    genre: book?.genre || "",
-    category: book?.category || "",
-    pages: book?.pages || "",
-    publication_year: book?.publication_year || "",
-    editorial: book?.editorial || "",
-    building: book?.building || "",
-    book_id: book?.book_id || "",
-    image_url: book?.image_url || "",
-    external_url: book?.external_url || "",
+    title: "",
+    author: "",
+    genre: "",
+    category: "",
+    pages: "",
+    publication_year: "",
+    editorial: "",
+    building: "",
+    book_id: "",
+    image_url: "",
+    external_url: "",
   });
+
+  // Update form when book prop changes or dialog opens
+  useEffect(() => {
+    if (isOpen) {
+      if (book) {
+        setFormData({
+          title: book.title || "",
+          author: book.author || "",
+          genre: book.genre || "",
+          category: book.category || "",
+          pages: book.pages || "",
+          publication_year: book.publication_year || "",
+          editorial: book.editorial || "",
+          building: book.building || "",
+          book_id: book.book_id || "",
+          image_url: book.image_url || "",
+          external_url: book.external_url || "",
+        });
+      } else {
+        // Reset form for new entries
+        setFormData({
+          title: "",
+          author: "",
+          genre: "",
+          category: "",
+          pages: "",
+          publication_year: "",
+          editorial: "",
+          building: "",
+          book_id: "",
+          image_url: "",
+          external_url: "",
+        });
+      }
+    }
+  }, [isOpen, book]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // Convert numeric fields to integers
       const processedData = {
         ...formData,
         pages: parseInt(formData.pages.toString()),
