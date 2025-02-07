@@ -1,15 +1,10 @@
 
 import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { useNavigate } from "react-router-dom";
+import { useDebounce } from "use-debounce";
+import { useTranslation } from "react-i18next";
+import { useToast } from "@/components/ui/use-toast";
+import { Input } from "@/components/ui/input";
 import {
   Pagination,
   PaginationContent,
@@ -18,12 +13,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useTranslation } from "react-i18next";
-import { useToast } from "@/components/ui/use-toast";
-import BookForm from "@/components/admin/BookForm";
-import { Pencil, Trash2, Download, Plus, ExternalLink, Image } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -34,11 +23,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/providers/AuthProvider";
-import { useDebounce } from "use-debounce";
-
-const ITEMS_PER_PAGE = 10;
+import { supabase } from "@/integrations/supabase/client";
+import BookForm from "@/components/admin/BookForm";
+import BookList from "@/components/admin/books/BookList";
+import BookHeader from "@/components/admin/books/BookHeader";
+import { useBooks } from "@/hooks/admin/useBooks";
 
 const AdminBooks = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -51,7 +40,6 @@ const AdminBooks = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { session } = useAuth();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -63,35 +51,7 @@ const AdminBooks = () => {
     checkAuth();
   }, [navigate]);
 
-  const { data, isLoading, refetch } = useQuery({
-    queryKey: ["admin-books", currentPage, debouncedSearchQuery],
-    queryFn: async () => {
-      const start = (currentPage - 1) * ITEMS_PER_PAGE;
-      const end = start + ITEMS_PER_PAGE - 1;
-
-      let query = supabase
-        .from("books")
-        .select("*", { count: "exact" });
-
-      if (debouncedSearchQuery) {
-        query = query.or(
-          `title.ilike.%${debouncedSearchQuery}%,author.ilike.%${debouncedSearchQuery}%,genre.ilike.%${debouncedSearchQuery}%,category.ilike.%${debouncedSearchQuery}%,book_id.ilike.%${debouncedSearchQuery}%,editorial.ilike.%${debouncedSearchQuery}%,building.ilike.%${debouncedSearchQuery}%`
-        );
-      }
-
-      const { data: books, count, error } = await query
-        .range(start, end)
-        .order("id", { ascending: false });
-
-      if (error) throw error;
-
-      return {
-        books,
-        totalPages: Math.ceil((count || 0) / ITEMS_PER_PAGE),
-      };
-    },
-    staleTime: 1000,
-  });
+  const { data, isLoading, refetch } = useBooks(currentPage, debouncedSearchQuery);
 
   const handleDownload = async () => {
     try {
@@ -156,28 +116,13 @@ const AdminBooks = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-semibold">{t("admin.booksManagement")}</h1>
-        <div className="flex space-x-2">
-          <Button 
-            onClick={handleDownload}
-            className="bg-[#D3E4FD] text-primary hover:bg-[#D3E4FD]/90"
-          >
-            <Download className="h-4 w-4 mr-2" />
-            {t("admin.downloadSelected")}
-          </Button>
-          <Button 
-            onClick={() => {
-              setSelectedBook(null);
-              setIsFormOpen(true);
-            }}
-            className="bg-[#F2FCE2] text-primary hover:bg-[#F2FCE2]/90"
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            {t("admin.newEntry")}
-          </Button>
-        </div>
-      </div>
+      <BookHeader
+        onDownload={handleDownload}
+        onNewBook={() => {
+          setSelectedBook(null);
+          setIsFormOpen(true);
+        }}
+      />
 
       <Input
         placeholder={t("admin.search")}
@@ -186,88 +131,17 @@ const AdminBooks = () => {
         className="max-w-sm"
       />
 
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>{t("book.bookId")}</TableHead>
-              <TableHead>{t("book.title")}</TableHead>
-              <TableHead>{t("book.author")}</TableHead>
-              <TableHead>{t("book.genre")}</TableHead>
-              <TableHead>{t("book.category")}</TableHead>
-              <TableHead>{t("book.pages")}</TableHead>
-              <TableHead>{t("book.publicationYear")}</TableHead>
-              <TableHead>{t("book.editorial")}</TableHead>
-              <TableHead>{t("book.status")}</TableHead>
-              <TableHead>{t("book.building")}</TableHead>
-              <TableHead>Links</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {data?.books?.map((book) => (
-              <TableRow key={book.id}>
-                <TableCell>{book.book_id}</TableCell>
-                <TableCell>{book.title}</TableCell>
-                <TableCell>{book.author}</TableCell>
-                <TableCell>{book.genre}</TableCell>
-                <TableCell>{book.category}</TableCell>
-                <TableCell>{book.pages}</TableCell>
-                <TableCell>{book.publication_year}</TableCell>
-                <TableCell>{book.editorial}</TableCell>
-                <TableCell>{book.status}</TableCell>
-                <TableCell>{book.building}</TableCell>
-                <TableCell>
-                  <div className="flex space-x-2">
-                    {book.external_url && (
-                      <a
-                        href={book.external_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-primary hover:text-primary/80"
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                      </a>
-                    )}
-                    {book.image_url && (
-                      <a
-                        href={book.image_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-primary hover:text-primary/80"
-                      >
-                        <Image className="h-4 w-4" />
-                      </a>
-                    )}
-                  </div>
-                </TableCell>
-                <TableCell className="text-right">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => {
-                      setSelectedBook(book);
-                      setIsFormOpen(true);
-                    }}
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => {
-                      setBookToDelete(book);
-                      setIsDeleteDialogOpen(true);
-                    }}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+      <BookList
+        books={data?.books || []}
+        onEdit={(book) => {
+          setSelectedBook(book);
+          setIsFormOpen(true);
+        }}
+        onDelete={(book) => {
+          setBookToDelete(book);
+          setIsDeleteDialogOpen(true);
+        }}
+      />
 
       <Pagination>
         <PaginationContent>
