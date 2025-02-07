@@ -33,7 +33,15 @@ const BookGrid = () => {
       const { data, count, error } = await query
         .range(start, start + ITEMS_PER_PAGE - 1);
 
-      if (error) throw error;
+      if (error) {
+        // If we get a range error, it means we've reached the end
+        if (error.code === 'PGRST103') {
+          setHasMore(false);
+          setIsLoading(false);
+          return;
+        }
+        throw error;
+      }
 
       if (start === 0) {
         setBooks(data || []);
@@ -41,11 +49,13 @@ const BookGrid = () => {
         setBooks((prev) => [...prev, ...(data || [])]);
       }
 
+      // Only set hasMore to true if we have more items to fetch
       setHasMore(count ? start + ITEMS_PER_PAGE < count : false);
       setIsLoading(false);
     } catch (error) {
       console.error("Error fetching books:", error);
       setIsLoading(false);
+      setHasMore(false);
     }
   };
 
