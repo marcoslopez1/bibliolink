@@ -3,6 +3,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { Pencil, Trash2, ExternalLink, Image } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 interface BookListProps {
   books: any[];
@@ -35,7 +36,14 @@ const BookList = ({ books, onEdit, onDelete }: BookListProps) => {
         <TableBody>
           {books?.map((book) => (
             <TableRow key={book.id}>
-              <TableCell>{book.book_id}</TableCell>
+              <TableCell>
+                <Link 
+                  to={`/book/${book.book_id}`}
+                  className="text-primary hover:underline"
+                >
+                  {book.book_id}
+                </Link>
+              </TableCell>
               <TableCell>{book.title}</TableCell>
               <TableCell>{book.author}</TableCell>
               <TableCell>{book.genre}</TableCell>

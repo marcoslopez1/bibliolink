@@ -1,7 +1,9 @@
+
 {
   "nav": {
     "home": "Inicio",
-    "howItWorks": "Cómo Funciona"
+    "howItWorks": "Cómo Funciona",
+    "myBooks": "Mis Libros"
   },
   "auth": {
     "signIn": "Iniciar Sesión",
@@ -41,7 +43,10 @@
     "editorial": "Editorial",
     "building": "Edificio",
     "details": "Detalles del Libro",
-    "status": "Estado",
+    "status": {
+      "available": "Disponible",
+      "reserved": "Reservado"
+    },
     "reservedBy": "Reservado por",
     "on": "el",
     "actions": {
@@ -52,6 +57,14 @@
       "returnSuccessTitle": "Libro Devuelto",
       "returnSuccessDescription": "Has devuelto el libro exitosamente"
     }
+  },
+  "myBooks": {
+    "title": "Mis Libros",
+    "noBooks": "Aún no has reservado ningún libro",
+    "reserved": "Reservado",
+    "returned": "Devuelto",
+    "reservedOn": "Reservado el",
+    "returnedOn": "Devuelto el"
   },
   "admin": {
     "booksManagement": "Gestión de Libros",

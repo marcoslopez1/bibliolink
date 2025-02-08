@@ -1,15 +1,16 @@
 
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { BookCopy } from "lucide-react";
+import { BookCopy, Library } from "lucide-react";
 
 interface NavLinksProps {
   isAdmin?: boolean;
   isMobile?: boolean;
   onItemClick?: () => void;
+  session?: boolean;
 }
 
-export const NavLinks = ({ isAdmin, isMobile, onItemClick }: NavLinksProps) => {
+export const NavLinks = ({ isAdmin, isMobile, onItemClick, session }: NavLinksProps) => {
   const location = useLocation();
   const { t } = useTranslation();
 
@@ -44,6 +45,16 @@ export const NavLinks = ({ isAdmin, isMobile, onItemClick }: NavLinksProps) => {
       >
         {t("nav.howItWorks")}
       </Link>
+      {session && (
+        <Link
+          to="/my-books"
+          className={`${baseStyles} ${isActive("/my-books")} space-x-2`}
+          onClick={handleClick}
+        >
+          <Library className="h-4 w-4 inline-block" />
+          <span>{t("nav.myBooks")}</span>
+        </Link>
+      )}
       {isAdmin && (
         <Link
           to="/admin/books"

@@ -1,7 +1,9 @@
+
 {
   "nav": {
     "home": "Home",
-    "howItWorks": "How It Works"
+    "howItWorks": "How It Works",
+    "myBooks": "My Books"
   },
   "auth": {
     "signIn": "Sign In",
@@ -55,6 +57,14 @@
       "returnSuccessTitle": "Book Returned",
       "returnSuccessDescription": "You have successfully returned this book"
     }
+  },
+  "myBooks": {
+    "title": "My Books",
+    "noBooks": "You haven't reserved any books yet",
+    "reserved": "Reserved",
+    "returned": "Returned",
+    "reservedOn": "Reserved on",
+    "returnedOn": "Returned on"
   },
   "admin": {
     "booksManagement": "Books Management",

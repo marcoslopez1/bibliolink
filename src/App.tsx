@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -15,6 +16,7 @@ import ResetPassword from "./pages/auth/ResetPassword";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import AdminRoute from "./components/admin/AdminRoute";
 import AdminBooks from "./pages/admin/Books";
+import MyBooks from "./pages/MyBooks";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +35,14 @@ const App = () => (
               <Route path="/auth/signin" element={<SignIn />} />
               <Route path="/auth/signup" element={<SignUp />} />
               <Route path="/auth/reset-password" element={<ResetPassword />} />
+              <Route
+                path="/my-books"
+                element={
+                  <ProtectedRoute>
+                    <MyBooks />
+                  </ProtectedRoute>
+                }
+              />
               <Route
                 path="/book/:id"
                 element={

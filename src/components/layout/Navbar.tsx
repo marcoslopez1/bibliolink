@@ -41,7 +41,7 @@ const Navbar = () => {
               <NavLogo />
             </div>
             <div className="hidden sm:flex">
-              <NavLinks isAdmin={profile?.is_admin} />
+              <NavLinks isAdmin={profile?.is_admin} session={!!session} />
             </div>
           </div>
           <div className="flex items-center space-x-4">
@@ -61,7 +61,7 @@ const Navbar = () => {
         {isMobile && isMenuOpen && (
           <div className="sm:hidden">
             <div className="pt-2 pb-3 space-y-1">
-              <NavLinks isAdmin={profile?.is_admin} isMobile onItemClick={closeMenu} />
+              <NavLinks isAdmin={profile?.is_admin} isMobile onItemClick={closeMenu} session={!!session} />
             </div>
             <div className="pt-4 pb-3 border-t border-gray-200">
               <AuthButtons session={!!session} onItemClick={closeMenu} />
