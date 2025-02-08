@@ -23,7 +23,8 @@ const MyBooks = () => {
             title,
             author,
             status,
-            book_id
+            book_id,
+            image_url
           )
         `)
         .eq("user_id", session?.user.id)
@@ -50,7 +51,7 @@ const MyBooks = () => {
         {reservations?.map((reservation) => (
           <Card key={reservation.id} className="p-4">
             <div className="flex flex-col sm:flex-row justify-between gap-4">
-              <div className="space-y-2">
+              <div className="flex-grow space-y-2">
                 <Link
                   to={`/book/${reservation.books.book_id}`}
                   className="text-xl font-semibold hover:text-primary transition-colors"
@@ -58,20 +59,16 @@ const MyBooks = () => {
                   {reservation.books.title}
                 </Link>
                 <p className="text-gray-600">{reservation.books.author}</p>
-              </div>
-              <div className="flex flex-col sm:items-end gap-2">
-                <div className="flex items-center gap-2">
-                  <Badge variant={reservation.returned_at ? "secondary" : "default"}>
+                <div className="flex flex-wrap gap-2">
+                  <Badge 
+                    variant="outline"
+                    className={reservation.returned_at 
+                      ? "bg-[#F2FCE2] border-[#F2FCE2] text-black"
+                      : "bg-[#fde7e9] border-[#fde7e9] text-black"}
+                  >
                     {reservation.returned_at 
                       ? t("myBooks.returned")
                       : t("myBooks.reserved")}
-                  </Badge>
-                  <Badge 
-                    variant={reservation.books.status === "available" ? "outline" : "destructive"}
-                  >
-                    {reservation.books.status === "available" 
-                      ? t("book.status.available")
-                      : t("book.status.reserved")}
                   </Badge>
                 </div>
                 <div className="text-sm text-gray-500">
@@ -88,10 +85,17 @@ const MyBooks = () => {
                   )}
                 </div>
               </div>
+              <div className="sm:w-32 h-32 sm:h-40">
+                <img
+                  src={reservation.books.image_url || "/placeholder.svg"}
+                  alt={reservation.books.title}
+                  className="w-full h-full object-cover rounded-lg"
+                />
+              </div>
             </div>
           </Card>
         ))}
-        {reservations?.length === 0 && (
+        {(!reservations || reservations.length === 0) && (
           <div className="text-center py-12">
             <p className="text-gray-500">{t("myBooks.noBooks")}</p>
           </div>
