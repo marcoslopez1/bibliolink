@@ -1,21 +1,16 @@
-import { useNavigate, useParams } from "react-router-dom";
+
+import { useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/providers/AuthProvider";
 import { useEffect } from "react";
-import { BookHeader } from "@/components/books/BookHeader";
-import { BookDetails } from "@/components/books/BookDetails";
-import { BookImage } from "@/components/books/BookImage";
-import { BookActions } from "@/components/books/BookActions";
-import { ExternalReference } from "@/components/books/ExternalReference";
 import { useTranslation } from "react-i18next";
+import { BookDetailHeader } from "@/components/books/detail/BookDetailHeader";
+import { BookDetailContent } from "@/components/books/detail/BookDetailContent";
 
 const BookDetail = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
   const { toast } = useToast();
   const { session } = useAuth();
   const queryClient = useQueryClient();
@@ -94,8 +89,8 @@ const BookDetail = () => {
   const handleStatusChange = async () => {
     if (!session?.user) {
       toast({
-        title: "Authentication required",
-        description: "Please sign in to reserve books",
+        title: t("auth.signInRequired"),
+        description: t("auth.signInToReserve"),
         variant: "destructive",
       });
       return;
@@ -175,50 +170,13 @@ const BookDetail = () => {
 
   return (
     <div className="container px-6 py-4">
-      <Button
-        variant="ghost"
-        size="sm"
-        className="mb-4"
-        onClick={() => navigate(-1)}
-      >
-        <ArrowLeft className="mr-2 h-4 w-4" />
-        {t("common.back")}
-      </Button>
-
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-        <BookImage
-          imageUrl={book.image_url}
-          title={book.title}
-          status={book.status}
-        />
-
-        <div className="md:col-span-3 space-y-6">
-          <BookHeader
-            bookId={book.book_id}
-            title={book.title}
-            author={book.author}
-            status={book.status}
-            reservation={reservation}
-          />
-
-          <BookActions
-            showButton={!!session?.user}
-            status={book.status}
-            onStatusChange={handleStatusChange}
-          />
-
-          <BookDetails
-            genre={book.genre}
-            category={book.category}
-            pages={book.pages}
-            publicationYear={book.publication_year}
-            editorial={book.editorial}
-            building={book.building}
-          />
-
-          <ExternalReference url={book.external_url} />
-        </div>
-      </div>
+      <BookDetailHeader />
+      <BookDetailContent
+        book={book}
+        reservation={reservation}
+        showButton={!!session?.user}
+        onStatusChange={handleStatusChange}
+      />
     </div>
   );
 };
