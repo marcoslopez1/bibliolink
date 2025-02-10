@@ -16,6 +16,23 @@ const BookDetail = () => {
   const queryClient = useQueryClient();
   const { t } = useTranslation();
 
+  // Query to check if the user is an admin
+  const { data: userProfile } = useQuery({
+    queryKey: ["userProfile", session?.user?.id],
+    queryFn: async () => {
+      if (!session?.user?.id) return null;
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", session.user.id)
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!session?.user?.id,
+  });
+
   const { data: book, isLoading } = useQuery({
     queryKey: ["book", id],
     queryFn: async () => {
@@ -176,6 +193,8 @@ const BookDetail = () => {
         reservation={reservation}
         showButton={!!session?.user}
         onStatusChange={handleStatusChange}
+        isAdmin={!!userProfile?.is_admin}
+        userId={session?.user?.id || ''}
       />
     </div>
   );

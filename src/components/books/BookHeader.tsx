@@ -1,3 +1,4 @@
+
 import { format } from "date-fns";
 import { User } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -14,7 +15,7 @@ interface BookHeaderProps {
       email: string;
     };
     reserved_at: string;
-  };
+  } | null;
 }
 
 export const BookHeader = ({

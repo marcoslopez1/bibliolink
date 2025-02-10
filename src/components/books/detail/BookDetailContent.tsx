@@ -15,9 +15,12 @@ interface BookDetailContentProps {
       email: string;
     };
     reserved_at: string;
+    user_id: string;
   } | null;
   showButton: boolean;
   onStatusChange: () => void;
+  isAdmin: boolean;
+  userId: string;
 }
 
 export const BookDetailContent = ({
@@ -25,7 +28,16 @@ export const BookDetailContent = ({
   reservation,
   showButton,
   onStatusChange,
+  isAdmin,
+  userId,
 }: BookDetailContentProps) => {
+  // Determine if the button should be shown based on business rules
+  const shouldShowButton = showButton && (
+    book.status === "available" || // Show to all logged-in users if book is available
+    isAdmin || // Show to admin users always
+    (reservation?.user_id === userId) // Show to the user who reserved it
+  );
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
       <BookImage
@@ -44,7 +56,7 @@ export const BookDetailContent = ({
         />
 
         <BookActions
-          showButton={showButton}
+          showButton={shouldShowButton}
           status={book.status}
           onStatusChange={onStatusChange}
         />
