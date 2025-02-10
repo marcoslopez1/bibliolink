@@ -4,12 +4,14 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
+import { useBookDetail } from "./useBookDetail";
 
 export const useBookStatusUpdate = (id: string) => {
   const { session } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { t } = useTranslation();
+  const { book } = useBookDetail(id);
 
   const handleStatusChange = async () => {
     if (!session?.user) {
