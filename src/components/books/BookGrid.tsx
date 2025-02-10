@@ -46,7 +46,7 @@ const BookGrid = () => {
 
       if (searchTerm) {
         query = query.or(
-          `title.ilike.%${searchTerm}%,author.ilike.%${searchTerm}%`
+          `title.ilike.%${searchTerm}%,author.ilike.%${searchTerm}%,book_id.ilike.%${searchTerm}%`
         );
       }
 

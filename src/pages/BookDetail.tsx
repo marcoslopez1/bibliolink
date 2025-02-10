@@ -168,13 +168,18 @@ const BookDetail = () => {
     );
   }
 
+  const canReturn = session?.user && (
+    (reservation?.user_id === session.user.id) || // User who reserved the book
+    (session.user.id && book.status === "reserved") // Admin users (handled by RLS)
+  );
+
   return (
     <div className="container px-6 py-4">
       <BookDetailHeader />
       <BookDetailContent
         book={book}
         reservation={reservation}
-        showButton={!!session?.user}
+        showButton={!!session?.user && canReturn}
         onStatusChange={handleStatusChange}
       />
     </div>

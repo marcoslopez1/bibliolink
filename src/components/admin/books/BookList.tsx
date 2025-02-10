@@ -39,7 +39,7 @@ const BookList = ({ books, onEdit, onDelete }: BookListProps) => {
               <TableCell>
                 <Link 
                   to={`/book/${book.book_id}`}
-                  className="text-primary hover:underline"
+                  className="text-primary hover:underline underline"
                 >
                   {book.book_id}
                 </Link>

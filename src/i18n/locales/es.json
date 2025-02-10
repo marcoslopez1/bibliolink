@@ -55,7 +55,8 @@
       "reserveSuccessDescription": "Has reservado el libro exitosamente",
       "returnSuccessTitle": "Libro Devuelto",
       "returnSuccessDescription": "Has devuelto el libro exitosamente"
-    }
+    },
+    "externalReference": "Referencia Externa"
   },
   "myBooks": {
     "title": "Mis Libros",
