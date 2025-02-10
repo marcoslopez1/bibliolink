@@ -46,12 +46,12 @@ export const BookHeader = ({
         </span>
       </div>
 
-      {status === "reserved" && reservation?.profiles && (
+      {status === "reserved" && reservation && reservation.profiles && (
         <div className="flex items-center gap-2 text-sm text-gray-600">
           <User className="h-4 w-4" />
           <span>
-            {t("book.reservedBy")}: {reservation.profiles.first_name}{" "}
-            {reservation.profiles.last_name} ({reservation.profiles.email}) {t("book.on")}{" "}
+            {t("book.reservedBy")}: {reservation.profiles?.first_name}{" "}
+            {reservation.profiles?.last_name} ({reservation.profiles?.email}) {t("book.on")}{" "}
             {format(new Date(reservation.reserved_at), "MMMM d, yyyy")}
           </span>
         </div>
