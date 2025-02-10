@@ -51,8 +51,9 @@ export const BookHeader = ({
           <User className="h-4 w-4" />
           <span>
             {t("book.reservedBy")}: {reservation.profiles.first_name}{" "}
-            {reservation.profiles.last_name} ({reservation.profiles.email}) {t("book.on")}{" "}
-            {reservation.reserved_at && format(new Date(reservation.reserved_at), "MMMM d, yyyy")}
+            {reservation.profiles.last_name} ({reservation.profiles.email}){" "}
+            {t("book.on")}{" "}
+            {format(new Date(reservation.reserved_at), "MMMM d, yyyy")}
           </span>
         </div>
       )}
