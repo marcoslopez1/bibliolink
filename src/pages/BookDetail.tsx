@@ -50,11 +50,16 @@ const BookDetail = () => {
   const { data: reservation } = useQuery({
     queryKey: ["reservation", id],
     queryFn: async () => {
+      // Updated query to properly join with profiles and filter active reservations
       const { data, error } = await supabase
         .from("book_reservations")
         .select(`
-          *,
-          profiles:user_id (
+          id,
+          book_id,
+          user_id,
+          reserved_at,
+          returned_at,
+          profiles (
             first_name,
             last_name,
             email
@@ -62,7 +67,7 @@ const BookDetail = () => {
         `)
         .eq("book_id", id)
         .is("returned_at", null)
-        .maybeSingle();
+        .single();
 
       if (error) throw error;
       return data;
