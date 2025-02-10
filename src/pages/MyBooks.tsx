@@ -8,6 +8,8 @@ import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 
+const defaultBookCover = "https://media.istockphoto.com/id/626462142/photo/red-book.jpg?s=612x612&w=0&k=20&c=6GQND0qF5JAhrm1g_cZzXHQVRkkaA_625VXjfy9MtxA=";
+
 const MyBooks = () => {
   const { session } = useAuth();
   const { t } = useTranslation();
@@ -87,7 +89,7 @@ const MyBooks = () => {
               </div>
               <div className="sm:w-32 h-32 sm:h-40">
                 <img
-                  src={reservation.books.image_url || "/placeholder.svg"}
+                  src={reservation.books.image_url || defaultBookCover}
                   alt={reservation.books.title}
                   className="w-full h-full object-cover rounded-lg"
                 />
