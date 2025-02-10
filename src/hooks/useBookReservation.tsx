@@ -22,7 +22,7 @@ export const useBookReservation = (id: string) => {
         `)
         .eq("book_id", id)
         .is("returned_at", null)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
       return data;
