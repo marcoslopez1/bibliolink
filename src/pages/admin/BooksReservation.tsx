@@ -47,10 +47,10 @@ const BooksReservation = () => {
 
       const query = supabase
         .from("book_reservations")
-        .select<'*', Reservation>('*, books!inner(book_id, title, author), profiles!inner(first_name, last_name)', { 
+        .select('*, books!inner(book_id, title, author), profiles!inner(first_name, last_name)', { 
           count: "exact" 
         })
-        .eq("status", "reserved")
+        .is('returned_at', null)
         .order('reserved_at', { ascending: false })
         .range(start, end);
 
@@ -63,7 +63,7 @@ const BooksReservation = () => {
       if (error) throw error;
 
       return {
-        reservations: reservations || [],
+        reservations: (reservations as Reservation[]) || [],
         totalPages: count ? Math.ceil(count / ITEMS_PER_PAGE) : 0
       };
     },
