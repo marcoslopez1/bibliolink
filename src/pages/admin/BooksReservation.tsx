@@ -47,19 +47,9 @@ const BooksReservation = () => {
 
       const query = supabase
         .from("book_reservations")
-        .select<string, Reservation>(`
-          id,
-          reserved_at,
-          books!inner (
-            book_id,
-            title,
-            author
-          ),
-          profiles!inner (
-            first_name,
-            last_name
-          )
-        `, { count: "exact" })
+        .select<'*', Reservation>('*, books!inner(book_id, title, author), profiles!inner(first_name, last_name)', { 
+          count: "exact" 
+        })
         .eq("status", "reserved")
         .order('reserved_at', { ascending: false })
         .range(start, end);
