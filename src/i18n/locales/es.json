@@ -42,10 +42,7 @@
     "editorial": "Editorial",
     "building": "Edificio",
     "details": "Detalles del Libro",
-    "status": {
-      "available": "Disponible",
-      "reserved": "Reservado"
-    },
+    "status": "Estado",
     "reservedBy": "Reservado por",
     "on": "el",
     "actions": {
@@ -68,6 +65,7 @@
   },
   "admin": {
     "booksManagement": "Gestión de Libros",
+    "reservationsManagement": "Reserva de Libros",
     "downloadSelected": "Descargar Libros Seleccionados",
     "newEntry": "Nueva Entrada",
     "edit": "Editar",

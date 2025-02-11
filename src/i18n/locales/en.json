@@ -42,10 +42,7 @@
     "editorial": "Editorial",
     "building": "Building",
     "details": "Book Details",
-    "status": {
-      "available": "Available",
-      "reserved": "Reserved"
-    },
+    "status": "Status",
     "reservedBy": "Reserved by",
     "on": "on",
     "actions": {
@@ -68,6 +65,7 @@
   },
   "admin": {
     "booksManagement": "Books Management",
+    "reservationsManagement": "Book Reservations",
     "downloadSelected": "Download Selected Books",
     "newEntry": "New Entry",
     "edit": "Edit",

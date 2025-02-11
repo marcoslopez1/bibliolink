@@ -16,6 +16,7 @@ import ResetPassword from "./pages/auth/ResetPassword";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import AdminRoute from "./components/admin/AdminRoute";
 import AdminBooks from "./pages/admin/Books";
+import BooksReservation from "./pages/admin/BooksReservation";
 import MyBooks from "./pages/MyBooks";
 
 const queryClient = new QueryClient();
@@ -56,6 +57,14 @@ const App = () => (
                 element={
                   <AdminRoute>
                     <AdminBooks />
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path="/admin/reservations"
+                element={
+                  <AdminRoute>
+                    <BooksReservation />
                   </AdminRoute>
                 }
               />
