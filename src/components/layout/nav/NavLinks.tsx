@@ -1,7 +1,7 @@
 
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { BookCopy, Library } from "lucide-react";
+import { BookCopy, Library, BookOpenCheck } from "lucide-react";
 
 interface NavLinksProps {
   isAdmin?: boolean;
@@ -56,14 +56,24 @@ export const NavLinks = ({ isAdmin, isMobile, onItemClick, session }: NavLinksPr
         </Link>
       )}
       {isAdmin && (
-        <Link
-          to="/admin/books"
-          className={`${baseStyles} ${isActive("/admin/books")} space-x-2`}
-          onClick={handleClick}
-        >
-          <BookCopy className="h-4 w-4 inline-block" />
-          <span>{t("admin.booksManagement")}</span>
-        </Link>
+        <>
+          <Link
+            to="/admin/books"
+            className={`${baseStyles} ${isActive("/admin/books")} space-x-2`}
+            onClick={handleClick}
+          >
+            <BookCopy className="h-4 w-4 inline-block" />
+            <span>{t("admin.booksManagement")}</span>
+          </Link>
+          <Link
+            to="/admin/reservations"
+            className={`${baseStyles} ${isActive("/admin/reservations")} space-x-2`}
+            onClick={handleClick}
+          >
+            <BookOpenCheck className="h-4 w-4 inline-block" />
+            <span>{t("admin.reservationsManagement")}</span>
+          </Link>
+        </>
       )}
     </div>
   );
