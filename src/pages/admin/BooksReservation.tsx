@@ -45,32 +45,35 @@ const BooksReservation = () => {
       const start = (currentPage - 1) * ITEMS_PER_PAGE;
       const end = start + ITEMS_PER_PAGE - 1;
 
-      const { data: reservations, count, error } = await supabase
+      const query = supabase
         .from("book_reservations")
-        .select(`
+        .select<string, Reservation>(`
           id,
           reserved_at,
-          books (
+          books!inner (
             book_id,
             title,
             author
           ),
-          profiles (
+          profiles!inner (
             first_name,
             last_name
           )
         `, { count: "exact" })
         .eq("status", "reserved")
         .order('reserved_at', { ascending: false })
-        .range(start, end)
-        .or(debouncedSearchQuery ? 
-          `books.title.ilike.%${debouncedSearchQuery}%,books.author.ilike.%${debouncedSearchQuery}%,books.book_id.ilike.%${debouncedSearchQuery}%` 
-          : '');
+        .range(start, end);
+
+      if (debouncedSearchQuery) {
+        query.or(`books.title.ilike.%${debouncedSearchQuery}%,books.author.ilike.%${debouncedSearchQuery}%,books.book_id.ilike.%${debouncedSearchQuery}%`);
+      }
+
+      const { data: reservations, count, error } = await query;
 
       if (error) throw error;
 
       return {
-        reservations: (reservations as Reservation[]) || [],
+        reservations: reservations || [],
         totalPages: count ? Math.ceil(count / ITEMS_PER_PAGE) : 0
       };
     },
