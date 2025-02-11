@@ -19,6 +19,20 @@ import { Loader2 } from "lucide-react";
 
 const ITEMS_PER_PAGE = 10;
 
+interface Reservation {
+  id: number;
+  reserved_at: string;
+  books: {
+    book_id: string;
+    title: string;
+    author: string;
+  };
+  profiles: {
+    first_name: string;
+    last_name: string;
+  };
+}
+
 const BooksReservation = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
@@ -31,7 +45,7 @@ const BooksReservation = () => {
       const start = (currentPage - 1) * ITEMS_PER_PAGE;
       const end = start + ITEMS_PER_PAGE - 1;
 
-      let query = supabase
+      const { data: reservations, count, error } = await supabase
         .from("book_reservations")
         .select(`
           id,
@@ -47,20 +61,16 @@ const BooksReservation = () => {
           )
         `, { count: "exact" })
         .eq("status", "reserved")
-        .order('reserved_at', { ascending: false });
-
-      if (debouncedSearchQuery) {
-        query = query.or(
-          `books.title.ilike.%${debouncedSearchQuery}%,books.author.ilike.%${debouncedSearchQuery}%,books.book_id.ilike.%${debouncedSearchQuery}%`
-        );
-      }
-
-      const { data: reservations, count, error } = await query.range(start, end);
+        .order('reserved_at', { ascending: false })
+        .range(start, end)
+        .or(debouncedSearchQuery ? 
+          `books.title.ilike.%${debouncedSearchQuery}%,books.author.ilike.%${debouncedSearchQuery}%,books.book_id.ilike.%${debouncedSearchQuery}%` 
+          : '');
 
       if (error) throw error;
 
       return {
-        reservations: reservations || [],
+        reservations: (reservations as Reservation[]) || [],
         totalPages: count ? Math.ceil(count / ITEMS_PER_PAGE) : 0
       };
     },
