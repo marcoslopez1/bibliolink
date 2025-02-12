@@ -1,3 +1,4 @@
+
 import { createContext, useContext, useEffect, useState } from "react";
 import { Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
@@ -43,9 +44,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const refreshSession = async () => {
       if (session) {
-        const { data, error } = await supabase.auth.refreshSession();
-        if (!error && data.session) {
-          setSession(data.session);
+        try {
+          const { data, error } = await supabase.auth.refreshSession();
+          // If there's an error with refresh token, sign out the user
+          if (error) {
+            if (error.message.includes('refresh_token_not_found')) {
+              await supabase.auth.signOut();
+              setSession(null);
+            }
+            return;
+          }
+          
+          if (data.session) {
+            setSession(data.session);
+          }
+        } catch (error) {
+          // If there's any other error, sign out the user
+          await supabase.auth.signOut();
+          setSession(null);
         }
       }
     };
