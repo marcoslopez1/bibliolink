@@ -1,4 +1,3 @@
-
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Pencil, Trash2, ExternalLink, Image } from "lucide-react";
@@ -16,7 +15,7 @@ const BookList = ({ books, onEdit, onDelete }: BookListProps) => {
 
   return (
     <div className="rounded-md border">
-      <Table>
+      <Table className="bg-white">
         <TableHeader>
           <TableRow>
             <TableHead>{t("book.bookId")}</TableHead>
@@ -27,10 +26,10 @@ const BookList = ({ books, onEdit, onDelete }: BookListProps) => {
             <TableHead>{t("book.pages")}</TableHead>
             <TableHead>{t("book.publicationYear")}</TableHead>
             <TableHead>{t("book.editorial")}</TableHead>
-            <TableHead>{t("book.status")}</TableHead>
             <TableHead>{t("book.building")}</TableHead>
+            <TableHead>{t("book.statusHeader")}</TableHead>
             <TableHead>Links</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead className="text-right">{t("admin.actions")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -51,8 +50,13 @@ const BookList = ({ books, onEdit, onDelete }: BookListProps) => {
               <TableCell>{book.pages}</TableCell>
               <TableCell>{book.publication_year}</TableCell>
               <TableCell>{book.editorial}</TableCell>
-              <TableCell>{book.status}</TableCell>
               <TableCell>{book.building}</TableCell>
+              <TableCell>
+                {book.status === 'available' 
+                  ? t("book.status.available") 
+                  : t("book.status.reserved")
+                }
+              </TableCell>
               <TableCell>
                 <div className="flex space-x-2">
                   {book.external_url && (

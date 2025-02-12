@@ -42,16 +42,20 @@
     "editorial": "Editorial",
     "building": "Edificio",
     "details": "Detalles del Libro",
-    "status": "Estado",
+    "statusHeader": "Estado",
+    "status": {
+      "available": "Disponible",
+      "reserved": "Reservado"
+    },
     "reservedBy": "Reservado por",
     "on": "el",
     "actions": {
       "reserve": "Reservar",
       "return": "Devolver",
       "reserveSuccessTitle": "Libro Reservado",
-      "reserveSuccessDescription": "Has reservado el libro exitosamente",
+      "reserveSuccessDescription": "Has reservado este libro exitosamente",
       "returnSuccessTitle": "Libro Devuelto",
-      "returnSuccessDescription": "Has devuelto el libro exitosamente"
+      "returnSuccessDescription": "Has devuelto este libro exitosamente"
     },
     "externalReference": "Referencia Externa"
   },
@@ -65,7 +69,7 @@
   },
   "admin": {
     "booksManagement": "Gestión de Libros",
-    "reservationsManagement": "Reserva de Libros",
+    "reservationsManagement": "Reservas de Libros",
     "downloadSelected": "Descargar Libros Seleccionados",
     "newEntry": "Nueva Entrada",
     "edit": "Editar",
@@ -73,14 +77,20 @@
     "search": "Buscar libros...",
     "bookCreated": "Libro creado exitosamente",
     "bookUpdated": "Libro actualizado exitosamente",
-    "editBookDescription": "Realiza cambios en la información del libro a continuación.",
-    "newBookDescription": "Agrega un nuevo libro a la biblioteca completando la información a continuación."
+    "editBookDescription": "Realiza cambios en la información de este libro a continuación.",
+    "newBookDescription": "Agrega un nuevo libro a la biblioteca completando la información a continuación.",
+    "Name": "Nombre",
+    "Lastname": "Apellidos",
+    "Email": "Correo",
+    "Reservation Date": "Fecha de reserva",
+    "noReservations": "No hay reservas",
+    "noReservationsFound": "No se encontraron reservas que coincidan con tu búsqueda"
   },
   "search": {
     "placeholder": "Buscar por título, autor..."
   },
   "common": {
-    "copyright": "© 2024 Biblioteca. Todos los derechos reservados.",
+    "copyright": " 2024 Biblioteca. Todos los derechos reservados.",
     "loading": "Cargando...",
     "save": "Guardar",
     "cancel": "Cancelar",

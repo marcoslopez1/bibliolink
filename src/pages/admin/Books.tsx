@@ -1,8 +1,7 @@
-
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/components/ui/use-toast";
-import { useDebounce } from "use-debounce";
+import { useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import BookForm from "@/components/admin/BookForm";
 import BookList from "@/components/admin/books/BookList";
@@ -15,8 +14,8 @@ import { downloadBooks } from "@/utils/download";
 
 const AdminBooks = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [debouncedSearchQuery] = useDebounce(searchQuery, 300);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchQuery = searchParams.get("q") || "";
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState<any>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -24,7 +23,7 @@ const AdminBooks = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
 
-  const { data, isLoading, refetch } = useBooks(currentPage, debouncedSearchQuery);
+  const { data, isLoading, refetch } = useBooks(currentPage, searchQuery);
 
   const handleDownload = async () => {
     try {
@@ -62,6 +61,11 @@ const AdminBooks = () => {
     }
   };
 
+  const handleSearch = useCallback((value: string) => {
+    setCurrentPage(1);
+    setSearchParams(value ? { q: value } : {}, { replace: true });
+  }, [setSearchParams]);
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
@@ -80,7 +84,10 @@ const AdminBooks = () => {
         }}
       />
 
-      <BookSearch value={searchQuery} onChange={setSearchQuery} />
+      <BookSearch 
+        initialValue={searchQuery}
+        onSearch={handleSearch}
+      />
 
       <BookList
         books={data?.books || []}

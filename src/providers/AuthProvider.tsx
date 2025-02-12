@@ -22,20 +22,38 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Initialize auth state from Supabase
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setLoading(false);
     });
 
+    // Listen for auth changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session);
       setLoading(false);
     });
 
     return () => subscription.unsubscribe();
   }, []);
+
+  // Provide session refresh
+  useEffect(() => {
+    const refreshSession = async () => {
+      if (session) {
+        const { data, error } = await supabase.auth.refreshSession();
+        if (!error && data.session) {
+          setSession(data.session);
+        }
+      }
+    };
+
+    // Refresh session every 4 minutes
+    const interval = setInterval(refreshSession, 1000 * 60 * 4);
+    return () => clearInterval(interval);
+  }, [session]);
 
   return (
     <AuthContext.Provider value={{ session, loading }}>
