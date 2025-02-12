@@ -1,4 +1,3 @@
-
 import { Navigate } from "react-router-dom";
 import { useAuth } from "@/providers/AuthProvider";
 import { useToast } from "@/components/ui/use-toast";
@@ -8,11 +7,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { Loader2 } from "lucide-react";
 
 const AdminRoute = ({ children }: { children: React.ReactNode }) => {
-  const { session } = useAuth();
+  const { session, loading: authLoading } = useAuth();
   const { toast } = useToast();
   const { t } = useTranslation();
 
-  const { data: profile, isLoading } = useQuery({
+  const { data: profile, isLoading: profileLoading } = useQuery({
     queryKey: ["profile", session?.user.id],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -25,9 +24,19 @@ const AdminRoute = ({ children }: { children: React.ReactNode }) => {
       return data;
     },
     enabled: !!session?.user.id,
-    staleTime: 30000, // Cache for 30 seconds
+    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+    cacheTime: 1000 * 60 * 30, // Keep in cache for 30 minutes
     retry: false,
   });
+
+  // Don't redirect while we're checking auth state
+  if (authLoading || (session && profileLoading)) {
+    return (
+      <div className="flex items-center justify-center min-h-[200px]">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
 
   if (!session) {
     toast({
@@ -36,14 +45,6 @@ const AdminRoute = ({ children }: { children: React.ReactNode }) => {
       variant: "destructive",
     });
     return <Navigate to="/auth/signin" replace />;
-  }
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[200px]">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
   }
 
   if (!profile?.is_admin) {

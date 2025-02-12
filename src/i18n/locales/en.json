@@ -42,7 +42,11 @@
     "editorial": "Editorial",
     "building": "Building",
     "details": "Book Details",
-    "status": "Status",
+    "statusHeader": "Status",
+    "status": {
+      "available": "Available",
+      "reserved": "Reserved"
+    },
     "reservedBy": "Reserved by",
     "on": "on",
     "actions": {
@@ -74,13 +78,19 @@
     "bookCreated": "Book created successfully",
     "bookUpdated": "Book updated successfully",
     "editBookDescription": "Make changes to this book's information below.",
-    "newBookDescription": "Add a new book to the library by filling out the information below."
+    "newBookDescription": "Add a new book to the library by filling out the information below.",
+    "Name": "Name",
+    "Lastname": "Lastname",
+    "Email": "Email",
+    "Reservation Date": "Reservation Date",
+    "noReservations": "No reservations found",
+    "noReservationsFound": "No reservations found matching your search"
   },
   "search": {
     "placeholder": "Search by title, author..."
   },
   "common": {
-    "copyright": "© 2024 Library App. All rights reserved.",
+    "copyright": " 2024 Library App. All rights reserved.",
     "loading": "Loading...",
     "save": "Save",
     "cancel": "Cancel",
