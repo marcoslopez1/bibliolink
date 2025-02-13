@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useTranslation } from "react-i18next";
@@ -11,7 +10,7 @@ interface BookFormProps {
   book?: any;
   isOpen: boolean;
   onClose: () => void;
-  onSave: () => void;
+  onSave?: () => void;
 }
 
 const BookForm = ({ book, isOpen, onClose, onSave }: BookFormProps) => {
@@ -74,19 +73,9 @@ const BookForm = ({ book, isOpen, onClose, onSave }: BookFormProps) => {
         ...formData,
         pages: parseInt(formData.pages.toString()),
         publication_year: parseInt(formData.publication_year.toString()),
-        // Set status as 'available' for new entries
-        ...(book ? {} : { status: 'available' }),
-        // Format created_at for new entries
         ...(book ? {} : { 
-          created_at: new Date().toLocaleString('en-GB', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: false
-          }).replace(/\//g, '-')
+          created_at: new Date().toISOString(),
+          status: 'available'
         })
       };
 
@@ -100,12 +89,18 @@ const BookForm = ({ book, isOpen, onClose, onSave }: BookFormProps) => {
       } else {
         const { error } = await supabase
           .from("books")
-          .insert([processedData]);
+          .insert(processedData);
         if (error) throw error;
         toast({ description: t("admin.bookCreated") });
       }
-      onSave();
+      
+      // Close the form
       onClose();
+      
+      // Trigger a refresh of the books list
+      if (typeof onSave === 'function') {
+        await onSave();
+      }
     } catch (error: any) {
       toast({
         variant: "destructive",
