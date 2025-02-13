@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Filter, ChevronUp, ChevronDown } from "lucide-react";
@@ -68,7 +67,7 @@ const BookFilters = ({ books, onFilterChange }: BookFiltersProps) => {
           <CollapsibleTrigger className="flex items-center gap-2 group hover:text-accent transition-colors">
             <Filter className="h-5 w-5" />
             <span className="font-medium">
-              Filters {activeFiltersCount > 0 && `(${activeFiltersCount})`}
+              {t("filters.title")} {activeFiltersCount > 0 && `(${activeFiltersCount})`}
             </span>
             {isOpen ? (
               <ChevronUp className="h-4 w-4 transition-transform" />
@@ -88,7 +87,7 @@ const BookFilters = ({ books, onFilterChange }: BookFiltersProps) => {
                 <SelectValue placeholder={t("book.genre")} />
               </SelectTrigger>
               <SelectContent className="bg-white border shadow-lg z-50">
-                <SelectItem value="all">All Genres</SelectItem>
+                <SelectItem value="all">{t("filters.allGenres")}</SelectItem>
                 {uniqueValues.genre.map((genre) => (
                   <SelectItem key={genre} value={genre}>
                     {genre}
@@ -105,7 +104,7 @@ const BookFilters = ({ books, onFilterChange }: BookFiltersProps) => {
                 <SelectValue placeholder={t("book.category")} />
               </SelectTrigger>
               <SelectContent className="bg-white border shadow-lg z-50">
-                <SelectItem value="all">All Categories</SelectItem>
+                <SelectItem value="all">{t("filters.allCategories")}</SelectItem>
                 {uniqueValues.category.map((category) => (
                   <SelectItem key={category} value={category}>
                     {category}
@@ -122,7 +121,7 @@ const BookFilters = ({ books, onFilterChange }: BookFiltersProps) => {
                 <SelectValue placeholder={t("book.building")} />
               </SelectTrigger>
               <SelectContent className="bg-white border shadow-lg z-50">
-                <SelectItem value="all">All Buildings</SelectItem>
+                <SelectItem value="all">{t("filters.allBuildings")}</SelectItem>
                 {uniqueValues.building.map((building) => (
                   <SelectItem key={building} value={building}>
                     {building}
@@ -138,4 +137,3 @@ const BookFilters = ({ books, onFilterChange }: BookFiltersProps) => {
 };
 
 export default BookFilters;
-
