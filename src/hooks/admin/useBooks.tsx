@@ -8,48 +8,67 @@ export const useBooks = (currentPage: number, searchQuery: string) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        setIsLoading(true);
-        const start = (currentPage - 1) * ITEMS_PER_PAGE;
-        const end = start + ITEMS_PER_PAGE - 1;
+  const fetchBooks = async () => {
+    try {
+      setIsLoading(true);
+      const start = (currentPage - 1) * ITEMS_PER_PAGE;
+      const end = start + ITEMS_PER_PAGE - 1;
 
-        let query = supabase
-          .from("books")
-          .select("*", { count: "exact" });
+      let query = supabase
+        .from("books")
+        .select("*", { count: "exact" });
 
-        if (searchQuery) {
-          query = query.or(
-            `title.ilike.%${searchQuery}%,author.ilike.%${searchQuery}%,genre.ilike.%${searchQuery}%,category.ilike.%${searchQuery}%,book_id.ilike.%${searchQuery}%,editorial.ilike.%${searchQuery}%,building.ilike.%${searchQuery}%`
-          );
-        }
-
-        const { data: books, count, error } = await query
-          .range(start, end)
-          .order("id", { ascending: false });
-
-        if (error) throw error;
-
-        setData({
-          books: books || [],
-          totalPages: Math.ceil((count || 0) / ITEMS_PER_PAGE),
-        });
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error('An error occurred'));
-      } finally {
-        setIsLoading(false);
+      if (searchQuery) {
+        query = query.or(
+          `title.ilike.%${searchQuery}%,author.ilike.%${searchQuery}%,genre.ilike.%${searchQuery}%,category.ilike.%${searchQuery}%,book_id.ilike.%${searchQuery}%,editorial.ilike.%${searchQuery}%,building.ilike.%${searchQuery}%`
+        );
       }
-    };
 
+      const { data: books, count, error } = await query
+        .range(start, end)
+        .order("id", { ascending: false });
+
+      if (error) throw error;
+
+      setData({
+        books: books || [],
+        totalPages: Math.ceil((count || 0) / ITEMS_PER_PAGE),
+      });
+    } catch (err) {
+      setError(err as Error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchBooks();
   }, [currentPage, searchQuery]);
 
-  return {
-    data: data,
-    isLoading,
-    error,
-  };
+  // Set up real-time subscription
+  useEffect(() => {
+    const channel = supabase
+      .channel('books-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'books'
+        },
+        () => {
+          // Refetch books when any change occurs
+          fetchBooks();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  return { data, isLoading, error, refetch: fetchBooks };
 };
 
 export { ITEMS_PER_PAGE };
