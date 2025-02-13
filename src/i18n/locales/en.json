@@ -62,6 +62,9 @@
   "myBooks": {
     "title": "My Books",
     "noBooks": "You haven't reserved any books yet",
+    "noReservations": "You haven't made any reservations yet",
+    "browseCatalog": "Go to catalog",
+    "noReservationsMessage": "You've made no reservations yet, go to the catalog to reserve a book and start reading",
     "reserved": "Reserved",
     "returned": "Returned",
     "reservedOn": "Reserved on",
@@ -90,7 +93,7 @@
     "placeholder": "Search by title, author..."
   },
   "common": {
-    "copyright": " 2024 Library App. All rights reserved.",
+    "copyright": "{{year}} BiblioLink. All rights reserved.",
     "loading": "Loading...",
     "save": "Save",
     "cancel": "Cancel",
@@ -117,5 +120,11 @@
         "description": "Be part of our community and help spread knowledge through books"
       }
     }
+  },
+  "filters": {
+    "title": "Filters",
+    "allGenres": "All Genres",
+    "allCategories": "All Categories",
+    "allBuildings": "All Buildings"
   }
 }

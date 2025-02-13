@@ -62,6 +62,9 @@
   "myBooks": {
     "title": "Mis Libros",
     "noBooks": "Aún no has reservado ningún libro",
+    "noReservations": "Aún no has hecho ninguna reserva",
+    "browseCatalog": "Ir al catálogo",
+    "noReservationsMessage": "Aún no has hecho ninguna reserva, ve al catálogo para reservar un libro y empezar a leer",
     "reserved": "Reservado",
     "returned": "Devuelto",
     "reservedOn": "Reservado el",
@@ -86,11 +89,17 @@
     "noReservations": "No hay reservas",
     "noReservationsFound": "No se encontraron reservas que coincidan con tu búsqueda"
   },
+  "filters": {
+    "title": "Filtros",
+    "allGenres": "Todos los Géneros",
+    "allCategories": "Todas las Categorías",
+    "allBuildings": "Todas las Sedes"
+  },
   "search": {
     "placeholder": "Buscar por título, autor..."
   },
   "common": {
-    "copyright": " 2024 Biblioteca. Todos los derechos reservados.",
+    "copyright": "{{year}} BiblioLink. Todos los derechos reservados.",
     "loading": "Cargando...",
     "save": "Guardar",
     "cancel": "Cancelar",

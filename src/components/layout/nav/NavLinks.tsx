@@ -1,4 +1,3 @@
-
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { BookCopy, Library, BookOpenCheck } from "lucide-react";
@@ -21,7 +20,7 @@ export const NavLinks = ({ isAdmin, isMobile, onItemClick, session }: NavLinksPr
 
   const baseStyles = isMobile
     ? "block px-3 py-2 text-base font-medium"
-    : "inline-flex items-center px-1 pt-1";
+    : "inline-flex items-center h-16 px-3 whitespace-nowrap";
 
   const handleClick = () => {
     if (onItemClick) {
@@ -30,7 +29,7 @@ export const NavLinks = ({ isAdmin, isMobile, onItemClick, session }: NavLinksPr
   };
 
   return (
-    <div className={isMobile ? "space-y-1" : "hidden sm:ml-6 sm:flex sm:space-x-8"}>
+    <div className={isMobile ? "space-y-1" : "ml-6 flex items-center space-x-4"}>
       <Link 
         to="/" 
         className={`${baseStyles} ${isActive("/")}`}
@@ -48,10 +47,10 @@ export const NavLinks = ({ isAdmin, isMobile, onItemClick, session }: NavLinksPr
       {session && (
         <Link
           to="/my-books"
-          className={`${baseStyles} ${isActive("/my-books")} space-x-2`}
+          className={`${baseStyles} ${isActive("/my-books")} gap-2`}
           onClick={handleClick}
         >
-          <Library className="h-4 w-4 inline-block" />
+          <Library className="h-4 w-4" />
           <span>{t("nav.myBooks")}</span>
         </Link>
       )}
@@ -59,18 +58,18 @@ export const NavLinks = ({ isAdmin, isMobile, onItemClick, session }: NavLinksPr
         <>
           <Link
             to="/admin/books"
-            className={`${baseStyles} ${isActive("/admin/books")} space-x-2`}
+            className={`${baseStyles} ${isActive("/admin/books")} gap-2`}
             onClick={handleClick}
           >
-            <BookCopy className="h-4 w-4 inline-block" />
+            <BookCopy className="h-4 w-4" />
             <span>{t("admin.booksManagement")}</span>
           </Link>
           <Link
             to="/admin/reservations"
-            className={`${baseStyles} ${isActive("/admin/reservations")} space-x-2`}
+            className={`${baseStyles} ${isActive("/admin/reservations")} gap-2`}
             onClick={handleClick}
           >
-            <BookOpenCheck className="h-4 w-4 inline-block" />
+            <BookOpenCheck className="h-4 w-4" />
             <span>{t("admin.reservationsManagement")}</span>
           </Link>
         </>

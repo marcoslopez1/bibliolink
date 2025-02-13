@@ -43,7 +43,7 @@ const MyBooks = () => {
           )
         `, { count: "exact" })
         .eq("user_id", session?.user.id)
-        .order('returned_at', { ascending: true, nullsFirst: true })
+        .order('returned_at', { ascending: false, nullsFirst: true })
         .order("reserved_at", { ascending: false })
         .range(from, to);
 
@@ -80,55 +80,63 @@ const MyBooks = () => {
       <h1 className="text-3xl font-bold mb-8">{t("myBooks.title")}</h1>
       <div className="space-y-4">
         {allReservations.map((reservation, index) => (
-          <Card 
-            key={reservation.id} 
-            className="p-4 bg-white"
+          <Link
+            key={reservation.id}
+            to={`/book/${reservation.books.book_id}`}
+            className="block"
           >
-            <div className="flex flex-col sm:flex-row justify-between gap-4">
-              <div className="flex-grow space-y-2">
-                <Link
-                  to={`/book/${reservation.books.book_id}`}
-                  className="text-xl font-semibold hover:text-primary transition-colors"
-                >
-                  {reservation.books.title}
-                </Link>
-                <p className="text-gray-600">{reservation.books.author}</p>
-                <div className="flex flex-wrap gap-2">
-                  <Badge 
-                    variant="outline"
-                    className={reservation.returned_at 
-                      ? "bg-[#F2FCE2] border-[#F2FCE2] text-black"
-                      : "bg-[#fde7e9] border-[#fde7e9] text-black"}
+            <Card className="p-4 bg-white hover:shadow-md transition-shadow">
+              <div className="flex flex-col sm:flex-row justify-between gap-4">
+                <div className="flex-grow space-y-2">
+                  <div
+                    className="text-xl font-semibold hover:text-primary transition-colors"
                   >
-                    {reservation.returned_at 
-                      ? t("myBooks.returned")
-                      : t("myBooks.reserved")}
-                  </Badge>
+                    {reservation.books.title}
+                  </div>
+                  <p className="text-gray-600">{reservation.books.author}</p>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge 
+                      variant="outline"
+                      className={reservation.returned_at 
+                        ? "bg-[#F2FCE2] border-[#F2FCE2] text-black"
+                        : "bg-[#fde7e9] border-[#fde7e9] text-black"}
+                    >
+                      {reservation.returned_at 
+                        ? t("myBooks.returned")
+                        : t("myBooks.reserved")}
+                    </Badge>
+                    <Badge
+                      variant="outline"
+                      className="bg-gray-100 border-gray-100 text-black"
+                    >
+                      {reservation.books.book_id}
+                    </Badge>
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    {reservation.returned_at ? (
+                      <>
+                        {t("myBooks.returnedOn")}: {format(new Date(reservation.returned_at), "PPP")}
+                        <br />
+                        {t("myBooks.reservedOn")}: {format(new Date(reservation.reserved_at), "PPP")}
+                      </>
+                    ) : (
+                      <>
+                        {t("myBooks.reservedOn")}: {format(new Date(reservation.reserved_at), "PPP")}
+                      </>
+                    )}
+                  </div>
                 </div>
-                <div className="text-sm text-gray-500">
-                  {reservation.returned_at ? (
-                    <>
-                      {t("myBooks.returnedOn")}: {format(new Date(reservation.returned_at), "PPP")}
-                      <br />
-                      {t("myBooks.reservedOn")}: {format(new Date(reservation.reserved_at), "PPP")}
-                    </>
-                  ) : (
-                    <>
-                      {t("myBooks.reservedOn")}: {format(new Date(reservation.reserved_at), "PPP")}
-                    </>
-                  )}
+                <div className="sm:w-32 h-32 sm:h-40">
+                  <img
+                    src={reservation.books.image_url || defaultBookCover}
+                    alt={reservation.books.title}
+                    className="w-full h-full object-cover rounded-lg"
+                    loading="lazy"
+                  />
                 </div>
               </div>
-              <div className="sm:w-32 h-32 sm:h-40">
-                <img
-                  src={reservation.books.image_url || defaultBookCover}
-                  alt={reservation.books.title}
-                  className="w-full h-full object-cover rounded-lg"
-                  loading="lazy"
-                />
-              </div>
-            </div>
-          </Card>
+            </Card>
+          </Link>
         ))}
 
         {/* Loading indicator */}
@@ -143,11 +151,11 @@ const MyBooks = () => {
 
         {/* Empty state */}
         {(!allReservations || allReservations.length === 0) && (
-          <div className="text-center py-12">
-            <p className="text-xl text-gray-600">{t("myBooks.noReservations")}</p>
+          <div className="text-center py-12 space-y-4">
+            <p className="text-xl text-gray-600">{t("myBooks.noReservationsMessage")}</p>
             <Link
-              to="/catalog"
-              className="text-primary hover:underline mt-2 inline-block"
+              to="/"
+              className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary/90 rounded-md transition-colors"
             >
               {t("myBooks.browseCatalog")}
             </Link>

@@ -1,4 +1,3 @@
-
 import { useAuth } from "@/providers/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,13 +6,11 @@ import { NavLogo } from "./nav/NavLogo";
 import { NavLinks } from "./nav/NavLinks";
 import { AuthButtons } from "./nav/AuthButtons";
 import { Menu, X } from "lucide-react";
-import { useState } from "react";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useResponsiveMenu } from "@/hooks/use-responsive-menu";
 
 const Navbar = () => {
   const { session } = useAuth();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const isMobile = useIsMobile();
+  const { isMenuOpen, setIsMenuOpen, shouldCollapse, containerRef, contentRef } = useResponsiveMenu();
 
   const { data: profile } = useQuery({
     queryKey: ["profile", session?.user.id],
@@ -35,35 +32,38 @@ const Navbar = () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex">
-            <div className="flex-shrink-0 flex items-center">
+        <div className="flex justify-between h-16" ref={containerRef}>
+          <div className="flex items-center min-w-0" ref={contentRef}>
+            <div className="flex-shrink-0">
               <NavLogo />
             </div>
-            <div className="hidden sm:flex">
+            {!shouldCollapse && (
               <NavLinks isAdmin={profile?.is_admin} session={!!session} />
-            </div>
+            )}
           </div>
           <div className="flex items-center space-x-4">
             <LanguageSwitcher />
-            <div className="hidden sm:flex">
+            {!shouldCollapse && (
               <AuthButtons session={!!session} onItemClick={closeMenu} />
-            </div>
-            <button
-              className="sm:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
+            )}
+            {shouldCollapse && (
+              <button
+                className="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                aria-label="Toggle menu"
+              >
+                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </button>
+            )}
           </div>
         </div>
 
-        {isMobile && isMenuOpen && (
-          <div className="sm:hidden">
-            <div className="pt-2 pb-3 space-y-1">
+        {shouldCollapse && isMenuOpen && (
+          <div className="border-t border-gray-200">
+            <div className="py-2">
               <NavLinks isAdmin={profile?.is_admin} isMobile onItemClick={closeMenu} session={!!session} />
             </div>
-            <div className="pt-4 pb-3 border-t border-gray-200">
+            <div className="py-2 border-t border-gray-200">
               <AuthButtons session={!!session} onItemClick={closeMenu} />
             </div>
           </div>
