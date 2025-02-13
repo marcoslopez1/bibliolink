@@ -15,6 +15,7 @@ import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import { Loader2 } from "lucide-react";
 import BookSearch from "@/components/admin/books/BookSearch";
+import BookPagination from "@/components/admin/books/BookPagination";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -182,23 +183,11 @@ const BooksReservation = () => {
       </div>
 
       {data?.totalPages && data.totalPages > 1 && (
-        <div className="flex justify-center">
-          <nav className="flex items-center gap-1">
-            {Array.from({ length: data.totalPages }).map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentPage(index + 1)}
-                className={`px-3 py-1 rounded ${
-                  currentPage === index + 1
-                    ? "bg-primary text-white"
-                    : "bg-gray-100 hover:bg-gray-200"
-                }`}
-              >
-                {index + 1}
-              </button>
-            ))}
-          </nav>
-        </div>
+        <BookPagination
+          currentPage={currentPage}
+          totalPages={data.totalPages}
+          onPageChange={setCurrentPage}
+        />
       )}
     </div>
   );
