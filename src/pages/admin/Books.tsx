@@ -114,7 +114,13 @@ const AdminBooks = () => {
           setIsFormOpen(false);
           setSelectedBook(null);
         }}
-        onSave={refetch}
+        onSave={async () => {
+          try {
+            await refetch();
+          } catch (error) {
+            console.error('Failed to refresh book list:', error);
+          }
+        }}
       />
 
       <BookDeleteDialog
