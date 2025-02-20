@@ -60,6 +60,7 @@ export type Database = {
           genre: string
           id: number
           image_url: string | null
+          isbn: number | null
           pages: number
           publication_year: number
           status: string
@@ -76,6 +77,7 @@ export type Database = {
           genre: string
           id?: number
           image_url?: string | null
+          isbn?: number | null
           pages: number
           publication_year: number
           status?: string
@@ -92,6 +94,7 @@ export type Database = {
           genre?: string
           id?: number
           image_url?: string | null
+          isbn?: number | null
           pages?: number
           publication_year?: number
           status?: string

@@ -99,10 +99,7 @@ const BookForm = ({ book, isOpen, onClose, onSave }: BookFormProps) => {
         toast({ description: t("admin.bookCreated") });
       }
       
-      // Close the form
       onClose();
-      
-      // Trigger a refresh of the books list
       if (typeof onSave === 'function') {
         await onSave();
       }
