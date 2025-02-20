@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useTranslation } from "react-i18next";
@@ -28,6 +29,7 @@ const BookForm = ({ book, isOpen, onClose, onSave }: BookFormProps) => {
     book_id: "",
     image_url: "",
     external_url: "",
+    isbn: "",
   });
 
   // Update form when book prop changes or dialog opens
@@ -46,6 +48,7 @@ const BookForm = ({ book, isOpen, onClose, onSave }: BookFormProps) => {
           book_id: book.book_id || "",
           image_url: book.image_url || "",
           external_url: book.external_url || "",
+          isbn: book.isbn || "",
         });
       } else {
         // Reset form for new entries
@@ -61,6 +64,7 @@ const BookForm = ({ book, isOpen, onClose, onSave }: BookFormProps) => {
           book_id: "",
           image_url: "",
           external_url: "",
+          isbn: "",
         });
       }
     }
@@ -73,6 +77,7 @@ const BookForm = ({ book, isOpen, onClose, onSave }: BookFormProps) => {
         ...formData,
         pages: parseInt(formData.pages.toString()),
         publication_year: parseInt(formData.publication_year.toString()),
+        isbn: formData.isbn ? parseFloat(formData.isbn) : null,
         ...(book ? {} : { 
           created_at: new Date().toISOString(),
           status: 'available'

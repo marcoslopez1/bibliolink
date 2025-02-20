@@ -16,6 +16,7 @@ interface BookFormFieldsProps {
     book_id: string;
     image_url: string;
     external_url: string;
+    isbn: string;
   };
   setFormData: (data: any) => void;
 }
@@ -148,9 +149,20 @@ const BookFormFields = ({ formData, setFormData }: BookFormFieldsProps) => {
           }
         />
       </div>
+      <div className="space-y-2">
+        <Label htmlFor="isbn">ISBN</Label>
+        <Input
+          id="isbn"
+          type="number"
+          value={formData.isbn}
+          onChange={(e) =>
+            setFormData({ ...formData, isbn: e.target.value })
+          }
+          placeholder="Optional"
+        />
+      </div>
     </div>
   );
 };
 
 export default BookFormFields;
-
