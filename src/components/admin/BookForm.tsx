@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useTranslation } from "react-i18next";
@@ -112,11 +111,11 @@ const BookForm = ({ book, isOpen, onClose, onSave }: BookFormProps) => {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px]">
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="max-w-[95vw] sm:max-w-[600px] h-[90vh] sm:h-auto overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            {book ? t("admin.edit") : t("admin.newEntry")}
+            {book ? t("admin.editBook") : t("admin.newEntry")}
           </DialogTitle>
           <DialogDescription>
             {book ? t("admin.editBookDescription") : t("admin.newBookDescription")}
@@ -124,7 +123,7 @@ const BookForm = ({ book, isOpen, onClose, onSave }: BookFormProps) => {
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <BookFormFields formData={formData} setFormData={setFormData} />
-          <BookFormActions onClose={onClose} />
+          <BookFormActions onCancel={onClose} isEditing={!!book} />
         </form>
       </DialogContent>
     </Dialog>

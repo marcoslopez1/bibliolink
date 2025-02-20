@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { BookCopy, Library, BookOpenCheck } from "lucide-react";
+import { BookCopy, Library, BookOpenCheck, HelpCircle, Settings } from "lucide-react";
 
 interface NavLinksProps {
   isAdmin?: boolean;
@@ -19,7 +19,7 @@ export const NavLinks = ({ isAdmin, isMobile, onItemClick, session }: NavLinksPr
       : "text-gray-600 hover:text-primary";
 
   const baseStyles = isMobile
-    ? "block px-3 py-2 text-base font-medium"
+    ? "flex items-center px-3 py-2 text-base font-medium"
     : "inline-flex items-center h-16 px-3 whitespace-nowrap";
 
   const handleClick = () => {
@@ -29,48 +29,60 @@ export const NavLinks = ({ isAdmin, isMobile, onItemClick, session }: NavLinksPr
   };
 
   return (
-    <div className={isMobile ? "space-y-1" : "ml-6 flex items-center space-x-4"}>
-      <Link 
-        to="/" 
-        className={`${baseStyles} ${isActive("/")}`}
-        onClick={handleClick}
-      >
-        {t("nav.home")}
-      </Link>
+    <div className={isMobile ? "space-y-1 w-fit min-w-[200px]" : "ml-6 flex items-center space-x-4"}>
       <Link
         to="/how-it-works"
         className={`${baseStyles} ${isActive("/how-it-works")}`}
         onClick={handleClick}
       >
-        {t("nav.howItWorks")}
+        <div className="flex items-center gap-2">
+          <HelpCircle className="h-4 w-4 flex-shrink-0" />
+          <span>{t("nav.howItWorks")}</span>
+        </div>
       </Link>
       {session && (
         <Link
           to="/my-books"
-          className={`${baseStyles} ${isActive("/my-books")} gap-2`}
+          className={`${baseStyles} ${isActive("/my-books")}`}
           onClick={handleClick}
         >
-          <Library className="h-4 w-4" />
-          <span>{t("nav.myBooks")}</span>
+          <div className="flex items-center gap-2">
+            <Library className="h-4 w-4 flex-shrink-0" />
+            <span>{t("nav.myBooks")}</span>
+          </div>
         </Link>
       )}
       {isAdmin && (
         <>
           <Link
             to="/admin/books"
-            className={`${baseStyles} ${isActive("/admin/books")} gap-2`}
+            className={`${baseStyles} ${isActive("/admin/books")}`}
             onClick={handleClick}
           >
-            <BookCopy className="h-4 w-4" />
-            <span>{t("admin.booksManagement")}</span>
+            <div className="flex items-center gap-2">
+              <BookCopy className="h-4 w-4 flex-shrink-0" />
+              <span>{t("admin.catalogManagement")}</span>
+            </div>
           </Link>
           <Link
             to="/admin/reservations"
-            className={`${baseStyles} ${isActive("/admin/reservations")} gap-2`}
+            className={`${baseStyles} ${isActive("/admin/reservations")}`}
             onClick={handleClick}
           >
-            <BookOpenCheck className="h-4 w-4" />
-            <span>{t("admin.reservationsManagement")}</span>
+            <div className="flex items-center gap-2">
+              <BookOpenCheck className="h-4 w-4 flex-shrink-0" />
+              <span>{t("admin.reservationsManagement")}</span>
+            </div>
+          </Link>
+          <Link
+            to="/admin/settings"
+            className={`${baseStyles} ${isActive("/admin/settings")}`}
+            onClick={handleClick}
+          >
+            <div className="flex items-center gap-2">
+              <Settings className="h-4 w-4 flex-shrink-0" />
+              <span>{t("admin.settings")}</span>
+            </div>
           </Link>
         </>
       )}

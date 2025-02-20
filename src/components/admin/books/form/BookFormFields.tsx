@@ -1,4 +1,3 @@
-
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useTranslation } from "react-i18next";
@@ -25,7 +24,7 @@ const BookFormFields = ({ formData, setFormData }: BookFormFieldsProps) => {
   const { t } = useTranslation();
 
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div className="space-y-2">
         <Label htmlFor="book_id">{t("book.bookId")}</Label>
         <Input
@@ -130,27 +129,29 @@ const BookFormFields = ({ formData, setFormData }: BookFormFieldsProps) => {
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="image_url">Image URL</Label>
+        <Label htmlFor="image_url">{t("book.imageUrl")}</Label>
         <Input
           id="image_url"
           value={formData.image_url}
           onChange={(e) =>
             setFormData({ ...formData, image_url: e.target.value })
           }
+          placeholder={t("common.optional")}
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="external_url">External URL</Label>
+        <Label htmlFor="external_url">{t("book.externalUrl")}</Label>
         <Input
           id="external_url"
           value={formData.external_url}
           onChange={(e) =>
             setFormData({ ...formData, external_url: e.target.value })
           }
+          placeholder={t("common.optional")}
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="isbn">ISBN</Label>
+        <Label htmlFor="isbn">{t("book.isbn")}</Label>
         <Input
           id="isbn"
           type="number"
@@ -158,7 +159,7 @@ const BookFormFields = ({ formData, setFormData }: BookFormFieldsProps) => {
           onChange={(e) =>
             setFormData({ ...formData, isbn: e.target.value })
           }
-          placeholder="Optional"
+          placeholder={t("common.optional")}
         />
       </div>
     </div>

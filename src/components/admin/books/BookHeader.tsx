@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Download, Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -12,22 +11,22 @@ const BookHeader = ({ onDownload, onNewBook }: BookHeaderProps) => {
   const { t } = useTranslation();
 
   return (
-    <div className="flex justify-between items-center">
-      <h1 className="text-2xl font-semibold">{t("admin.booksManagement")}</h1>
-      <div className="flex space-x-2">
+    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
+      <h1 className="text-2xl font-semibold">{t("admin.catalogManagement")}</h1>
+      <div className="flex flex-wrap gap-2 w-full sm:w-auto">
         <Button 
           onClick={onDownload}
-          className="bg-[#D3E4FD] text-primary hover:bg-[#D3E4FD]/90"
+          className="flex-1 sm:flex-none bg-[#D3E4FD] text-primary hover:bg-[#D3E4FD]/90"
         >
           <Download className="h-4 w-4 mr-2" />
-          {t("admin.downloadSelected")}
+          <span className="whitespace-nowrap">{t("admin.downloadSelected")}</span>
         </Button>
         <Button 
           onClick={onNewBook}
-          className="bg-[#F2FCE2] text-primary hover:bg-[#F2FCE2]/90"
+          className="flex-1 sm:flex-none bg-[#F2FCE2] text-primary hover:bg-[#F2FCE2]/90"
         >
           <Plus className="h-4 w-4 mr-2" />
-          {t("admin.newEntry")}
+          <span className="whitespace-nowrap">{t("admin.newEntry")}</span>
         </Button>
       </div>
     </div>

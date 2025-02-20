@@ -49,6 +49,8 @@
     },
     "reservedBy": "Reservado por",
     "on": "el",
+    "imageUrl": "URL de Imagen",
+    "externalUrl": "URL Externa",
     "actions": {
       "reserve": "Reservar",
       "return": "Devolver",
@@ -71,12 +73,16 @@
     "returnedOn": "Devuelto el"
   },
   "admin": {
-    "booksManagement": "Gestión de Libros",
+    "catalogManagement": "Gestión del Catálogo",
     "reservationsManagement": "Reservas de Libros",
     "downloadSelected": "Descargar Libros Seleccionados",
-    "newEntry": "Nueva Entrada",
+    "newEntry": "Agregar Nuevo Libro",
+    "editBook": "Editar Libro",
     "edit": "Editar",
     "delete": "Eliminar",
+    "actions": "Acciones",
+    "deleteConfirmation": "¿Estás seguro de que quieres eliminar este libro? Esta acción no se puede deshacer.",
+    "deleteSuccess": "Libro eliminado correctamente",
     "search": "Buscar libros...",
     "bookCreated": "Libro creado exitosamente",
     "bookUpdated": "Libro actualizado exitosamente",
@@ -87,7 +93,27 @@
     "Email": "Correo",
     "Reservation Date": "Fecha de reserva",
     "noReservations": "No hay reservas",
-    "noReservationsFound": "No se encontraron reservas que coincidan con tu búsqueda"
+    "noReservationsFound": "No se encontraron reservas que coincidan con tu búsqueda",
+    "settings": "Ajustes",
+    "genres": "Géneros",
+    "categories": "Categorías",
+    "alerts": "Gestión de Alertas",
+    "addGenre": "Añadir Nuevo Género",
+    "addCategory": "Añadir Nueva Categoría",
+    "genreName": "Nombre del Género",
+    "categoryName": "Nombre de la Categoría",
+    "alertName": "Nombre de la Alerta",
+    "frequency": "Frecuencia",
+    "weekly": "Semanal",
+    "monthly": "Mensual",
+    "quarterly": "Trimestral",
+    "annually": "Anual",
+    "userAlerts": "Alertas de Actividad de Usuarios",
+    "adminAlerts": "Alertas Administrativas",
+    "save": "Guardar",
+    "enabled": "Activado",
+    "disabled": "Desactivado",
+    "downloadSuccess": "Libros descargados exitosamente"
   },
   "filters": {
     "title": "Filtros",
@@ -103,7 +129,8 @@
     "loading": "Cargando...",
     "save": "Guardar",
     "cancel": "Cancelar",
-    "back": "Volver"
+    "back": "Volver",
+    "optional": "Opcional"
   },
   "howItWorks": {
     "title": "Cómo Funciona",

@@ -49,6 +49,8 @@
     },
     "reservedBy": "Reserved by",
     "on": "on",
+    "imageUrl": "Image URL",
+    "externalUrl": "External URL",
     "actions": {
       "reserve": "Reserve",
       "return": "Return",
@@ -71,12 +73,16 @@
     "returnedOn": "Returned on"
   },
   "admin": {
-    "booksManagement": "Books Management",
+    "catalogManagement": "Catalog Management",
     "reservationsManagement": "Book Reservations",
     "downloadSelected": "Download Selected Books",
-    "newEntry": "New Entry",
+    "newEntry": "Add New Book",
+    "editBook": "Edit Book",
     "edit": "Edit",
     "delete": "Delete",
+    "actions": "Actions",
+    "deleteConfirmation": "Are you sure you want to delete this book? This action cannot be undone.",
+    "deleteSuccess": "Book deleted successfully",
     "search": "Search books...",
     "bookCreated": "Book created successfully",
     "bookUpdated": "Book updated successfully",
@@ -87,7 +93,27 @@
     "Email": "Email",
     "Reservation Date": "Reservation Date",
     "noReservations": "No reservations found",
-    "noReservationsFound": "No reservations found matching your search"
+    "noReservationsFound": "No reservations found matching your search",
+    "settings": "Settings",
+    "genres": "Genres",
+    "categories": "Categories",
+    "alerts": "Alerts Management",
+    "addGenre": "Add New Genre",
+    "addCategory": "Add New Category",
+    "genreName": "Genre Name",
+    "categoryName": "Category Name",
+    "alertName": "Alert Name",
+    "frequency": "Frequency",
+    "weekly": "Weekly",
+    "monthly": "Monthly",
+    "quarterly": "Quarterly",
+    "annually": "Annually",
+    "userAlerts": "User Activity Alerts",
+    "adminAlerts": "Administrative Alerts",
+    "save": "Save",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "downloadSuccess": "Books downloaded successfully"
   },
   "search": {
     "placeholder": "Search by title, author..."
@@ -97,7 +123,8 @@
     "loading": "Loading...",
     "save": "Save",
     "cancel": "Cancel",
-    "back": "Back"
+    "back": "Back",
+    "optional": "Optional"
   },
   "howItWorks": {
     "title": "How It Works",
@@ -109,7 +136,7 @@
       },
       "account": {
         "title": "Create Account",
-        "description": "Sign up for an account to start reserving and managing your book loans"
+        "description": "Create your account to start borrowing and managing books"
       },
       "reserve": {
         "title": "Reserve Books",

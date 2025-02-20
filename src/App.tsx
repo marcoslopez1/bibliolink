@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -18,6 +17,7 @@ import AdminRoute from "./components/admin/AdminRoute";
 import AdminBooks from "./pages/admin/Books";
 import BooksReservation from "./pages/admin/BooksReservation";
 import MyBooks from "./pages/MyBooks";
+import Settings from "./pages/admin/Settings";
 
 const queryClient = new QueryClient();
 
@@ -65,6 +65,14 @@ const App = () => (
                 element={
                   <AdminRoute>
                     <BooksReservation />
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path="/admin/settings"
+                element={
+                  <AdminRoute>
+                    <Settings />
                   </AdminRoute>
                 }
               />

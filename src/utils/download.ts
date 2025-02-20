@@ -1,6 +1,22 @@
+import { supabase } from "@/integrations/supabase/client";
 
-export const downloadBooks = (books: any[]) => {
+export const fetchAllBooks = async (searchQuery: string) => {
+  let query = supabase.from("books").select("*");
+
+  if (searchQuery) {
+    query = query.or(
+      `title.ilike.%${searchQuery}%,author.ilike.%${searchQuery}%,genre.ilike.%${searchQuery}%,category.ilike.%${searchQuery}%,book_id.ilike.%${searchQuery}%,editorial.ilike.%${searchQuery}%,building.ilike.%${searchQuery}%`
+    );
+  }
+
+  const { data: books, error } = await query.order("id", { ascending: false });
+  if (error) throw error;
+  return books || [];
+};
+
+export const downloadBooks = async (searchQuery: string) => {
   try {
+    const books = await fetchAllBooks(searchQuery);
     if (!books?.length) return;
 
     const csvContent = [

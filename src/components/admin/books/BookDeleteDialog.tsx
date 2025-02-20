@@ -1,4 +1,3 @@
-
 import { useTranslation } from "react-i18next";
 import {
   AlertDialog,
@@ -26,7 +25,7 @@ const BookDeleteDialog = ({ isOpen, onOpenChange, onConfirm }: BookDeleteDialogP
         <AlertDialogHeader>
           <AlertDialogTitle>{t("admin.delete")}</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete this book? This action cannot be undone.
+            {t("admin.deleteConfirmation")}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

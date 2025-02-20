@@ -1,10 +1,17 @@
-
 import { Link } from "react-router-dom";
-import { Book } from "lucide-react";
 
 export const NavLogo = () => (
   <Link to="/" className="text-xl font-bold text-primary flex items-center gap-2">
-    <Book className="h-6 w-6" />
+    <img 
+      src="public/logo.svg"
+      alt="BiblioLink"
+      className="h-6 w-6"
+      onError={(e) => {
+        const target = e.target as HTMLImageElement;
+        target.onerror = null;
+        target.src = "public/logo.svg";
+      }}
+    />
     BiblioLink
   </Link>
 );

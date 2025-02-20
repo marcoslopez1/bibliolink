@@ -11,15 +11,16 @@ import BookPagination from "@/components/admin/books/BookPagination";
 import BookDeleteDialog from "@/components/admin/books/BookDeleteDialog";
 import { useBooks } from "@/hooks/admin/useBooks";
 import { downloadBooks } from "@/utils/download";
+import { Book } from "@/types/book";
 
-const AdminBooks = () => {
+const Books = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get("q") || "";
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [selectedBook, setSelectedBook] = useState<any>(null);
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [bookToDelete, setBookToDelete] = useState<any>(null);
+  const [bookToDelete, setBookToDelete] = useState<Book | null>(null);
   const { t } = useTranslation();
   const { toast } = useToast();
 
@@ -27,9 +28,12 @@ const AdminBooks = () => {
 
   const handleDownload = async () => {
     try {
-      if (!data?.books) return;
-      downloadBooks(data.books);
+      await downloadBooks(searchQuery);
+      toast({
+        description: t("admin.downloadSuccess"),
+      });
     } catch (error: any) {
+      console.error("Download error:", error);
       toast({
         variant: "destructive",
         description: error.message,
@@ -44,20 +48,23 @@ const AdminBooks = () => {
       const { error } = await supabase
         .from("books")
         .delete()
-        .eq("id", bookToDelete.id);
+        .eq("id", bookToDelete?.id);
 
       if (error) throw error;
 
-      toast({ description: "Book deleted successfully" });
-      refetch();
-    } catch (error: any) {
       toast({
-        variant: "destructive",
-        description: error.message,
+        description: t("admin.deleteSuccess"),
       });
-    } finally {
+      
       setIsDeleteDialogOpen(false);
       setBookToDelete(null);
+      refetch();
+    } catch (error: any) {
+      console.error("Delete error:", error);
+      toast({
+        description: t("common.error"),
+        variant: "destructive",
+      });
     }
   };
 
@@ -65,6 +72,15 @@ const AdminBooks = () => {
     setCurrentPage(1);
     setSearchParams(value ? { q: value } : {}, { replace: true });
   }, [setSearchParams]);
+
+  const handleEdit = (book: Book) => {
+    setSelectedBook(book);
+    setIsFormOpen(true);
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   if (isLoading) {
     return (
@@ -75,7 +91,7 @@ const AdminBooks = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="container mx-auto px-4 py-8 space-y-6">
       <BookHeader
         onDownload={handleDownload}
         onNewBook={() => {
@@ -84,28 +100,29 @@ const AdminBooks = () => {
         }}
       />
 
-      <BookSearch 
-        initialValue={searchQuery}
-        onSearch={handleSearch}
-      />
+      <div className="space-y-6">
+        <BookSearch 
+          initialValue={searchQuery}
+          onSearch={handleSearch}
+        />
 
-      <BookList
-        books={data?.books || []}
-        onEdit={(book) => {
-          setSelectedBook(book);
-          setIsFormOpen(true);
-        }}
-        onDelete={(book) => {
-          setBookToDelete(book);
-          setIsDeleteDialogOpen(true);
-        }}
-      />
+        <div className="rounded-md border">
+          <BookList
+            books={data?.books || []}
+            onEdit={handleEdit}
+            onDelete={(book) => {
+              setBookToDelete(book);
+              setIsDeleteDialogOpen(true);
+            }}
+          />
+        </div>
 
-      <BookPagination
-        currentPage={currentPage}
-        totalPages={data?.totalPages || 1}
-        onPageChange={setCurrentPage}
-      />
+        <BookPagination
+          currentPage={currentPage}
+          totalPages={data?.totalPages || 1}
+          onPageChange={handlePageChange}
+        />
+      </div>
 
       <BookForm
         book={selectedBook}
@@ -127,9 +144,10 @@ const AdminBooks = () => {
         isOpen={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
         onConfirm={handleDelete}
+        book={bookToDelete}
       />
     </div>
   );
 };
 
-export default AdminBooks;
+export default Books;

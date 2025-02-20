@@ -59,12 +59,12 @@ const Navbar = () => {
         </div>
 
         {shouldCollapse && isMenuOpen && (
-          <div className="border-t border-gray-200">
+          <div className="absolute right-0 top-16 bg-white border-l border-b border-t border-gray-200 rounded-bl-lg shadow-lg">
             <div className="py-2">
               <NavLinks isAdmin={profile?.is_admin} isMobile onItemClick={closeMenu} session={!!session} />
-            </div>
-            <div className="py-2 border-t border-gray-200">
-              <AuthButtons session={!!session} onItemClick={closeMenu} />
+              <div className="border-t border-gray-200 px-3 py-2">
+                <AuthButtons session={!!session} onItemClick={closeMenu} />
+              </div>
             </div>
           </div>
         )}

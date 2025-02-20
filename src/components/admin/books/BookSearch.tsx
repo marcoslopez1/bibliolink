@@ -27,9 +27,9 @@ const BookSearch = ({ onSearch, initialValue = "" }: BookSearchProps) => {
   };
 
   return (
-    <div className="flex gap-2">
+    <div className="flex w-full sm:w-auto gap-2">
       <Input
-        className="max-w-sm"
+        className="w-full sm:max-w-sm"
         placeholder={t("admin.search")}
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
