@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { format } from "date-fns";
@@ -8,76 +7,60 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/components/ui/use-toast";
-import { useAuth } from "@/providers/AuthProvider";
-import type { BookRequest } from "@/types/bookRequest";
+
+interface BookRequest {
+  id: number;
+  title: string;
+  author: string;
+  editorial: string;
+  link: string;
+  comments: string;
+  status: "accepted" | "pending" | "rejected";
+  requestDate: string;
+}
 
 const MyRequests = () => {
   const { t } = useTranslation();
-  const { toast } = useToast();
-  const { session } = useAuth();
-  const queryClient = useQueryClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [requests, setRequests] = useState<BookRequest[]>([
+    {
+      id: 1,
+      title: "The Great Gatsby",
+      author: "F. Scott Fitzgerald",
+      editorial: "Scribner",
+      link: "https://example.com/book1",
+      comments: "Would love to read this classic",
+      status: "accepted",
+      requestDate: "2025-02-21",
+    },
+    {
+      id: 2,
+      title: "1984",
+      author: "George Orwell",
+      editorial: "Penguin Books",
+      link: "https://example.com/book2",
+      comments: "Heard great things about this book",
+      status: "pending",
+      requestDate: "2025-02-20",
+    },
+    {
+      id: 3,
+      title: "The Catcher in the Rye",
+      author: "J.D. Salinger",
+      editorial: "Little, Brown and Company",
+      link: "https://example.com/book3",
+      comments: "Required for my literature class",
+      status: "rejected",
+      requestDate: "2025-02-19",
+    },
+  ]);
+
   const [formData, setFormData] = useState({
     title: "",
     author: "",
     editorial: "",
     link: "",
     comments: "",
-  });
-
-  // Fetch requests
-  const { data: requests = [] } = useQuery({
-    queryKey: ["my-requests"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("book_requests")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if (error) throw error;
-      return data as BookRequest[];
-    },
-  });
-
-  // Create request mutation
-  const createRequest = useMutation({
-    mutationFn: async (newRequest: Omit<BookRequest, "id" | "status" | "created_at" | "created_by" | "user_first_name" | "user_last_name" | "user_email">) => {
-      const { data, error } = await supabase
-        .from("book_requests")
-        .insert({
-          ...newRequest,
-          created_by: session?.user.id,
-          status: "pending"
-        })
-        .select()
-        .single();
-
-      if (error) throw error;
-      return data;
-    },
-    onSuccess: () => {
-      toast({
-        description: t("bookRequests.form.success")
-      });
-      queryClient.invalidateQueries({ queryKey: ["my-requests"] });
-      setIsDialogOpen(false);
-      setFormData({
-        title: "",
-        author: "",
-        editorial: "",
-        link: "",
-        comments: "",
-      });
-    },
-    onError: () => {
-      toast({
-        variant: "destructive",
-        description: t("bookRequests.form.error")
-      });
-    },
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -87,7 +70,15 @@ const MyRequests = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    createRequest.mutate(formData);
+    const newRequest: BookRequest = {
+      id: requests.length + 1,
+      ...formData,
+      status: "pending",
+      requestDate: new Date().toISOString().split("T")[0],
+    };
+    setRequests((prev) => [newRequest, ...prev]);
+    setFormData({ title: "", author: "", editorial: "", link: "", comments: "" });
+    setIsDialogOpen(false);
   };
 
   const getStatusBadge = (status: BookRequest["status"]) => {
@@ -98,7 +89,7 @@ const MyRequests = () => {
     };
     return (
       <Badge className={variants[status]}>
-        {t(`bookRequests.list.status.${status}`)}
+        {t(`requests.status.${status}`)}
       </Badge>
     );
   };
@@ -106,76 +97,76 @@ const MyRequests = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
-        <h1 className="text-2xl font-bold">{t("bookRequests.title")}</h1>
+        <h1 className="text-2xl font-bold">{t("requests.pageTitle")}</h1>
         <Button onClick={() => setIsDialogOpen(true)} className="w-full md:w-auto">
-          {t("bookRequests.form.title")}
+          {t("requests.createRequest")}
         </Button>
       </div>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>{t("bookRequests.form.title")}</DialogTitle>
+            <DialogTitle>{t("requests.requestForm.title")}</DialogTitle>
             <DialogDescription>
-              {t("bookRequests.form.description")}
+              {t("requests.requestForm.description")}
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="text-sm font-medium">
-                {t("bookRequests.form.bookTitle")}
+                {t("requests.requestForm.bookTitle")}
               </label>
               <Input
                 name="title"
                 value={formData.title}
                 onChange={handleInputChange}
-                placeholder={t("bookRequests.form.bookTitle")}
+                placeholder={t("requests.requestForm.bookTitlePlaceholder")}
                 required
               />
             </div>
             <div>
               <label className="text-sm font-medium">
-                {t("bookRequests.form.author")}
+                {t("requests.requestForm.author")}
               </label>
               <Input
                 name="author"
                 value={formData.author}
                 onChange={handleInputChange}
-                placeholder={t("bookRequests.form.author")}
+                placeholder={t("requests.requestForm.authorPlaceholder")}
                 required
               />
             </div>
             <div>
               <label className="text-sm font-medium">
-                {t("bookRequests.form.editorial")}
+                {t("requests.requestForm.editorial")}
               </label>
               <Input
                 name="editorial"
                 value={formData.editorial}
                 onChange={handleInputChange}
-                placeholder={t("bookRequests.form.editorial")}
+                placeholder={t("requests.requestForm.editorialPlaceholder")}
               />
             </div>
             <div>
               <label className="text-sm font-medium">
-                {t("bookRequests.form.link")}
+                {t("requests.requestForm.link")}
               </label>
               <Input
                 name="link"
                 value={formData.link}
                 onChange={handleInputChange}
-                placeholder={t("bookRequests.form.link")}
+                placeholder={t("requests.requestForm.linkPlaceholder")}
               />
             </div>
             <div>
               <label className="text-sm font-medium">
-                {t("bookRequests.form.comments")}
+                {t("requests.requestForm.comments")}
               </label>
               <Textarea
                 name="comments"
                 value={formData.comments}
                 onChange={handleInputChange}
-                placeholder={t("bookRequests.form.comments")}
+                placeholder={t("requests.requestForm.commentsPlaceholder")}
                 rows={3}
               />
             </div>
@@ -185,10 +176,10 @@ const MyRequests = () => {
                 variant="outline"
                 onClick={() => setIsDialogOpen(false)}
               >
-                {t("common.cancel")}
+                {t("requests.requestForm.cancel")}
               </Button>
-              <Button type="submit" disabled={createRequest.isPending}>
-                {createRequest.isPending ? t("common.loading") : t("bookRequests.form.send")}
+              <Button type="submit">
+                {t("requests.requestForm.send")}
               </Button>
             </div>
           </form>
@@ -197,10 +188,10 @@ const MyRequests = () => {
 
       <div className="space-y-4">
         <h2 className="text-xl font-semibold mb-4">
-          {t("bookRequests.list.title")}
+          {t("requests.status.title")}
         </h2>
         {requests.length === 0 ? (
-          <p className="text-gray-500">{t("bookRequests.list.noRequests")}</p>
+          <p className="text-gray-500">{t("requests.status.noRequests")}</p>
         ) : (
           requests.map((request) => (
             <Card key={request.id} className="p-6 bg-white">
@@ -215,7 +206,7 @@ const MyRequests = () => {
                     <p className="text-gray-600 mt-2">{request.comments}</p>
                   )}
                   <p className="text-gray-500 text-sm mt-2">
-                    {t("bookRequests.list.requestDate")}: {format(new Date(request.created_at), "PP")}
+                    {t("requests.status.requestDate")}: {format(new Date(request.requestDate), "PP")}
                   </p>
                 </div>
                 <div>

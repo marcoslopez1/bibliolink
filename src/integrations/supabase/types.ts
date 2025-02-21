@@ -9,50 +9,6 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      book_requests: {
-        Row: {
-          author: string
-          comments: string | null
-          created_at: string
-          created_by: string
-          editorial: string | null
-          id: number
-          link: string | null
-          status: string
-          title: string
-        }
-        Insert: {
-          author: string
-          comments?: string | null
-          created_at?: string
-          created_by: string
-          editorial?: string | null
-          id?: number
-          link?: string | null
-          status?: string
-          title: string
-        }
-        Update: {
-          author?: string
-          comments?: string | null
-          created_at?: string
-          created_by?: string
-          editorial?: string | null
-          id?: number
-          link?: string | null
-          status?: string
-          title?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "book_requests_created_by_fkey1"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       book_reservations: {
         Row: {
           book_id: string
