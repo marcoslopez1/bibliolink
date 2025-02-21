@@ -2,7 +2,7 @@
 import React, { useEffect, useRef } from 'react';
 import { BrowserMultiFormatReader, Result } from '@zxing/library';
 import { useTranslation } from 'react-i18next';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Loader2, Camera } from 'lucide-react';
 
@@ -80,6 +80,9 @@ const BarcodeScanner = ({ isOpen, onClose, onScan }: BarcodeScannerProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[600px]">
+        <DialogTitle>{t("admin.scanner.title")}</DialogTitle>
+        <DialogDescription>{t("admin.scanner.description")}</DialogDescription>
+        
         <div className="space-y-4">
           {error ? (
             <div className="space-y-4">

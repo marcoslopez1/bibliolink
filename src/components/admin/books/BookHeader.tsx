@@ -17,22 +17,25 @@ const BookHeader = ({ onDownload, onNewBook, onScan }: BookHeaderProps) => {
       <h1 className="text-2xl font-semibold">{t("admin.catalogManagement")}</h1>
       <div className="flex flex-wrap gap-2 w-full sm:w-auto">
         <Button 
-          onClick={onScan}
-          className="flex-1 sm:flex-none bg-[#E5ECF6] text-primary hover:bg-[#E5ECF6]/90"
-        >
-          <Camera className="h-4 w-4 mr-2" />
-          <span className="whitespace-nowrap">{t("admin.scanBook")}</span>
-        </Button>
-        <Button 
           onClick={onDownload}
-          className="flex-1 sm:flex-none bg-[#D3E4FD] text-primary hover:bg-[#D3E4FD]/90"
+          variant="outline"
+          className="flex-1 sm:flex-none bg-[#000000e6] text-white hover:bg-[#000000cc]"
         >
           <Download className="h-4 w-4 mr-2" />
           <span className="whitespace-nowrap">{t("admin.downloadSelected")}</span>
         </Button>
         <Button 
+          onClick={onScan}
+          variant="outline"
+          className="flex-1 sm:flex-none bg-[#000000e6] text-white hover:bg-[#000000cc]"
+        >
+          <Camera className="h-4 w-4 mr-2" />
+          <span className="whitespace-nowrap">{t("admin.scanBook")}</span>
+        </Button>
+        <Button 
           onClick={onNewBook}
-          className="flex-1 sm:flex-none bg-[#F2FCE2] text-primary hover:bg-[#F2FCE2]/90"
+          variant="outline"
+          className="flex-1 sm:flex-none bg-[#000000e6] text-white hover:bg-[#000000cc]"
         >
           <Plus className="h-4 w-4 mr-2" />
           <span className="whitespace-nowrap">{t("admin.newEntry")}</span>
