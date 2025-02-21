@@ -3,6 +3,7 @@
     "home": "Inicio",
     "howItWorks": "Cómo Funciona",
     "myBooks": "Mis Libros",
+    "myRequests": "Mis Solicitudes",
     "settings": "Ajustes"
   },
   "auth": {
@@ -76,6 +77,7 @@
   "admin": {
     "catalogManagement": "Gestión del Catálogo",
     "reservationsManagement": "Reservas de Libros",
+    "requestsManagement": "Solicitudes de Libros",
     "downloadSelected": "Descargar Libros Seleccionados",
     "scanBook": "Escanear Libro",
     "newEntry": "Agregar Nuevo Libro",
@@ -139,6 +141,79 @@
       "tryAgain": "Intentar de Nuevo",
       "bookNotFound": "No se encontró ningún libro con este código de barras",
       "scanButton": "Escanear Libro"
+    },
+    "bookRequests": {
+      "title": "Gestión de Solicitudes de Libros",
+      "table": {
+        "bookTitle": "Título",
+        "author": "Autor",
+        "editorial": "Editorial",
+        "reference": "Referencia",
+        "userName": "Nombre",
+        "userLastName": "Apellido",
+        "userEmail": "Correo",
+        "comments": "Comentarios",
+        "requestDate": "Fecha de Solicitud",
+        "status": "Estado",
+        "actions": "Acciones"
+      },
+      "status": {
+        "pending": "Pendiente",
+        "accepted": "Aceptada",
+        "rejected": "Rechazada"
+      },
+      "actions": {
+        "edit": "Editar",
+        "delete": "Eliminar",
+        "save": "Guardar",
+        "cancel": "Cancelar"
+      },
+      "deleteConfirm": {
+        "title": "Eliminar Solicitud",
+        "description": "¿Estás seguro de que quieres eliminar esta solicitud? Esta acción no se puede deshacer.",
+        "confirm": "Sí, eliminar",
+        "cancel": "Cancelar"
+      },
+      "editForm": {
+        "title": "Editar Solicitud de Libro",
+        "bookTitle": "Título del Libro",
+        "author": "Autor",
+        "editorial": "Editorial",
+        "reference": "Enlace de Referencia",
+        "userName": "Nombre del Usuario",
+        "userLastName": "Apellido del Usuario",
+        "userEmail": "Correo del Usuario",
+        "comments": "Comentarios",
+        "status": "Estado"
+      }
+    }
+  },
+  "requests": {
+    "pageTitle": "Mis Solicitudes",
+    "createRequest": "Crear nueva solicitud",
+    "requestForm": {
+      "title": "Enviar solicitud de libro",
+      "description": "Si deseas sugerir un libro, puedes usar el siguiente formulario para enviarnos tus preferencias.",
+      "bookTitle": "Título",
+      "bookTitlePlaceholder": "Escribe el título del libro",
+      "author": "Autor",
+      "authorPlaceholder": "Escribe el autor del libro",
+      "editorial": "Editorial",
+      "editorialPlaceholder": "Escribe la editorial",
+      "link": "Enlace",
+      "linkPlaceholder": "Comparte un enlace de referencia",
+      "comments": "Comentarios",
+      "commentsPlaceholder": "Cualquier cosa que quieras compartir",
+      "send": "Enviar",
+      "cancel": "Cancelar"
+    },
+    "status": {
+      "title": "Estado de mis solicitudes",
+      "noRequests": "No has creado ninguna solicitud.",
+      "requestDate": "Fecha de solicitud",
+      "accepted": "Aceptada",
+      "pending": "Pendiente",
+      "rejected": "Rechazada"
     }
   },
   "filters": {

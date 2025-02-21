@@ -1,6 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 
-export const useResponsiveMenu = () => {
+interface UseResponsiveMenuProps {
+  forceCollapse?: boolean;
+}
+
+export const useResponsiveMenu = ({ forceCollapse = false }: UseResponsiveMenuProps = {}) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [shouldCollapse, setShouldCollapse] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -8,6 +12,11 @@ export const useResponsiveMenu = () => {
 
   useEffect(() => {
     const checkResponsiveness = () => {
+      if (forceCollapse) {
+        setShouldCollapse(true);
+        return;
+      }
+
       if (containerRef.current && contentRef.current) {
         const container = containerRef.current;
         const content = contentRef.current;
@@ -49,27 +58,21 @@ export const useResponsiveMenu = () => {
     // Initial check
     checkResponsiveness();
     
-    // Setup resize observer for content changes
-    const resizeObserver = new ResizeObserver(debouncedCheck);
-    if (containerRef.current) {
-      resizeObserver.observe(containerRef.current);
-    }
-
-    // Setup window resize listener
+    // Add event listener
     window.addEventListener('resize', debouncedCheck);
-
+    
+    // Cleanup
     return () => {
-      if (resizeTimeout) clearTimeout(resizeTimeout);
-      resizeObserver.disconnect();
       window.removeEventListener('resize', debouncedCheck);
+      clearTimeout(resizeTimeout);
     };
-  }, []);
+  }, [forceCollapse]);
 
   return {
     isMenuOpen,
     setIsMenuOpen,
     shouldCollapse,
     containerRef,
-    contentRef
+    contentRef,
   };
 };
