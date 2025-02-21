@@ -1,3 +1,4 @@
+
 import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/components/ui/use-toast";
@@ -13,169 +14,130 @@ import BarcodeScanner from "@/components/admin/books/scanner/BarcodeScanner";
 import { useBooks } from "@/hooks/admin/useBooks";
 import { downloadBooks } from "@/utils/download";
 import { fetchBookData } from "@/services/bookApis";
-import { Book } from "@/types/book";
+import type { Book } from "@/types/book";
 
 const Books = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const searchQuery = searchParams.get("q") || "";
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [bookToDelete, setBookToDelete] = useState<Book | null>(null);
-  const [isScannerOpen, setIsScannerOpen] = useState(false);
-  const [scannedBookData, setScannedBookData] = useState<Partial<Book> | null>(null);
   const { t } = useTranslation();
   const { toast } = useToast();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isScannerOpen, setIsScannerOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
+  const searchQuery = searchParams.get("q") || "";
 
   const { data, isLoading, refetch } = useBooks(currentPage, searchQuery);
 
-  const handleDownload = async () => {
-    try {
-      await downloadBooks(searchQuery);
-      toast({
-        description: t("admin.downloadSuccess"),
-      });
-    } catch (error: any) {
-      console.error("Download error:", error);
-      toast({
-        variant: "destructive",
-        description: error.message,
-      });
-    }
-  };
-
-  const handleDelete = async () => {
-    if (!bookToDelete) return;
-
-    try {
-      const { error } = await supabase
-        .from("books")
-        .delete()
-        .eq("id", bookToDelete.id);
-
-      if (error) throw error;
-
-      toast({
-        description: t("admin.deleteSuccess"),
-      });
-      
-      setIsDeleteDialogOpen(false);
-      setBookToDelete(null);
-      refetch();
-    } catch (error: any) {
-      console.error("Delete error:", error);
-      toast({
-        description: t("common.error"),
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleSearch = useCallback((value: string) => {
+  const handleSearch = useCallback((term: string) => {
     setCurrentPage(1);
-    setSearchParams(value ? { q: value } : {}, { replace: true });
+    setSearchParams(term ? { q: term } : {});
   }, [setSearchParams]);
+
+  const handleScanResult = async (isbn: string) => {
+    try {
+      const bookData = await fetchBookData(isbn);
+      if (bookData) {
+        setSelectedBook(bookData);
+        setIsScannerOpen(false);
+        setIsFormOpen(true);
+      }
+    } catch (error) {
+      console.error("Error fetching book data:", error);
+      toast({
+        variant: "destructive",
+        description: t("common.error")
+      });
+    }
+  };
 
   const handleEdit = (book: Book) => {
     setSelectedBook(book);
     setIsFormOpen(true);
   };
 
-  const handleScan = () => {
-    setIsScannerOpen(true);
-  };
+  const handleDelete = async () => {
+    if (!selectedBook) return;
 
-  const handleBarcodeScan = async (isbn: string) => {
     try {
-      const bookData = await fetchBookData(isbn);
-      if (bookData) {
-        setScannedBookData(bookData);
-        setIsScannerOpen(false);
-        setSelectedBook(null);
-        setIsFormOpen(true);
-      } else {
-        toast({
-          variant: "destructive",
-          description: t("admin.scanner.bookNotFound"),
-        });
-      }
+      const { error } = await supabase
+        .from('books')
+        .delete()
+        .eq('id', selectedBook.id);
+
+      if (error) throw error;
+
+      toast({
+        description: t("admin.deleteSuccess")
+      });
+      
+      refetch();
     } catch (error) {
-      console.error("Error fetching book data:", error);
+      console.error('Error deleting book:', error);
       toast({
         variant: "destructive",
-        description: t("admin.scanner.error"),
+        description: t("common.error")
       });
+    } finally {
+      setIsDeleteDialogOpen(false);
+      setSelectedBook(null);
     }
   };
 
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
+  const onDownloadSelected = (selectedBooks: Book[]) => {
+    downloadBooks(selectedBooks);
+    toast({
+      description: t("admin.downloadSuccess")
+    });
+  };
+
+  const onDeleteClick = (book: Book) => {
+    setSelectedBook(book);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const closeForm = () => {
+    setIsFormOpen(false);
+    setSelectedBook(null);
   };
 
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 space-y-6">
-      <BookHeader
-        onDownload={handleDownload}
-        onNewBook={() => {
-          setSelectedBook(null);
-          setScannedBookData(null);
-          setIsFormOpen(true);
-        }}
-        onScan={handleScan}
+    <div className="space-y-6">
+      <BookHeader onNewBook={() => setIsFormOpen(true)} onScanBook={() => setIsScannerOpen(true)} />
+
+      <BookSearch
+        initialValue={searchQuery}
+        onSearch={handleSearch}
       />
 
-      <div className="space-y-6">
-        <BookSearch 
-          initialValue={searchQuery}
-          onSearch={handleSearch}
-        />
+      <BookList
+        books={data?.books || []}
+        onEdit={handleEdit}
+        onDelete={onDeleteClick}
+        onDownloadSelected={onDownloadSelected}
+      />
 
-        <div className="rounded-md border">
-          <BookList
-            books={data?.books || []}
-            onEdit={handleEdit}
-            onDelete={(book) => {
-              setBookToDelete(book);
-              setIsDeleteDialogOpen(true);
-            }}
-          />
-        </div>
-
+      {data?.totalPages && data.totalPages > 1 && (
         <BookPagination
           currentPage={currentPage}
-          totalPages={data?.totalPages || 1}
-          onPageChange={handlePageChange}
+          totalPages={data.totalPages}
+          onPageChange={setCurrentPage}
         />
-      </div>
+      )}
 
       <BookForm
         book={selectedBook}
         isOpen={isFormOpen}
-        onClose={() => {
-          setIsFormOpen(false);
-          setSelectedBook(null);
-          setScannedBookData(null);
-        }}
-        onSave={async () => {
-          try {
-            await refetch();
-            setIsFormOpen(false);
-            setSelectedBook(null);
-            setScannedBookData(null);
-          } catch (error) {
-            console.error('Failed to refresh book list:', error);
-          }
-        }}
-        initialData={scannedBookData}
+        onClose={closeForm}
+        onSave={refetch}
       />
 
       <BookDeleteDialog
@@ -186,8 +148,8 @@ const Books = () => {
 
       <BarcodeScanner
         isOpen={isScannerOpen}
-        onClose={() => setIsScannerOpen(false)}
-        onScan={handleBarcodeScan}
+        onOpenChange={setIsScannerOpen}
+        onResult={handleScanResult}
       />
     </div>
   );

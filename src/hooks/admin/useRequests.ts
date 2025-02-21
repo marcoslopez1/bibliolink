@@ -14,7 +14,14 @@ export const useRequests = (currentPage: number, searchQuery: string) => {
 
       let query = supabase
         .from('book_requests')
-        .select('*', { count: 'exact' });
+        .select(`
+          *,
+          profiles:created_by (
+            first_name,
+            last_name,
+            email
+          )
+        `, { count: 'exact' });
 
       if (searchQuery) {
         query = query.or(`title.ilike.%${searchQuery}%,author.ilike.%${searchQuery}%`);
@@ -26,10 +33,13 @@ export const useRequests = (currentPage: number, searchQuery: string) => {
 
       if (error) throw error;
 
-      // Cast the data to ensure it matches our BookRequest type
+      // Transform the data to match the BookRequest type
       const typedData = (data || []).map(item => ({
         ...item,
-        status: item.status as BookRequest['status']
+        status: item.status as BookRequest['status'],
+        user_first_name: item.profiles?.first_name || '',
+        user_last_name: item.profiles?.last_name || '',
+        user_email: item.profiles?.email || ''
       }));
 
       return {
