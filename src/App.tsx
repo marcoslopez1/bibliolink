@@ -18,6 +18,7 @@ import AdminBooks from "./pages/admin/Books";
 import BooksReservation from "./pages/admin/BooksReservation";
 import MyBooks from "./pages/MyBooks";
 import Settings from "./pages/admin/Settings";
+import BookRequests from "./pages/BookRequests";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +42,14 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <MyBooks />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/book-requests"
+                element={
+                  <ProtectedRoute>
+                    <BookRequests />
                   </ProtectedRoute>
                 }
               />

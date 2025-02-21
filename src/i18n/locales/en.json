@@ -3,7 +3,8 @@
     "home": "Home",
     "howItWorks": "How It Works",
     "myBooks": "My Books",
-    "settings": "Settings"
+    "settings": "Settings",
+    "bookRequests": "Book Requests"
   },
   "auth": {
     "signIn": "Sign In",
@@ -139,6 +140,32 @@
       "tryAgain": "Try Again",
       "bookNotFound": "No book found with this barcode",
       "scanButton": "Scan Book"
+    }
+  },
+  "bookRequests": {
+    "title": "Book Requests",
+    "form": {
+      "title": "Request a Book",
+      "description": "If you want to suggest a book, you can use this form to send us your preferences.",
+      "bookTitle": "Book Title",
+      "author": "Author",
+      "editorial": "Editorial",
+      "link": "Reference Link",
+      "comments": "Comments",
+      "send": "Send Request",
+      "cancel": "Cancel",
+      "success": "Request sent successfully",
+      "error": "Error sending request"
+    },
+    "list": {
+      "title": "My Requests",
+      "noRequests": "You haven't made any requests yet",
+      "status": {
+        "accepted": "Accepted",
+        "pending": "Pending",
+        "rejected": "Rejected"
+      },
+      "requestDate": "Requested on"
     }
   },
   "search": {
