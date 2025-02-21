@@ -10,7 +10,9 @@ import { useResponsiveMenu } from "@/hooks/use-responsive-menu";
 
 const Navbar = () => {
   const { session } = useAuth();
-  const { isMenuOpen, setIsMenuOpen, shouldCollapse, containerRef, contentRef } = useResponsiveMenu();
+  const { isMenuOpen, setIsMenuOpen, shouldCollapse, containerRef, contentRef } = useResponsiveMenu({
+    forceCollapse: !!session
+  });
 
   const { data: profile } = useQuery({
     queryKey: ["profile", session?.user.id],
@@ -47,27 +49,41 @@ const Navbar = () => {
               <AuthButtons session={!!session} onItemClick={closeMenu} />
             )}
             {shouldCollapse && (
-              <button
-                className="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                aria-label="Toggle menu"
-              >
-                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-              </button>
+              <div className="relative">
+                <button
+                  className="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                >
+                  {isMenuOpen ? (
+                    <X className="h-6 w-6" />
+                  ) : (
+                    <Menu className="h-6 w-6" />
+                  )}
+                </button>
+                
+                {/* Expandable menu */}
+                {isMenuOpen && (
+                  <div className="absolute top-full right-0 mt-1 z-50">
+                    <div 
+                      className="relative bg-white shadow-lg rounded-lg border border-gray-200 w-64 py-2"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <NavLinks
+                        isAdmin={profile?.is_admin}
+                        session={!!session}
+                        isMobile
+                        onItemClick={closeMenu}
+                      />
+                      <div className="mt-2 pt-2 px-3 border-t border-gray-200">
+                        <AuthButtons session={!!session} onItemClick={closeMenu} />
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             )}
           </div>
         </div>
-
-        {shouldCollapse && isMenuOpen && (
-          <div className="absolute right-0 top-16 bg-white border-l border-b border-t border-gray-200 rounded-bl-lg shadow-lg">
-            <div className="py-2">
-              <NavLinks isAdmin={profile?.is_admin} isMobile onItemClick={closeMenu} session={!!session} />
-              <div className="border-t border-gray-200 px-3 py-2">
-                <AuthButtons session={!!session} onItemClick={closeMenu} />
-              </div>
-            </div>
-          </div>
-        )}
       </nav>
     </header>
   );
