@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -11,7 +12,7 @@ export const useBooks = (currentPage: number, searchQuery: string) => {
   const fetchBooks = async () => {
     try {
       setIsLoading(true);
-      const start = (currentPage - 1) * ITEMS_PER_PAGE;
+      const start = (Number(currentPage) - 1) * ITEMS_PER_PAGE;
       const end = start + ITEMS_PER_PAGE - 1;
 
       let query = supabase

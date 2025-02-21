@@ -1,4 +1,3 @@
-
 import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/components/ui/use-toast";
@@ -17,7 +16,7 @@ import { fetchBookData } from "@/services/bookApis";
 import { Book } from "@/types/book";
 
 const Books = () => {
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get("q") || "";
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -29,7 +28,7 @@ const Books = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
 
-  const { data, isLoading, refetch } = useBooks(currentPage, searchQuery);
+  const { data, isLoading, refetch } = useBooks(Number(currentPage), searchQuery);
 
   const handleDownload = async () => {
     try {
