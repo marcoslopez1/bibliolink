@@ -28,16 +28,19 @@ const RequestsTable = ({ requests, onEdit, onDelete }: RequestsTableProps) => {
   };
 
   return (
-    <div className="rounded-md border">
+    <div className="rounded-md border bg-white">
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead>{t("book.title")}</TableHead>
             <TableHead>{t("book.author")}</TableHead>
             <TableHead>{t("book.editorial")}</TableHead>
+            <TableHead>{t("admin.Name")}</TableHead>
+            <TableHead>{t("admin.Lastname")}</TableHead>
+            <TableHead>{t("admin.Email")}</TableHead>
             <TableHead>{t("bookRequests.form.link")}</TableHead>
             <TableHead>{t("bookRequests.form.comments")}</TableHead>
-            <TableHead>{t("bookRequests.list.status")}</TableHead>
+            <TableHead>{t("admin.Status")}</TableHead>
             <TableHead>{t("bookRequests.list.requestDate")}</TableHead>
             <TableHead className="text-right">{t("admin.actions")}</TableHead>
           </TableRow>
@@ -48,6 +51,9 @@ const RequestsTable = ({ requests, onEdit, onDelete }: RequestsTableProps) => {
               <TableCell>{request.title}</TableCell>
               <TableCell>{request.author}</TableCell>
               <TableCell>{request.editorial}</TableCell>
+              <TableCell>{request.user_first_name}</TableCell>
+              <TableCell>{request.user_last_name}</TableCell>
+              <TableCell>{request.user_email}</TableCell>
               <TableCell>
                 {request.link && (
                   <a
@@ -63,7 +69,7 @@ const RequestsTable = ({ requests, onEdit, onDelete }: RequestsTableProps) => {
               <TableCell>{request.comments}</TableCell>
               <TableCell>
                 <Badge variant={getStatusBadgeVariant(request.status)}>
-                  {t(`bookRequests.list.status.${request.status}`)}
+                  {t(`admin.Status.${request.status}`)}
                 </Badge>
               </TableCell>
               <TableCell>

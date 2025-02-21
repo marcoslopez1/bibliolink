@@ -1,4 +1,3 @@
-
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { BookCopy, Library, BookOpenCheck, HelpCircle, Settings, BookPlus, MessagesSquare } from "lucide-react";
@@ -21,7 +20,7 @@ export const NavLinks = ({ isAdmin, isMobile, onItemClick, session }: NavLinksPr
 
   const baseStyles = isMobile
     ? "flex items-center px-3 py-2 text-base font-medium"
-    : "inline-flex items-center h-16 px-2 whitespace-nowrap text-sm";
+    : "inline-flex items-center h-16 px-1.5 whitespace-nowrap text-sm";
 
   const handleClick = () => {
     if (onItemClick) {
@@ -30,7 +29,7 @@ export const NavLinks = ({ isAdmin, isMobile, onItemClick, session }: NavLinksPr
   };
 
   return (
-    <div className={isMobile ? "space-y-1 w-fit min-w-[200px]" : "ml-4 flex items-center space-x-2"}>
+    <div className={isMobile ? "space-y-1 w-fit min-w-[200px]" : "ml-2 flex items-center gap-1"}>
       <Link
         to="/how-it-works"
         className={`${baseStyles} ${isActive("/how-it-works")}`}

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useTranslation } from "react-i18next";
@@ -124,13 +123,13 @@ const RequestForm = ({ request, isOpen, onClose, onSave }: RequestFormProps) => 
                 value={formData.status}
                 onValueChange={(value) => setFormData({ ...formData, status: value })}
               >
-                <SelectTrigger>
-                  <SelectValue placeholder={t("bookRequests.list.status")} />
+                <SelectTrigger className="bg-white">
+                  <SelectValue placeholder={t("admin.Status")} />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="pending">{t("bookRequests.list.status.pending")}</SelectItem>
-                  <SelectItem value="accepted">{t("bookRequests.list.status.accepted")}</SelectItem>
-                  <SelectItem value="rejected">{t("bookRequests.list.status.rejected")}</SelectItem>
+                <SelectContent className="bg-white">
+                  <SelectItem value="pending">{t("admin.Status.pending")}</SelectItem>
+                  <SelectItem value="accepted">{t("admin.Status.accepted")}</SelectItem>
+                  <SelectItem value="rejected">{t("admin.Status.rejected")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>

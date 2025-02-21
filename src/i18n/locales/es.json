@@ -140,6 +140,12 @@
       "tryAgain": "Intentar de Nuevo",
       "bookNotFound": "No se encontró ningún libro con este código de barras",
       "scanButton": "Escanear Libro"
+    },
+    "requestsManagement": "Gestión de Solicitudes",
+    "Status": {
+      "pending": "Pendiente",
+      "accepted": "Aceptada",
+      "rejected": "Rechazada"
     }
   },
   "bookRequests": {

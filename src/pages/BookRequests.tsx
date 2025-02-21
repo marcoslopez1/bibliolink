@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/components/ui/use-toast";
@@ -41,7 +40,6 @@ const BookRequests = () => {
       
       if (error) throw error;
       
-      // Ensure the data matches our BookRequest type
       const typedData = (data || []) as BookRequest[];
       setRequests(typedData);
     } catch (error: any) {
@@ -54,7 +52,6 @@ const BookRequests = () => {
   };
 
   const handleSubmit = async () => {
-    // Validate required fields
     if (!formData.title.trim() || !formData.author.trim()) {
       toast({
         variant: "destructive",
@@ -178,7 +175,7 @@ const BookRequests = () => {
           </div>
         ) : (
           requests.map((request) => (
-            <Card key={request.id} className="p-6">
+            <Card key={request.id} className="p-6 bg-white">
               <div className="flex justify-between items-start">
                 <div>
                   <h3 className="text-lg font-semibold">{request.title}</h3>

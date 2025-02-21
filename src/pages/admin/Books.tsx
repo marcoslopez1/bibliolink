@@ -16,7 +16,7 @@ import { fetchBookData } from "@/services/bookApis";
 import { Book } from "@/types/book";
 
 const Books = () => {
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get("q") || "";
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -73,7 +73,7 @@ const Books = () => {
   };
 
   const handleSearch = useCallback((value: string) => {
-    setCurrentPage(1);  // Reset to first page when searching
+    setCurrentPage(1);
     setSearchParams(value ? { q: value } : {}, { replace: true });
   }, [setSearchParams]);
 
