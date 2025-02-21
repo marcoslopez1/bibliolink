@@ -1,6 +1,7 @@
+
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { BookCopy, Library, BookOpenCheck, HelpCircle, Settings, BookPlus } from "lucide-react";
+import { BookCopy, Library, BookOpenCheck, HelpCircle, Settings, BookPlus, MessagesSquare } from "lucide-react";
 
 interface NavLinksProps {
   isAdmin?: boolean;
@@ -74,6 +75,16 @@ export const NavLinks = ({ isAdmin, isMobile, onItemClick, session }: NavLinksPr
             <div className="flex items-center gap-2">
               <BookCopy className="h-4 w-4 flex-shrink-0" />
               <span>{t("admin.catalogManagement")}</span>
+            </div>
+          </Link>
+          <Link
+            to="/admin/requests"
+            className={`${baseStyles} ${isActive("/admin/requests")}`}
+            onClick={handleClick}
+          >
+            <div className="flex items-center gap-2">
+              <MessagesSquare className="h-4 w-4 flex-shrink-0" />
+              <span>{t("admin.requestsManagement")}</span>
             </div>
           </Link>
           <Link

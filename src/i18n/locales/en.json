@@ -1,3 +1,4 @@
+
 {
   "nav": {
     "home": "Home",
@@ -77,10 +78,14 @@
   "admin": {
     "catalogManagement": "Catalog Management",
     "reservationsManagement": "Book Reservations",
+    "requestsManagement": "Requests Management",
     "downloadSelected": "Download Selected Books",
     "scanBook": "Scan Book",
     "newEntry": "Add New Book",
     "editBook": "Edit Book",
+    "editRequest": "Edit Request",
+    "requestDeleted": "Request deleted successfully",
+    "requestUpdated": "Request updated successfully",
     "edit": "Edit",
     "delete": "Delete",
     "actions": "Actions",
@@ -151,6 +156,7 @@
       "author": "Author",
       "editorial": "Editorial",
       "link": "Reference Link",
+      "viewLink": "View Link",
       "comments": "Comments",
       "send": "Send Request",
       "cancel": "Cancel",
@@ -177,7 +183,8 @@
     "save": "Save",
     "cancel": "Cancel",
     "back": "Back",
-    "optional": "Optional"
+    "optional": "Optional",
+    "error": "An error occurred"
   },
   "howItWorks": {
     "title": "How It Works",
