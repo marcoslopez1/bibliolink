@@ -1,3 +1,4 @@
+
 import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/components/ui/use-toast";
@@ -73,7 +74,7 @@ const Books = () => {
   };
 
   const handleSearch = useCallback((value: string) => {
-    setCurrentPage(1);
+    setCurrentPage(1);  // Reset to first page when searching
     setSearchParams(value ? { q: value } : {}, { replace: true });
   }, [setSearchParams]);
 
