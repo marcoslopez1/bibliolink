@@ -3,7 +3,8 @@
     "home": "Inicio",
     "howItWorks": "Cómo Funciona",
     "myBooks": "Mis Libros",
-    "settings": "Ajustes"
+    "settings": "Ajustes",
+    "bookRequests": "Solicitudes de Libros"
   },
   "auth": {
     "signIn": "Iniciar Sesión",
@@ -139,6 +140,32 @@
       "tryAgain": "Intentar de Nuevo",
       "bookNotFound": "No se encontró ningún libro con este código de barras",
       "scanButton": "Escanear Libro"
+    }
+  },
+  "bookRequests": {
+    "title": "Solicitudes de Libros",
+    "form": {
+      "title": "Solicitar un Libro",
+      "description": "Si deseas sugerir un libro, puedes usar este formulario para enviarnos tus preferencias.",
+      "bookTitle": "Título del Libro",
+      "author": "Autor",
+      "editorial": "Editorial",
+      "link": "Enlace de Referencia",
+      "comments": "Comentarios",
+      "send": "Enviar Solicitud",
+      "cancel": "Cancelar",
+      "success": "Solicitud enviada con éxito",
+      "error": "Error al enviar la solicitud"
+    },
+    "list": {
+      "title": "Mis Solicitudes",
+      "noRequests": "Aún no has realizado ninguna solicitud",
+      "status": {
+        "accepted": "Aceptada",
+        "pending": "Pendiente",
+        "rejected": "Rechazada"
+      },
+      "requestDate": "Solicitado el"
     }
   },
   "filters": {

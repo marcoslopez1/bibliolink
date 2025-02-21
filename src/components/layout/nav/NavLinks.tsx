@@ -1,7 +1,6 @@
-
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { BookCopy, Library, BookOpenCheck, HelpCircle, Settings } from "lucide-react";
+import { BookCopy, Library, BookOpenCheck, HelpCircle, Settings, BookPlus } from "lucide-react";
 
 interface NavLinksProps {
   isAdmin?: boolean;
@@ -21,7 +20,7 @@ export const NavLinks = ({ isAdmin, isMobile, onItemClick, session }: NavLinksPr
 
   const baseStyles = isMobile
     ? "flex items-center px-3 py-2 text-base font-medium"
-    : "inline-flex items-center h-16 px-3 whitespace-nowrap";
+    : "inline-flex items-center h-16 px-2 whitespace-nowrap text-sm";
 
   const handleClick = () => {
     if (onItemClick) {
@@ -30,7 +29,7 @@ export const NavLinks = ({ isAdmin, isMobile, onItemClick, session }: NavLinksPr
   };
 
   return (
-    <div className={isMobile ? "space-y-1 w-fit min-w-[200px]" : "ml-6 flex items-center space-x-4"}>
+    <div className={isMobile ? "space-y-1 w-fit min-w-[200px]" : "ml-4 flex items-center space-x-2"}>
       <Link
         to="/how-it-works"
         className={`${baseStyles} ${isActive("/how-it-works")}`}
@@ -42,16 +41,28 @@ export const NavLinks = ({ isAdmin, isMobile, onItemClick, session }: NavLinksPr
         </div>
       </Link>
       {session && (
-        <Link
-          to="/my-books"
-          className={`${baseStyles} ${isActive("/my-books")}`}
-          onClick={handleClick}
-        >
-          <div className="flex items-center gap-2">
-            <Library className="h-4 w-4 flex-shrink-0" />
-            <span>{t("nav.myBooks")}</span>
-          </div>
-        </Link>
+        <>
+          <Link
+            to="/my-books"
+            className={`${baseStyles} ${isActive("/my-books")}`}
+            onClick={handleClick}
+          >
+            <div className="flex items-center gap-2">
+              <Library className="h-4 w-4 flex-shrink-0" />
+              <span>{t("nav.myBooks")}</span>
+            </div>
+          </Link>
+          <Link
+            to="/book-requests"
+            className={`${baseStyles} ${isActive("/book-requests")}`}
+            onClick={handleClick}
+          >
+            <div className="flex items-center gap-2">
+              <BookPlus className="h-4 w-4 flex-shrink-0" />
+              <span>{t("nav.bookRequests")}</span>
+            </div>
+          </Link>
+        </>
       )}
       {isAdmin && (
         <>
