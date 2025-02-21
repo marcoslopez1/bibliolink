@@ -109,7 +109,6 @@ const BooksReservation = () => {
     },
     staleTime: 1000 * 60,
     gcTime: 1000 * 60 * 5,
-    keepPreviousData: true,
   });
 
   if (isLoading) {

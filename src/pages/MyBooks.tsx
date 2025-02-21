@@ -46,8 +46,8 @@ const MyBooks = () => {
     isFetchingNextPage
   } = useInfiniteQuery<PageType>({
     queryKey: ["my-reservations", session?.user.id],
-    queryFn: async ({ pageParam = 0 }) => {
-      const from = Number(pageParam) * ITEMS_PER_PAGE;
+    queryFn: async ({ pageParam }) => {
+      const from = (pageParam as number) * ITEMS_PER_PAGE;
       const to = from + ITEMS_PER_PAGE - 1;
 
       const { data, error, count } = await supabase
@@ -71,7 +71,7 @@ const MyBooks = () => {
 
       return {
         reservations: data as ReservationType[],
-        nextPage: to < (count || 0) - 1 ? pageParam + 1 : null,
+        nextPage: to < (count || 0) - 1 ? (pageParam as number) + 1 : null,
         totalCount: count || 0
       };
     },
