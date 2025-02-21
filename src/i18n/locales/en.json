@@ -2,7 +2,8 @@
   "nav": {
     "home": "Home",
     "howItWorks": "How It Works",
-    "myBooks": "My Books"
+    "myBooks": "My Books",
+    "settings": "Settings"
   },
   "auth": {
     "signIn": "Sign In",
@@ -95,6 +96,9 @@
     "Reservation Date": "Reservation Date",
     "noReservations": "No reservations found",
     "noReservationsFound": "No reservations found matching your search",
+    "settingsPage": {
+      "title": "Settings"
+    },
     "settings": {
       "addSuccess": "Item added successfully",
       "updateSuccess": "Item updated successfully",

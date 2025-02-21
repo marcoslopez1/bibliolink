@@ -2,7 +2,8 @@
   "nav": {
     "home": "Inicio",
     "howItWorks": "Cómo Funciona",
-    "myBooks": "Mis Libros"
+    "myBooks": "Mis Libros",
+    "settings": "Ajustes"
   },
   "auth": {
     "signIn": "Iniciar Sesión",
@@ -95,6 +96,9 @@
     "Reservation Date": "Fecha de reserva",
     "noReservations": "No hay reservas",
     "noReservationsFound": "No se encontraron reservas que coincidan con tu búsqueda",
+    "settingsPage": {
+      "title": "Ajustes"
+    },
     "settings": {
       "addSuccess": "Elemento añadido correctamente",
       "updateSuccess": "Elemento actualizado correctamente",

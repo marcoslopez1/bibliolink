@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,11 +7,7 @@ import { Pencil, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-
-interface SettingItem {
-  id: number;
-  name: string;
-}
+import { SettingItem, SettingType } from "@/types/settings";
 
 interface EditDialogProps {
   isOpen: boolean;
@@ -169,10 +164,9 @@ const Settings = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-normal mb-8">{t("admin.settings")}</h1>
+      <h1 className="text-3xl font-normal mb-8">{t("admin.settingsPage.title")}</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Genres Section */}
         <Card className="shadow-sm">
           <CardHeader>
             <CardTitle className="text-xl font-normal">{t("admin.genres")}</CardTitle>
@@ -220,7 +214,6 @@ const Settings = () => {
           </CardContent>
         </Card>
 
-        {/* Categories Section */}
         <Card className="shadow-sm">
           <CardHeader>
             <CardTitle className="text-xl font-normal">{t("admin.categories")}</CardTitle>
@@ -268,7 +261,6 @@ const Settings = () => {
           </CardContent>
         </Card>
 
-        {/* Buildings Section */}
         <Card className="shadow-sm">
           <CardHeader>
             <CardTitle className="text-xl font-normal">{t("admin.buildings")}</CardTitle>

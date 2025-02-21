@@ -40,15 +40,19 @@ const BookFormFields = ({ formData, setFormData }: BookFormFieldsProps) => {
 
   useEffect(() => {
     const fetchSettings = async () => {
-      const [genresData, categoriesData, buildingsData] = await Promise.all([
-        supabase.from("genres").select("*").order("name"),
-        supabase.from("categories").select("*").order("name"),
-        supabase.from("buildings").select("*").order("name"),
-      ]);
+      try {
+        const [genresData, categoriesData, buildingsData] = await Promise.all([
+          supabase.from('genres').select("*").order("name"),
+          supabase.from('categories').select("*").order("name"),
+          supabase.from('buildings').select("*").order("name")
+        ]);
 
-      if (genresData.data) setGenres(genresData.data);
-      if (categoriesData.data) setCategories(categoriesData.data);
-      if (buildingsData.data) setBuildings(buildingsData.data);
+        if (genresData.data) setGenres(genresData.data);
+        if (categoriesData.data) setCategories(categoriesData.data);
+        if (buildingsData.data) setBuildings(buildingsData.data);
+      } catch (error) {
+        console.error("Error fetching settings:", error);
+      }
     };
 
     fetchSettings();
@@ -110,10 +114,10 @@ const BookFormFields = ({ formData, setFormData }: BookFormFieldsProps) => {
           value={formData.genre}
           onValueChange={(value) => setFormData({ ...formData, genre: value })}
         >
-          <SelectTrigger id="genre">
+          <SelectTrigger id="genre" className="bg-white">
             <SelectValue placeholder={t("book.genre")} />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white">
             {genres.map((genre) => (
               <SelectItem key={genre.id} value={genre.name}>
                 {genre.name}
@@ -129,10 +133,10 @@ const BookFormFields = ({ formData, setFormData }: BookFormFieldsProps) => {
           value={formData.category}
           onValueChange={(value) => setFormData({ ...formData, category: value })}
         >
-          <SelectTrigger id="category">
+          <SelectTrigger id="category" className="bg-white">
             <SelectValue placeholder={t("book.category")} />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white">
             {categories.map((category) => (
               <SelectItem key={category.id} value={category.name}>
                 {category.name}
@@ -185,10 +189,10 @@ const BookFormFields = ({ formData, setFormData }: BookFormFieldsProps) => {
           value={formData.building}
           onValueChange={(value) => setFormData({ ...formData, building: value })}
         >
-          <SelectTrigger id="building">
+          <SelectTrigger id="building" className="bg-white">
             <SelectValue placeholder={t("book.building")} />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white">
             {buildings.map((building) => (
               <SelectItem key={building.id} value={building.name}>
                 {building.name}
