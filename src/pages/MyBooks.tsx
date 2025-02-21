@@ -1,3 +1,4 @@
+
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/providers/AuthProvider";
@@ -13,6 +14,25 @@ import { Loader2 } from "lucide-react";
 const ITEMS_PER_PAGE = 10;
 const defaultBookCover = "https://media.istockphoto.com/id/626462142/photo/red-book.jpg?s=612x612&w=0&k=20&c=6GQND0qF5JAhrm1g_cZzXHQVRkkaA_625VXjfy9MtxA=";
 
+interface ReservationType {
+  id: number;
+  reserved_at: string;
+  returned_at: string | null;
+  books: {
+    title: string;
+    author: string;
+    status: string;
+    book_id: string;
+    image_url: string | null;
+  };
+}
+
+interface PageType {
+  reservations: ReservationType[];
+  nextPage: number | null;
+  totalCount: number;
+}
+
 const MyBooks = () => {
   const { session } = useAuth();
   const { t } = useTranslation();
@@ -24,10 +44,10 @@ const MyBooks = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage
-  } = useInfiniteQuery({
+  } = useInfiniteQuery<PageType>({
     queryKey: ["my-reservations", session?.user.id],
     queryFn: async ({ pageParam = 0 }) => {
-      const from = pageParam * ITEMS_PER_PAGE;
+      const from = Number(pageParam) * ITEMS_PER_PAGE;
       const to = from + ITEMS_PER_PAGE - 1;
 
       const { data, error, count } = await supabase
@@ -50,11 +70,12 @@ const MyBooks = () => {
       if (error) throw error;
 
       return {
-        reservations: data,
-        nextPage: to < (count || 0) - 1 ? pageParam + 1 : undefined,
-        totalCount: count
+        reservations: data as ReservationType[],
+        nextPage: to < (count || 0) - 1 ? pageParam + 1 : null,
+        totalCount: count || 0
       };
     },
+    initialPageParam: 0,
     getNextPageParam: (lastPage) => lastPage.nextPage,
     enabled: !!session?.user.id,
   });

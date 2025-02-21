@@ -1,3 +1,4 @@
+
 import { Navigate } from "react-router-dom";
 import { useAuth } from "@/providers/AuthProvider";
 import { useToast } from "@/components/ui/use-toast";
@@ -25,7 +26,7 @@ const AdminRoute = ({ children }: { children: React.ReactNode }) => {
     },
     enabled: !!session?.user.id,
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-    cacheTime: 1000 * 60 * 30, // Keep in cache for 30 minutes
+    gcTime: 1000 * 60 * 30, // Keep in cache for 30 minutes
     retry: false,
   });
 
