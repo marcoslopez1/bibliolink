@@ -1,6 +1,4 @@
 
-import { supabase } from "@/integrations/supabase/client";
-
 interface GoogleBookInfo {
   title?: string;
   authors?: string[];
@@ -14,6 +12,19 @@ interface GoogleBookInfo {
     type: string;
     identifier: string;
   }>;
+}
+
+interface OpenLibraryBook {
+  title: string;
+  authors: Array<{ name: string }>;
+  publishers?: string[];
+  publish_date?: string;
+  number_of_pages?: number;
+  cover?: {
+    small?: string;
+    medium?: string;
+    large?: string;
+  };
 }
 
 interface BookData {
@@ -54,44 +65,26 @@ async function fetchGoogleBooksData(isbn: string): Promise<BookData | null> {
   }
 }
 
-async function fetchISBNdbData(isbn: string): Promise<BookData | null> {
+async function fetchOpenLibraryData(isbn: string): Promise<BookData | null> {
   try {
-    const { data: { api_key }, error } = await supabase
-      .from('secrets')
-      .select('value')
-      .eq('key', 'ISBNDB_API_KEY')
-      .single();
-
-    if (error || !api_key) {
-      console.error("Error fetching ISBNdb API key:", error);
+    const response = await fetch(`https://openlibrary.org/isbn/${isbn}.json`);
+    if (!response.ok) {
       return null;
     }
-
-    const response = await fetch(`https://api2.isbndb.com/book/${isbn}`, {
-      headers: {
-        'Authorization': api_key
-      }
-    });
-
-    const data = await response.json();
-
-    if (!data.book) {
-      return null;
-    }
+    
+    const data: OpenLibraryBook = await response.json();
 
     return {
-      title: data.book.title || "",
-      author: data.book.authors?.join(", ") || "",
-      editorial: data.book.publisher || "",
-      publication_year: data.book.date_published 
-        ? new Date(data.book.date_published).getFullYear().toString()
-        : "",
-      pages: data.book.pages?.toString() || "",
-      image_url: data.book.image || "",
+      title: data.title || "",
+      author: data.authors?.map(author => author.name).join(", ") || "",
+      editorial: data.publishers?.[0] || "",
+      publication_year: data.publish_date ? data.publish_date.substring(0, 4) : "",
+      pages: data.number_of_pages?.toString() || "",
+      image_url: data.cover?.medium || `https://covers.openlibrary.org/b/isbn/${isbn}-M.jpg`,
       isbn: isbn
     };
   } catch (error) {
-    console.error("Error fetching from ISBNdb:", error);
+    console.error("Error fetching from Open Library:", error);
     return null;
   }
 }
@@ -103,10 +96,10 @@ export async function fetchBookData(isbn: string): Promise<BookData | null> {
     return googleData;
   }
 
-  // If Google Books fails, try ISBNdb
-  const isbndbData = await fetchISBNdbData(isbn);
-  if (isbndbData) {
-    return isbndbData;
+  // If Google Books fails, try Open Library
+  const openLibraryData = await fetchOpenLibraryData(isbn);
+  if (openLibraryData) {
+    return openLibraryData;
   }
 
   return null;

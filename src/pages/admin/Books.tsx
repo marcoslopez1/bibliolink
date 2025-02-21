@@ -25,7 +25,7 @@ const Books = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [bookToDelete, setBookToDelete] = useState<Book | null>(null);
   const [isScannerOpen, setIsScannerOpen] = useState(false);
-  const [scannedBookData, setScannedBookData] = useState<any>(null);
+  const [scannedBookData, setScannedBookData] = useState<Partial<Book> | null>(null);
   const { t } = useTranslation();
   const { toast } = useToast();
 
@@ -53,7 +53,7 @@ const Books = () => {
       const { error } = await supabase
         .from("books")
         .delete()
-        .eq("id", bookToDelete?.id);
+        .eq("id", bookToDelete.id);
 
       if (error) throw error;
 
@@ -180,7 +180,7 @@ const Books = () => {
         isOpen={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
         onConfirm={handleDelete}
-        book={bookToDelete}
+        bookToDelete={bookToDelete}
       />
 
       <BarcodeScanner
