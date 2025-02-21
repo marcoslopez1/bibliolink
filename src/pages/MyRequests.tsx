@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { format } from "date-fns";
@@ -7,6 +8,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "@/providers/AuthProvider";
 
 interface BookRequest {
   id: number;
@@ -16,51 +21,74 @@ interface BookRequest {
   link: string;
   comments: string;
   status: "accepted" | "pending" | "rejected";
-  requestDate: string;
+  created_at: string;
+  created_by: string;
 }
 
 const MyRequests = () => {
   const { t } = useTranslation();
+  const { toast } = useToast();
+  const { session } = useAuth();
+  const queryClient = useQueryClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [requests, setRequests] = useState<BookRequest[]>([
-    {
-      id: 1,
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      editorial: "Scribner",
-      link: "https://example.com/book1",
-      comments: "Would love to read this classic",
-      status: "accepted",
-      requestDate: "2025-02-21",
-    },
-    {
-      id: 2,
-      title: "1984",
-      author: "George Orwell",
-      editorial: "Penguin Books",
-      link: "https://example.com/book2",
-      comments: "Heard great things about this book",
-      status: "pending",
-      requestDate: "2025-02-20",
-    },
-    {
-      id: 3,
-      title: "The Catcher in the Rye",
-      author: "J.D. Salinger",
-      editorial: "Little, Brown and Company",
-      link: "https://example.com/book3",
-      comments: "Required for my literature class",
-      status: "rejected",
-      requestDate: "2025-02-19",
-    },
-  ]);
-
   const [formData, setFormData] = useState({
     title: "",
     author: "",
     editorial: "",
     link: "",
     comments: "",
+  });
+
+  // Fetch user's requests
+  const { data: requests = [] } = useQuery({
+    queryKey: ["my-requests"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("book_requests")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      return data as BookRequest[];
+    },
+  });
+
+  // Create request mutation
+  const createRequest = useMutation({
+    mutationFn: async (newRequest: Omit<BookRequest, "id" | "status" | "created_at" | "created_by">) => {
+      const { data, error } = await supabase
+        .from("book_requests")
+        .insert({
+          ...newRequest,
+          created_by: session?.user.id,
+          status: "pending"
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      toast({
+        description: t("requests.form.success")
+      });
+      queryClient.invalidateQueries({ queryKey: ["my-requests"] });
+      setIsDialogOpen(false);
+      setFormData({
+        title: "",
+        author: "",
+        editorial: "",
+        link: "",
+        comments: "",
+      });
+    },
+    onError: () => {
+      toast({
+        variant: "destructive",
+        description: t("requests.form.error")
+      });
+    },
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -70,15 +98,7 @@ const MyRequests = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const newRequest: BookRequest = {
-      id: requests.length + 1,
-      ...formData,
-      status: "pending",
-      requestDate: new Date().toISOString().split("T")[0],
-    };
-    setRequests((prev) => [newRequest, ...prev]);
-    setFormData({ title: "", author: "", editorial: "", link: "", comments: "" });
-    setIsDialogOpen(false);
+    createRequest.mutate(formData);
   };
 
   const getStatusBadge = (status: BookRequest["status"]) => {
@@ -178,7 +198,7 @@ const MyRequests = () => {
               >
                 {t("requests.requestForm.cancel")}
               </Button>
-              <Button type="submit">
+              <Button type="submit" disabled={createRequest.isPending}>
                 {t("requests.requestForm.send")}
               </Button>
             </div>
@@ -206,7 +226,7 @@ const MyRequests = () => {
                     <p className="text-gray-600 mt-2">{request.comments}</p>
                   )}
                   <p className="text-gray-500 text-sm mt-2">
-                    {t("requests.status.requestDate")}: {format(new Date(request.requestDate), "PP")}
+                    {t("requests.status.requestDate")}: {format(new Date(request.created_at), "PP")}
                   </p>
                 </div>
                 <div>
