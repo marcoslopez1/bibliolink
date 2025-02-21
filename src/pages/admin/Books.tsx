@@ -1,4 +1,5 @@
-import { useState, useCallback, useEffect } from "react";
+
+import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/components/ui/use-toast";
 import { useSearchParams } from "react-router-dom";
@@ -9,8 +10,10 @@ import BookHeader from "@/components/admin/books/BookHeader";
 import BookSearch from "@/components/admin/books/BookSearch";
 import BookPagination from "@/components/admin/books/BookPagination";
 import BookDeleteDialog from "@/components/admin/books/BookDeleteDialog";
+import BarcodeScanner from "@/components/admin/books/scanner/BarcodeScanner";
 import { useBooks } from "@/hooks/admin/useBooks";
 import { downloadBooks } from "@/utils/download";
+import { fetchBookData } from "@/services/bookApis";
 import { Book } from "@/types/book";
 
 const Books = () => {
@@ -21,6 +24,8 @@ const Books = () => {
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [bookToDelete, setBookToDelete] = useState<Book | null>(null);
+  const [isScannerOpen, setIsScannerOpen] = useState(false);
+  const [scannedBookData, setScannedBookData] = useState<any>(null);
   const { t } = useTranslation();
   const { toast } = useToast();
 
@@ -78,6 +83,33 @@ const Books = () => {
     setIsFormOpen(true);
   };
 
+  const handleScan = () => {
+    setIsScannerOpen(true);
+  };
+
+  const handleBarcodeScan = async (isbn: string) => {
+    try {
+      const bookData = await fetchBookData(isbn);
+      if (bookData) {
+        setScannedBookData(bookData);
+        setIsScannerOpen(false);
+        setSelectedBook(null);
+        setIsFormOpen(true);
+      } else {
+        toast({
+          variant: "destructive",
+          description: t("admin.scanner.bookNotFound"),
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching book data:", error);
+      toast({
+        variant: "destructive",
+        description: t("admin.scanner.error"),
+      });
+    }
+  };
+
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
@@ -96,8 +128,10 @@ const Books = () => {
         onDownload={handleDownload}
         onNewBook={() => {
           setSelectedBook(null);
+          setScannedBookData(null);
           setIsFormOpen(true);
         }}
+        onScan={handleScan}
       />
 
       <div className="space-y-6">
@@ -130,6 +164,7 @@ const Books = () => {
         onClose={() => {
           setIsFormOpen(false);
           setSelectedBook(null);
+          setScannedBookData(null);
         }}
         onSave={async () => {
           try {
@@ -138,6 +173,7 @@ const Books = () => {
             console.error('Failed to refresh book list:', error);
           }
         }}
+        initialData={scannedBookData}
       />
 
       <BookDeleteDialog
@@ -145,6 +181,12 @@ const Books = () => {
         onOpenChange={setIsDeleteDialogOpen}
         onConfirm={handleDelete}
         book={bookToDelete}
+      />
+
+      <BarcodeScanner
+        isOpen={isScannerOpen}
+        onClose={() => setIsScannerOpen(false)}
+        onScan={handleBarcodeScan}
       />
     </div>
   );

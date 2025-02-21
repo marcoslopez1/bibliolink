@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useTranslation } from "react-i18next";
@@ -11,9 +12,10 @@ interface BookFormProps {
   isOpen: boolean;
   onClose: () => void;
   onSave?: () => void;
+  initialData?: any;
 }
 
-const BookForm = ({ book, isOpen, onClose, onSave }: BookFormProps) => {
+const BookForm = ({ book, isOpen, onClose, onSave, initialData }: BookFormProps) => {
   const { t } = useTranslation();
   const { toast } = useToast();
   const [formData, setFormData] = useState({
@@ -49,6 +51,11 @@ const BookForm = ({ book, isOpen, onClose, onSave }: BookFormProps) => {
           external_url: book.external_url || "",
           isbn: book.isbn || "",
         });
+      } else if (initialData) {
+        setFormData({
+          ...formData,
+          ...initialData,
+        });
       } else {
         // Reset form for new entries
         setFormData({
@@ -67,7 +74,7 @@ const BookForm = ({ book, isOpen, onClose, onSave }: BookFormProps) => {
         });
       }
     }
-  }, [isOpen, book]);
+  }, [isOpen, book, initialData]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -111,7 +118,7 @@ const BookForm = ({ book, isOpen, onClose, onSave }: BookFormProps) => {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-[95vw] sm:max-w-[600px] h-[90vh] sm:h-auto overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
