@@ -21,19 +21,12 @@ const initialCategories = [
   "Category 3"
 ];
 
-const initialBuildings = [
-  "Building 1",
-  "Building 2"
-];
-
 const Settings = () => {
   const { t } = useTranslation();
   const [genres, setGenres] = useState(initialGenres);
   const [categories, setCategories] = useState(initialCategories);
-  const [buildings, setBuildings] = useState(initialBuildings);
   const [newGenre, setNewGenre] = useState("");
   const [newCategory, setNewCategory] = useState("");
-  const [newBuilding, setNewBuilding] = useState("");
 
   const handleAddGenre = () => {
     if (newGenre.trim()) {
@@ -49,23 +42,12 @@ const Settings = () => {
     }
   };
 
-  const handleAddBuilding = () => {
-    if (newBuilding.trim()) {
-      setBuildings([...buildings, newBuilding.trim()]);
-      setNewBuilding("");
-    }
-  };
-
   const handleDeleteGenre = (index: number) => {
     setGenres(genres.filter((_, i) => i !== index));
   };
 
   const handleDeleteCategory = (index: number) => {
     setCategories(categories.filter((_, i) => i !== index));
-  };
-
-  const handleDeleteBuilding = (index: number) => {
-    setBuildings(buildings.filter((_, i) => i !== index));
   };
 
   return (
@@ -153,51 +135,6 @@ const Settings = () => {
                     <button 
                       className="p-1 hover:bg-gray-100 rounded"
                       onClick={() => handleDeleteCategory(index)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Buildings Section */}
-        <Card className="shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-xl font-normal">{t("admin.buildings")}</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex gap-2">
-              <Input
-                className="flex-1 bg-white"
-                placeholder={t("admin.addBuilding")}
-                value={newBuilding}
-                onChange={(e) => setNewBuilding(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && handleAddBuilding()}
-              />
-              <Button 
-                className="bg-black text-white hover:bg-black/90"
-                onClick={handleAddBuilding}
-              >
-                {t("common.save")}
-              </Button>
-            </div>
-            <div className="space-y-1">
-              {buildings.map((building, index) => (
-                <div 
-                  key={index} 
-                  className="flex items-center justify-between py-2 px-4 bg-white rounded-lg border border-gray-100"
-                >
-                  <span className="text-sm">{building}</span>
-                  <div className="flex items-center gap-2">
-                    <button className="p-1 hover:bg-gray-100 rounded">
-                      <Pencil className="h-4 w-4" />
-                    </button>
-                    <button 
-                      className="p-1 hover:bg-gray-100 rounded"
-                      onClick={() => handleDeleteBuilding(index)}
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>

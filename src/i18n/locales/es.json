@@ -76,7 +76,6 @@
     "catalogManagement": "Gestión del Catálogo",
     "reservationsManagement": "Reservas de Libros",
     "downloadSelected": "Descargar Libros Seleccionados",
-    "scanBook": "Escanear Libro",
     "newEntry": "Agregar Nuevo Libro",
     "editBook": "Editar Libro",
     "edit": "Editar",
@@ -114,18 +113,7 @@
     "save": "Guardar",
     "enabled": "Activado",
     "disabled": "Desactivado",
-    "downloadSuccess": "Libros descargados exitosamente",
-    "buildings": "Edificios",
-    "addBuilding": "Añadir edificio",
-    "scanner": {
-      "title": "Escanear Código de Barras",
-      "description": "Coloca el código de barras del libro frente a tu cámara",
-      "instructions": "Centra el código de barras en la vista de la cámara y mantenlo estable",
-      "error": "Error al inicializar la cámara. Por favor, verifica los permisos de la cámara.",
-      "tryAgain": "Intentar de Nuevo",
-      "bookNotFound": "No se encontró ningún libro con este código de barras",
-      "scanButton": "Escanear Libro"
-    }
+    "downloadSuccess": "Libros descargados exitosamente"
   },
   "filters": {
     "title": "Filtros",

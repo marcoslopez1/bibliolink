@@ -168,9 +168,6 @@ const Books = () => {
         onSave={async () => {
           try {
             await refetch();
-            setIsFormOpen(false);
-            setSelectedBook(null);
-            setScannedBookData(null);
           } catch (error) {
             console.error('Failed to refresh book list:', error);
           }
