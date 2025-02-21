@@ -1,3 +1,4 @@
+
 import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/components/ui/use-toast";
@@ -14,13 +15,6 @@ import { useBooks } from "@/hooks/admin/useBooks";
 import { downloadBooks } from "@/utils/download";
 import { fetchBookData } from "@/services/bookApis";
 import { Book } from "@/types/book";
-
-interface BookDeleteDialogProps {
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
-  onConfirm: () => void;
-  bookToDelete: Book | null;
-}
 
 const Books = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -116,8 +110,8 @@ const Books = () => {
     }
   };
 
-  const handlePageChange = (page: string) => {
-    setCurrentPage(Number(page));
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
   if (isLoading) {
@@ -186,7 +180,6 @@ const Books = () => {
         isOpen={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
         onConfirm={handleDelete}
-        bookToDelete={bookToDelete}
       />
 
       <BarcodeScanner
