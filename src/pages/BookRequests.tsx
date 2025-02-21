@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/components/ui/use-toast";
 import { format } from "date-fns";
@@ -8,58 +9,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { X } from "lucide-react";
-
-interface BookRequest {
-  id: number;
-  title: string;
-  author: string;
-  editorial: string;
-  link: string;
-  comments: string;
-  status: "accepted" | "pending" | "rejected";
-  requestDate: string;
-}
-
-// Mock data for development
-const mockRequests: BookRequest[] = [
-  {
-    id: 1,
-    title: "The Great Gatsby",
-    author: "F. Scott Fitzgerald",
-    editorial: "Scribner",
-    link: "https://example.com/book1",
-    comments: "Would be great for the literature section",
-    status: "accepted",
-    requestDate: "2025-02-20"
-  },
-  {
-    id: 2,
-    title: "1984",
-    author: "George Orwell",
-    editorial: "Penguin Books",
-    link: "https://example.com/book2",
-    comments: "Classic that should be in our collection",
-    status: "pending",
-    requestDate: "2025-02-21"
-  },
-  {
-    id: 3,
-    title: "Dune",
-    author: "Frank Herbert",
-    editorial: "Ace Books",
-    link: "https://example.com/book3",
-    comments: "Popular sci-fi book",
-    status: "rejected",
-    requestDate: "2025-02-19"
-  }
-];
+import { supabase } from "@/integrations/supabase/client";
+import type { BookRequest } from "@/types/bookRequest";
 
 const BookRequests = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [requests, setRequests] = useState<BookRequest[]>(mockRequests);
+  const [requests, setRequests] = useState<BookRequest[]>([]);
   const [formData, setFormData] = useState({
     title: "",
     author: "",
@@ -68,21 +25,65 @@ const BookRequests = () => {
     comments: ""
   });
 
-  const handleSubmit = () => {
-    const newRequest: BookRequest = {
-      id: requests.length + 1,
-      ...formData,
-      status: "pending",
-      requestDate: format(new Date(), "yyyy-MM-dd")
-    };
+  useEffect(() => {
+    fetchRequests();
+  }, []);
 
-    setRequests([newRequest, ...requests]);
-    setIsFormOpen(false);
-    setFormData({ title: "", author: "", editorial: "", link: "", comments: "" });
-    
-    toast({
-      description: t("bookRequests.form.success")
-    });
+  const fetchRequests = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('book_requests')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      setRequests(data || []);
+    } catch (error: any) {
+      console.error('Error fetching requests:', error);
+      toast({
+        variant: "destructive",
+        description: t("common.error")
+      });
+    }
+  };
+
+  const handleSubmit = async () => {
+    // Validate required fields
+    if (!formData.title.trim() || !formData.author.trim()) {
+      toast({
+        variant: "destructive",
+        description: t("bookRequests.form.requiredFields")
+      });
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('book_requests')
+        .insert({
+          title: formData.title.trim(),
+          author: formData.author.trim(),
+          editorial: formData.editorial.trim() || null,
+          link: formData.link.trim() || null,
+          comments: formData.comments.trim() || null,
+        });
+
+      if (error) throw error;
+
+      setIsFormOpen(false);
+      setFormData({ title: "", author: "", editorial: "", link: "", comments: "" });
+      fetchRequests();
+      
+      toast({
+        description: t("bookRequests.form.success")
+      });
+    } catch (error: any) {
+      console.error('Error submitting request:', error);
+      toast({
+        variant: "destructive",
+        description: error.message
+      });
+    }
   };
 
   const getStatusBadgeVariant = (status: BookRequest["status"]) => {
@@ -118,11 +119,13 @@ const BookRequests = () => {
               placeholder={t("bookRequests.form.bookTitle")}
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              required
             />
             <Input
               placeholder={t("bookRequests.form.author")}
               value={formData.author}
               onChange={(e) => setFormData({ ...formData, author: e.target.value })}
+              required
             />
             <Input
               placeholder={t("bookRequests.form.editorial")}
@@ -159,12 +162,14 @@ const BookRequests = () => {
           </div>
         ) : (
           requests.map((request) => (
-            <Card key={request.id} className="p-6 bg-white">
+            <Card key={request.id} className="p-6">
               <div className="flex justify-between items-start">
                 <div>
                   <h3 className="text-lg font-semibold">{request.title}</h3>
                   <p className="text-muted-foreground">{request.author}</p>
-                  <p className="text-sm mt-2">{request.editorial}</p>
+                  {request.editorial && (
+                    <p className="text-sm mt-2">{request.editorial}</p>
+                  )}
                   {request.link && (
                     <a
                       href={request.link}
@@ -185,7 +190,7 @@ const BookRequests = () => {
                       {t(`bookRequests.list.status.${request.status}`)}
                     </Badge>
                     <span className="text-sm text-muted-foreground">
-                      {t("bookRequests.list.requestDate")}: {request.requestDate}
+                      {t("bookRequests.list.requestDate")}: {format(new Date(request.created_at), "yyyy-MM-dd")}
                     </span>
                   </div>
                 </div>
