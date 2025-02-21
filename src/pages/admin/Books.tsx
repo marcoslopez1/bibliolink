@@ -1,4 +1,3 @@
-
 import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/components/ui/use-toast";
@@ -110,8 +109,8 @@ const Books = () => {
     }
   };
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
   };
 
   if (isLoading) {
