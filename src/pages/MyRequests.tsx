@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { format } from "date-fns";
@@ -39,18 +38,22 @@ const MyRequests = () => {
     comments: "",
   });
 
-  // Fetch user's requests
+  // Fetch user's requests - now with proper filtering through RLS
   const { data: requests = [] } = useQuery({
-    queryKey: ["my-requests"],
+    queryKey: ["my-requests", session?.user.id],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("book_requests")
         .select("*")
         .order("created_at", { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching requests:", error);
+        throw error;
+      }
       return data as BookRequest[];
     },
+    enabled: !!session?.user.id, // Only run query if we have a user
   });
 
   // Create request mutation
