@@ -1,3 +1,4 @@
+
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { BookCopy, Library, BookOpenCheck, HelpCircle, Settings } from "lucide-react";
@@ -81,7 +82,7 @@ export const NavLinks = ({ isAdmin, isMobile, onItemClick, session }: NavLinksPr
           >
             <div className="flex items-center gap-2">
               <Settings className="h-4 w-4 flex-shrink-0" />
-              <span>{t("admin.settings")}</span>
+              <span>{t("admin.settingsPage.title")}</span>
             </div>
           </Link>
         </>
