@@ -95,7 +95,17 @@
     "Reservation Date": "Reservation Date",
     "noReservations": "No reservations found",
     "noReservationsFound": "No reservations found matching your search",
-    "settings": "Settings",
+    "settings": {
+      "addSuccess": "Item added successfully",
+      "updateSuccess": "Item updated successfully",
+      "deleteSuccess": "Item deleted successfully",
+      "editGenre": "Edit Genre",
+      "editCategory": "Edit Category",
+      "editBuilding": "Edit Building",
+      "noGenres": "No genres available. Create one in Settings",
+      "noCategories": "No categories available. Create one in Settings",
+      "noBuildings": "No buildings available. Create one in Settings"
+    },
     "genres": "Genres",
     "categories": "Categories",
     "alerts": "Alerts Management",

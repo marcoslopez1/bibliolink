@@ -95,7 +95,17 @@
     "Reservation Date": "Fecha de reserva",
     "noReservations": "No hay reservas",
     "noReservationsFound": "No se encontraron reservas que coincidan con tu búsqueda",
-    "settings": "Ajustes",
+    "settings": {
+      "addSuccess": "Elemento añadido correctamente",
+      "updateSuccess": "Elemento actualizado correctamente",
+      "deleteSuccess": "Elemento eliminado correctamente",
+      "editGenre": "Editar Género",
+      "editCategory": "Editar Categoría",
+      "editBuilding": "Editar Edificio",
+      "noGenres": "No hay géneros disponibles. Crea uno en Ajustes",
+      "noCategories": "No hay categorías disponibles. Crea uno en Ajustes",
+      "noBuildings": "No hay edificios disponibles. Crea uno en Ajustes"
+    },
     "genres": "Géneros",
     "categories": "Categorías",
     "alerts": "Gestión de Alertas",

@@ -1,6 +1,13 @@
+
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useTranslation } from "react-i18next";
+import { supabase } from "@/integrations/supabase/client";
+import { Link } from "react-router-dom";
+import { AlertCircle } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface BookFormFieldsProps {
   formData: {
@@ -20,8 +27,47 @@ interface BookFormFieldsProps {
   setFormData: (data: any) => void;
 }
 
+interface SettingItem {
+  id: number;
+  name: string;
+}
+
 const BookFormFields = ({ formData, setFormData }: BookFormFieldsProps) => {
   const { t } = useTranslation();
+  const [genres, setGenres] = useState<SettingItem[]>([]);
+  const [categories, setCategories] = useState<SettingItem[]>([]);
+  const [buildings, setBuildings] = useState<SettingItem[]>([]);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      const [genresData, categoriesData, buildingsData] = await Promise.all([
+        supabase.from("genres").select("*").order("name"),
+        supabase.from("categories").select("*").order("name"),
+        supabase.from("buildings").select("*").order("name"),
+      ]);
+
+      if (genresData.data) setGenres(genresData.data);
+      if (categoriesData.data) setCategories(categoriesData.data);
+      if (buildingsData.data) setBuildings(buildingsData.data);
+    };
+
+    fetchSettings();
+  }, []);
+
+  const NoItemsAlert = ({ type }: { type: 'genres' | 'categories' | 'buildings' }) => (
+    <Alert variant="destructive" className="mt-2">
+      <AlertCircle className="h-4 w-4" />
+      <AlertDescription className="flex items-center gap-2">
+        {t(`admin.settings.no${type.charAt(0).toUpperCase() + type.slice(1)}`)}
+        <Link 
+          to="/admin/settings" 
+          className="text-primary underline hover:text-primary/90"
+        >
+          {t("admin.settings")}
+        </Link>
+      </AlertDescription>
+    </Alert>
+  );
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -60,25 +106,41 @@ const BookFormFields = ({ formData, setFormData }: BookFormFieldsProps) => {
       </div>
       <div className="space-y-2">
         <Label htmlFor="genre">{t("book.genre")}</Label>
-        <Input
-          id="genre"
+        <Select
           value={formData.genre}
-          onChange={(e) =>
-            setFormData({ ...formData, genre: e.target.value })
-          }
-          required
-        />
+          onValueChange={(value) => setFormData({ ...formData, genre: value })}
+        >
+          <SelectTrigger id="genre">
+            <SelectValue placeholder={t("book.genre")} />
+          </SelectTrigger>
+          <SelectContent>
+            {genres.map((genre) => (
+              <SelectItem key={genre.id} value={genre.name}>
+                {genre.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {genres.length === 0 && <NoItemsAlert type="genres" />}
       </div>
       <div className="space-y-2">
         <Label htmlFor="category">{t("book.category")}</Label>
-        <Input
-          id="category"
+        <Select
           value={formData.category}
-          onChange={(e) =>
-            setFormData({ ...formData, category: e.target.value })
-          }
-          required
-        />
+          onValueChange={(value) => setFormData({ ...formData, category: value })}
+        >
+          <SelectTrigger id="category">
+            <SelectValue placeholder={t("book.category")} />
+          </SelectTrigger>
+          <SelectContent>
+            {categories.map((category) => (
+              <SelectItem key={category.id} value={category.name}>
+                {category.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {categories.length === 0 && <NoItemsAlert type="categories" />}
       </div>
       <div className="space-y-2">
         <Label htmlFor="pages">{t("book.pages")}</Label>
@@ -119,14 +181,22 @@ const BookFormFields = ({ formData, setFormData }: BookFormFieldsProps) => {
       </div>
       <div className="space-y-2">
         <Label htmlFor="building">{t("book.building")}</Label>
-        <Input
-          id="building"
+        <Select
           value={formData.building}
-          onChange={(e) =>
-            setFormData({ ...formData, building: e.target.value })
-          }
-          required
-        />
+          onValueChange={(value) => setFormData({ ...formData, building: value })}
+        >
+          <SelectTrigger id="building">
+            <SelectValue placeholder={t("book.building")} />
+          </SelectTrigger>
+          <SelectContent>
+            {buildings.map((building) => (
+              <SelectItem key={building.id} value={building.name}>
+                {building.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {buildings.length === 0 && <NoItemsAlert type="buildings" />}
       </div>
       <div className="space-y-2">
         <Label htmlFor="image_url">{t("book.imageUrl")}</Label>
