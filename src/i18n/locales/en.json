@@ -76,6 +76,7 @@
     "catalogManagement": "Catalog Management",
     "reservationsManagement": "Book Reservations",
     "downloadSelected": "Download Selected Books",
+    "scanBook": "Scan Book",
     "newEntry": "Add New Book",
     "editBook": "Edit Book",
     "edit": "Edit",
@@ -113,7 +114,18 @@
     "save": "Save",
     "enabled": "Enabled",
     "disabled": "Disabled",
-    "downloadSuccess": "Books downloaded successfully"
+    "downloadSuccess": "Books downloaded successfully",
+    "buildings": "Buildings",
+    "addBuilding": "Add building",
+    "scanner": {
+      "title": "Scan Book Barcode",
+      "description": "Position the book's barcode in front of your camera",
+      "instructions": "Center the barcode in the camera view and hold steady",
+      "error": "Failed to initialize camera. Please check camera permissions.",
+      "tryAgain": "Try Again",
+      "bookNotFound": "No book found with this barcode",
+      "scanButton": "Scan Book"
+    }
   },
   "search": {
     "placeholder": "Search by title, author..."

@@ -1,4 +1,3 @@
-
 interface GoogleBookInfo {
   title?: string;
   authors?: string[];
@@ -7,7 +6,13 @@ interface GoogleBookInfo {
   pageCount?: number;
   imageLinks?: {
     thumbnail?: string;
+    smallThumbnail?: string;
+    small?: string;
+    medium?: string;
+    large?: string;
+    extraLarge?: string;
   };
+  infoLink?: string;
   industryIdentifiers?: Array<{
     type: string;
     identifier: string;
@@ -25,6 +30,7 @@ interface OpenLibraryBook {
     medium?: string;
     large?: string;
   };
+  info_url?: string;
 }
 
 interface BookData {
@@ -35,6 +41,41 @@ interface BookData {
   pages: string;
   image_url: string;
   isbn: string;
+  external_url: string;
+}
+
+function getBestImageUrl(imageLinks: GoogleBookInfo['imageLinks']): string {
+  if (!imageLinks) return '';
+  
+  // Order from highest to lowest quality
+  const imageTypes = ['extraLarge', 'large', 'medium', 'small', 'thumbnail', 'smallThumbnail'];
+  
+  for (const type of imageTypes) {
+    if (imageLinks[type as keyof typeof imageLinks]) {
+      // Convert from http to https if needed
+      return imageLinks[type as keyof typeof imageLinks]!.replace(/^http:/, 'https:');
+    }
+  }
+  
+  return '';
+}
+
+function getOpenLibraryBestImage(isbn: string, cover?: OpenLibraryBook['cover']): string {
+  if (!cover) {
+    // If no cover object, try different sizes from highest to lowest quality
+    const sizes = ['L', 'M', 'S'];
+    for (const size of sizes) {
+      const url = `https://covers.openlibrary.org/b/isbn/${isbn}-${size}.jpg`;
+      return url;
+    }
+  }
+  
+  // If cover object exists, get the best available quality
+  if (cover.large) return cover.large;
+  if (cover.medium) return cover.medium;
+  if (cover.small) return cover.small;
+  
+  return '';
 }
 
 async function fetchGoogleBooksData(isbn: string): Promise<BookData | null> {
@@ -56,8 +97,9 @@ async function fetchGoogleBooksData(isbn: string): Promise<BookData | null> {
       editorial: bookInfo.publisher || "",
       publication_year: bookInfo.publishedDate ? bookInfo.publishedDate.substring(0, 4) : "",
       pages: bookInfo.pageCount?.toString() || "",
-      image_url: bookInfo.imageLinks?.thumbnail || "",
-      isbn: isbn
+      image_url: getBestImageUrl(bookInfo.imageLinks),
+      isbn: isbn,
+      external_url: bookInfo.infoLink || ""
     };
   } catch (error) {
     console.error("Error fetching from Google Books:", error);
@@ -80,8 +122,9 @@ async function fetchOpenLibraryData(isbn: string): Promise<BookData | null> {
       editorial: data.publishers?.[0] || "",
       publication_year: data.publish_date ? data.publish_date.substring(0, 4) : "",
       pages: data.number_of_pages?.toString() || "",
-      image_url: data.cover?.medium || `https://covers.openlibrary.org/b/isbn/${isbn}-M.jpg`,
-      isbn: isbn
+      image_url: getOpenLibraryBestImage(isbn, data.cover),
+      isbn: isbn,
+      external_url: `https://openlibrary.org/isbn/${isbn}` // OpenLibrary's info page
     };
   } catch (error) {
     console.error("Error fetching from Open Library:", error);
