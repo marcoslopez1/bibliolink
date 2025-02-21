@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -17,10 +16,8 @@ import ProtectedRoute from "./components/auth/ProtectedRoute";
 import AdminRoute from "./components/admin/AdminRoute";
 import AdminBooks from "./pages/admin/Books";
 import BooksReservation from "./pages/admin/BooksReservation";
-import RequestsManagement from "./pages/admin/RequestsManagement";
 import MyBooks from "./pages/MyBooks";
 import Settings from "./pages/admin/Settings";
-import BookRequests from "./pages/BookRequests";
 
 const queryClient = new QueryClient();
 
@@ -48,14 +45,6 @@ const App = () => (
                 }
               />
               <Route
-                path="/book-requests"
-                element={
-                  <ProtectedRoute>
-                    <BookRequests />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
                 path="/book/:id"
                 element={
                   <ProtectedRoute>
@@ -68,14 +57,6 @@ const App = () => (
                 element={
                   <AdminRoute>
                     <AdminBooks />
-                  </AdminRoute>
-                }
-              />
-              <Route
-                path="/admin/requests"
-                element={
-                  <AdminRoute>
-                    <RequestsManagement />
                   </AdminRoute>
                 }
               />
