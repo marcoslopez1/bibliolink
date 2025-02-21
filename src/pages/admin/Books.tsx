@@ -28,7 +28,7 @@ const Books = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
 
-  const { data, isLoading, refetch } = useBooks(Number(currentPage), searchQuery);
+  const { data, isLoading, refetch } = useBooks(currentPage, searchQuery);
 
   const handleDownload = async () => {
     try {

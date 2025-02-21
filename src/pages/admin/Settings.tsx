@@ -60,8 +60,8 @@ const Settings = () => {
   const [newGenre, setNewGenre] = useState("");
   const [newCategory, setNewCategory] = useState("");
   const [newBuilding, setNewBuilding] = useState("");
-  const [editItem, setEditItem] = useState<{ type: string; item: SettingItem | null }>({
-    type: "",
+  const [editItem, setEditItem] = useState<{ type: SettingType; item: SettingItem | null }>({
+    type: "genres",
     item: null,
   });
 
@@ -81,9 +81,9 @@ const Settings = () => {
       if (categoriesData.error) throw categoriesData.error;
       if (buildingsData.error) throw buildingsData.error;
 
-      setGenres(genresData.data);
-      setCategories(categoriesData.data);
-      setBuildings(buildingsData.data);
+      setGenres(genresData.data || []);
+      setCategories(categoriesData.data || []);
+      setBuildings(buildingsData.data || []);
     } catch (error: any) {
       console.error("Error fetching settings:", error);
       toast({
@@ -93,7 +93,7 @@ const Settings = () => {
     }
   };
 
-  const handleAdd = async (table: string, value: string, setter: (value: string) => void) => {
+  const handleAdd = async (table: SettingType, value: string, setter: (value: string) => void) => {
     if (!value.trim()) return;
 
     try {
@@ -117,7 +117,7 @@ const Settings = () => {
     }
   };
 
-  const handleEdit = async (table: string, id: number, newValue: string) => {
+  const handleEdit = async (table: SettingType, id: number, newValue: string) => {
     try {
       const { error } = await supabase
         .from(table)
@@ -126,7 +126,7 @@ const Settings = () => {
 
       if (error) throw error;
 
-      setEditItem({ type: "", item: null });
+      setEditItem({ type: "genres", item: null });
       fetchSettings();
       toast({
         description: t("admin.settings.updateSuccess"),
@@ -140,7 +140,7 @@ const Settings = () => {
     }
   };
 
-  const handleDelete = async (table: string, id: number) => {
+  const handleDelete = async (table: SettingType, id: number) => {
     try {
       const { error } = await supabase
         .from(table)
@@ -311,10 +311,10 @@ const Settings = () => {
 
       <EditDialog
         isOpen={!!editItem.item}
-        onOpenChange={(open) => !open && setEditItem({ type: "", item: null })}
+        onOpenChange={(open) => !open && setEditItem({ type: "genres", item: null })}
         onSave={(value) => editItem.item && handleEdit(editItem.type, editItem.item.id, value)}
         initialValue={editItem.item?.name || ""}
-        title={t(`admin.edit${editItem.type.slice(0, -1)}`)}
+        title={t(`admin.settings.edit${editItem.type.slice(0, -1)}`)}
       />
     </div>
   );
