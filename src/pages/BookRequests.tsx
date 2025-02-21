@@ -30,6 +30,9 @@ const BookRequests = () => {
   }, []);
 
   const fetchRequests = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
     try {
       const { data, error } = await supabase
         .from('book_requests')
@@ -37,7 +40,10 @@ const BookRequests = () => {
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      setRequests(data || []);
+      
+      // Ensure the data matches our BookRequest type
+      const typedData = (data || []) as BookRequest[];
+      setRequests(typedData);
     } catch (error: any) {
       console.error('Error fetching requests:', error);
       toast({
@@ -57,6 +63,15 @@ const BookRequests = () => {
       return;
     }
 
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      toast({
+        variant: "destructive",
+        description: t("common.unauthorized")
+      });
+      return;
+    }
+
     try {
       const { error } = await supabase
         .from('book_requests')
@@ -66,6 +81,7 @@ const BookRequests = () => {
           editorial: formData.editorial.trim() || null,
           link: formData.link.trim() || null,
           comments: formData.comments.trim() || null,
+          created_by: user.id
         });
 
       if (error) throw error;
@@ -89,7 +105,7 @@ const BookRequests = () => {
   const getStatusBadgeVariant = (status: BookRequest["status"]) => {
     switch (status) {
       case "accepted":
-        return "success";
+        return "default";
       case "rejected":
         return "destructive";
       default:
