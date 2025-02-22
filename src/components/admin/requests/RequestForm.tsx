@@ -51,6 +51,15 @@ const RequestForm = ({ request, isOpen, onClose, onSave }: RequestFormProps) => 
     e.preventDefault();
     
     try {
+      // Validate required fields
+      if (!formData.title.trim() || !formData.author.trim() || !formData.status) {
+        toast({
+          variant: "destructive",
+          description: t("common.requiredFields")
+        });
+        return;
+      }
+
       const { error } = await supabase
         .from('book_requests')
         .update({
@@ -75,7 +84,7 @@ const RequestForm = ({ request, isOpen, onClose, onSave }: RequestFormProps) => 
       console.error('Error updating request:', error);
       toast({
         variant: "destructive",
-        description: error.message
+        description: t("common.error")
       });
     }
   };

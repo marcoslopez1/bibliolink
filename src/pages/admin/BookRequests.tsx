@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
 import { format } from "date-fns";
 import {
   Table,
@@ -9,27 +10,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, Loader2, Search } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import BookSearch from "@/components/admin/books/BookSearch";
+import BookPagination from "@/components/admin/books/BookPagination";
+import BookDeleteDialog from "@/components/admin/books/BookDeleteDialog";
+import RequestForm from "@/components/admin/requests/RequestForm";
+import { useRequests } from "@/hooks/admin/useRequests";
+import { useQueryClient, useQuery } from "@tanstack/react-query";
+import { useAuth } from "@/providers/AuthProvider";
+import type { BookRequest } from "@/types/bookRequest";
 
 interface BookRequest {
   id: number;
@@ -37,9 +31,9 @@ interface BookRequest {
   author: string;
   editorial: string;
   reference: string;
-  userName: string;
-  userLastName: string;
-  userEmail: string;
+  user_first_name: string;
+  user_last_name: string;
+  user_email: string;
   comments: string;
   requestDate: string;
   status: "pending" | "accepted" | "rejected";
@@ -47,100 +41,131 @@ interface BookRequest {
 
 const BookRequests = () => {
   const { t } = useTranslation();
-  const [requests, setRequests] = useState<BookRequest[]>([
-    {
-      id: 1,
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      editorial: "Scribner",
-      reference: "https://example.com/book1",
-      userName: "John",
-      userLastName: "Doe",
-      userEmail: "john.doe@example.com",
-      comments: "Would love to read this classic",
-      requestDate: "2025-02-21",
-      status: "pending",
-    },
-    {
-      id: 2,
-      title: "1984",
-      author: "George Orwell",
-      editorial: "Penguin Books",
-      reference: "https://example.com/book2",
-      userName: "Jane",
-      userLastName: "Smith",
-      userEmail: "jane.smith@example.com",
-      comments: "Heard great things about this book",
-      requestDate: "2025-02-20",
-      status: "accepted",
-    },
-    {
-      id: 3,
-      title: "The Catcher in the Rye",
-      author: "J.D. Salinger",
-      editorial: "Little, Brown and Company",
-      reference: "https://example.com/book3",
-      userName: "Bob",
-      userLastName: "Johnson",
-      userEmail: "bob.johnson@example.com",
-      comments: "Required for literature class",
-      requestDate: "2025-02-19",
-      status: "rejected",
-    },
-  ]);
-
-  const [editingRequest, setEditingRequest] = useState<BookRequest | null>(null);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const { toast } = useToast();
+  const { session } = useAuth();
+  const queryClient = useQueryClient();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [requestToDelete, setRequestToDelete] = useState<number | null>(null);
+  const [selectedRequest, setSelectedRequest] = useState<BookRequest | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const searchQuery = searchParams.get("q") || "";
 
-  const getStatusBadge = (status: BookRequest["status"]) => {
-    const variants = {
-      pending: "bg-blue-100 text-blue-800",
-      accepted: "bg-green-100 text-green-800",
-      rejected: "bg-red-100 text-red-800",
-    };
-    return (
-      <Badge className={variants[status]}>
-        {t(`admin.bookRequests.status.${status}`)}
-      </Badge>
-    );
-  };
+  const { data, isLoading, refetch } = useRequests(currentPage, searchQuery);
+
+  const handleSearch = useCallback((term: string) => {
+    setCurrentPage(1);
+    setSearchParams(term ? { q: term } : {});
+  }, [setSearchParams]);
 
   const handleEdit = (request: BookRequest) => {
-    setEditingRequest(request);
-    setIsEditDialogOpen(true);
+    setSelectedRequest(request);
+    setIsFormOpen(true);
   };
 
-  const handleDelete = (id: number) => {
-    setRequestToDelete(id);
+  // Fetch admin status
+  const { data: profile } = useQuery({
+    queryKey: ["profile", session?.user.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("is_admin")
+        .eq("id", session?.user.id)
+        .maybeSingle();
+
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!session?.user.id,
+  });
+
+  const handleDelete = async () => {
+    if (!selectedRequest || !session?.user) return;
+
+    setIsDeleting(true);
+    try {
+      // First check if the user has permission to delete this request
+      const { data: requestData, error: fetchError } = await supabase
+        .from('book_requests')
+        .select('created_by')
+        .eq('id', selectedRequest.id)
+        .single();
+
+      if (fetchError) throw fetchError;
+
+      // Allow deletion if user is admin or the creator of the request
+      if (!profile?.is_admin && requestData.created_by !== session.user.id) {
+        throw new Error('You do not have permission to delete this request');
+      }
+
+      const { error } = await supabase
+        .from('book_requests')
+        .delete()
+        .match({ id: selectedRequest.id });
+
+      if (error) throw error;
+
+      toast({
+        description: t("admin.requestDeleted")
+      });
+      
+      // Invalidate and refetch
+      await queryClient.invalidateQueries({ queryKey: ["book-requests"] });
+    } catch (error: any) {
+      console.error('Error deleting request:', error);
+      toast({
+        variant: "destructive",
+        description: error.message === 'You do not have permission to delete this request'
+          ? t("common.unauthorized")
+          : t("common.error")
+      });
+    } finally {
+      setIsDeleting(false);
+      setIsDeleteDialogOpen(false);
+      setSelectedRequest(null);
+    }
+  };
+
+  const onDeleteClick = (request: BookRequest) => {
+    setSelectedRequest(request);
     setIsDeleteDialogOpen(true);
   };
 
-  const handleSaveEdit = (event: React.FormEvent) => {
-    event.preventDefault();
-    if (editingRequest) {
-      setRequests((prev) =>
-        prev.map((req) =>
-          req.id === editingRequest.id ? editingRequest : req
-        )
-      );
-      setIsEditDialogOpen(false);
-      setEditingRequest(null);
+  const closeForm = () => {
+    setIsFormOpen(false);
+    setSelectedRequest(null);
+  };
+
+  const getStatusBadgeVariant = (status: BookRequest["status"]) => {
+    switch (status) {
+      case "accepted":
+        return "default";
+      case "rejected":
+        return "destructive";
+      default:
+        return "secondary";
     }
   };
 
-  const handleConfirmDelete = () => {
-    if (requestToDelete) {
-      setRequests((prev) => prev.filter((req) => req.id !== requestToDelete));
-      setIsDeleteDialogOpen(false);
-      setRequestToDelete(null);
-    }
-  };
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-8">{t("admin.bookRequests.title")}</h1>
+
+      <div className="mb-6">
+        <BookSearch
+          initialValue={searchQuery}
+          onSearch={handleSearch}
+        />
+      </div>
 
       <div className="rounded-md border bg-white">
         <Table>
@@ -162,7 +187,7 @@ const BookRequests = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {requests.map((request) => (
+            {(data?.requests || []).map((request) => (
               <TableRow key={request.id}>
                 <TableCell className="font-medium">{request.title}</TableCell>
                 <TableCell>{request.author}</TableCell>
@@ -170,26 +195,32 @@ const BookRequests = () => {
                   {request.editorial}
                 </TableCell>
                 <TableCell className="hidden lg:table-cell">
-                  {`${request.userName} ${request.userLastName}`}
+                  {`${request.user_first_name} ${request.user_last_name}`}
                 </TableCell>
                 <TableCell className="hidden lg:table-cell">
-                  {request.userEmail}
+                  {request.user_email}
                 </TableCell>
-                <TableCell>{getStatusBadge(request.status)}</TableCell>
+                <TableCell>
+                  <Badge variant={getStatusBadgeVariant(request.status)}>
+                    {t(`admin.bookRequests.status.${request.status}`)}
+                  </Badge>
+                </TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
-                    <button
-                      className="p-2 hover:bg-gray-100 rounded-full"
+                    <Button
+                      variant="ghost"
+                      size="sm"
                       onClick={() => handleEdit(request)}
                     >
-                      <Pencil className="h-5 w-5" />
-                    </button>
-                    <button
-                      className="p-2 hover:bg-gray-100 rounded-full text-red-600"
-                      onClick={() => handleDelete(request.id)}
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onDeleteClick(request)}
                     >
-                      <Trash2 className="h-5 w-5" />
-                    </button>
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
                   </div>
                 </TableCell>
               </TableRow>
@@ -198,204 +229,36 @@ const BookRequests = () => {
         </Table>
       </div>
 
-      {/* Edit Dialog */}
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="sm:max-w-[600px] h-[90vh] flex flex-col">
-          <DialogHeader>
-            <DialogTitle>{t("admin.bookRequests.editForm.title")}</DialogTitle>
-          </DialogHeader>
-          <form onSubmit={handleSaveEdit} className="flex flex-col flex-1">
-            <div className="flex-1 overflow-y-auto px-6">
-              <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label className="text-right font-medium col-span-1">
-                    {t("admin.bookRequests.editForm.bookTitle")}
-                  </label>
-                  <Input
-                    className="col-span-3"
-                    value={editingRequest?.title || ""}
-                    onChange={(e) =>
-                      setEditingRequest(
-                        (prev) => prev && { ...prev, title: e.target.value }
-                      )
-                    }
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label className="text-right font-medium col-span-1">
-                    {t("admin.bookRequests.editForm.author")}
-                  </label>
-                  <Input
-                    className="col-span-3"
-                    value={editingRequest?.author || ""}
-                    onChange={(e) =>
-                      setEditingRequest(
-                        (prev) => prev && { ...prev, author: e.target.value }
-                      )
-                    }
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label className="text-right font-medium col-span-1">
-                    {t("admin.bookRequests.editForm.editorial")}
-                  </label>
-                  <Input
-                    className="col-span-3"
-                    value={editingRequest?.editorial || ""}
-                    onChange={(e) =>
-                      setEditingRequest(
-                        (prev) => prev && { ...prev, editorial: e.target.value }
-                      )
-                    }
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label className="text-right font-medium col-span-1">
-                    {t("admin.bookRequests.editForm.reference")}
-                  </label>
-                  <Input
-                    className="col-span-3"
-                    value={editingRequest?.reference || ""}
-                    onChange={(e) =>
-                      setEditingRequest(
-                        (prev) => prev && { ...prev, reference: e.target.value }
-                      )
-                    }
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label className="text-right font-medium col-span-1">
-                    {t("admin.bookRequests.editForm.userName")}
-                  </label>
-                  <Input
-                    className="col-span-3"
-                    value={editingRequest?.userName || ""}
-                    onChange={(e) =>
-                      setEditingRequest(
-                        (prev) => prev && { ...prev, userName: e.target.value }
-                      )
-                    }
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label className="text-right font-medium col-span-1">
-                    {t("admin.bookRequests.editForm.userLastName")}
-                  </label>
-                  <Input
-                    className="col-span-3"
-                    value={editingRequest?.userLastName || ""}
-                    onChange={(e) =>
-                      setEditingRequest(
-                        (prev) =>
-                          prev && { ...prev, userLastName: e.target.value }
-                      )
-                    }
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label className="text-right font-medium col-span-1">
-                    {t("admin.bookRequests.editForm.userEmail")}
-                  </label>
-                  <Input
-                    className="col-span-3"
-                    value={editingRequest?.userEmail || ""}
-                    onChange={(e) =>
-                      setEditingRequest(
-                        (prev) => prev && { ...prev, userEmail: e.target.value }
-                      )
-                    }
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label className="text-right font-medium col-span-1">
-                    {t("admin.bookRequests.editForm.comments")}
-                  </label>
-                  <Textarea
-                    className="col-span-3"
-                    value={editingRequest?.comments || ""}
-                    onChange={(e) =>
-                      setEditingRequest(
-                        (prev) => prev && { ...prev, comments: e.target.value }
-                      )
-                    }
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label className="text-right font-medium col-span-1">
-                    {t("admin.bookRequests.editForm.status")}
-                  </label>
-                  <div className="col-span-3">
-                    <Select
-                      value={editingRequest?.status}
-                      onValueChange={(value: BookRequest["status"]) =>
-                        setEditingRequest(
-                          (prev) =>
-                            prev && {
-                              ...prev,
-                              status: value,
-                            }
-                        )
-                      }
-                    >
-                      <SelectTrigger className="w-full bg-white border-gray-200">
-                        <SelectValue placeholder="Select status" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-white">
-                        <SelectItem value="pending" className="hover:bg-orange-50">
-                          {t("admin.bookRequests.status.pending")}
-                        </SelectItem>
-                        <SelectItem value="accepted" className="hover:bg-orange-50">
-                          {t("admin.bookRequests.status.accepted")}
-                        </SelectItem>
-                        <SelectItem value="rejected" className="hover:bg-orange-50">
-                          {t("admin.bookRequests.status.rejected")}
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <DialogFooter className="px-6 py-4">
-              <Button
-                variant="outline"
-                onClick={() => setIsEditDialogOpen(false)}
-              >
-                {t("admin.bookRequests.actions.cancel")}
-              </Button>
-              <Button type="submit">
-                {t("admin.bookRequests.actions.save")}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+      {data?.totalPages && data.totalPages > 1 && (
+        <div className="mt-4">
+          <BookPagination
+            currentPage={currentPage}
+            totalPages={data.totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </div>
+      )}
 
-      {/* Delete Confirmation Dialog */}
-      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{t("admin.bookRequests.deleteConfirm.title")}</DialogTitle>
-            <DialogDescription>
-              {t("admin.bookRequests.deleteConfirm.description")}
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setIsDeleteDialogOpen(false)}
-            >
-              {t("admin.bookRequests.deleteConfirm.cancel")}
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={handleConfirmDelete}
-            >
-              {t("admin.bookRequests.deleteConfirm.confirm")}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      {selectedRequest && (
+        <RequestForm
+          request={selectedRequest}
+          isOpen={isFormOpen}
+          onClose={closeForm}
+          onSave={() => {
+            refetch();
+            closeForm();
+          }}
+        />
+      )}
+
+      <BookDeleteDialog
+        isOpen={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+        onConfirm={handleDelete}
+        title={t("admin.bookRequests.deleteConfirm.title")}
+        description={t("admin.deleteRequestConfirmation")}
+        isLoading={isDeleting}
+      />
     </div>
   );
 };

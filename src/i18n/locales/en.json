@@ -158,9 +158,9 @@
         "actions": "Actions"
       },
       "status": {
-        "pending": "Pending",
-        "accepted": "Accepted",
-        "rejected": "Rejected"
+        "pending": "Awaiting Review",
+        "accepted": "Approved",
+        "rejected": "Declined"
       },
       "actions": {
         "edit": "Edit",
@@ -186,7 +186,9 @@
         "comments": "Comments",
         "status": "Status"
       }
-    }
+    },
+    "requestDeleted": "Request deleted successfully",
+    "deleteRequestConfirmation": "Are you sure you want to delete this request? This action cannot be undone."
   },
   "requests": {
     "pageTitle": "My Requests",
@@ -211,9 +213,9 @@
       "title": "Status of my requests",
       "noRequests": "You have not created yet any request.",
       "requestDate": "Requested date",
-      "accepted": "Accepted",
-      "pending": "Pending",
-      "rejected": "Rejected"
+      "accepted": "Approved",
+      "pending": "Awaiting Review",
+      "rejected": "Declined"
     }
   },
   "search": {
@@ -225,7 +227,9 @@
     "save": "Save",
     "cancel": "Cancel",
     "back": "Back",
-    "optional": "Optional"
+    "optional": "Optional",
+    "error": "An error occurred",
+    "unauthorized": "You do not have permission to perform this action"
   },
   "howItWorks": {
     "title": "How It Works",
