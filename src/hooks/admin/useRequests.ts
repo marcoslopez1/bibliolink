@@ -7,7 +7,7 @@ const ITEMS_PER_PAGE = 10;
 
 export const useRequests = (currentPage: number, searchQuery: string) => {
   return useQuery({
-    queryKey: ["admin-requests", currentPage, searchQuery],
+    queryKey: ["requests", currentPage, searchQuery],
     queryFn: async () => {
       const start = (currentPage - 1) * ITEMS_PER_PAGE;
       const end = start + ITEMS_PER_PAGE - 1;
