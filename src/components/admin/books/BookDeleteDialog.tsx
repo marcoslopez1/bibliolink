@@ -1,5 +1,5 @@
-
 import { useTranslation } from "react-i18next";
+import { Loader2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,18 +15,28 @@ interface BookDeleteDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
+  title?: string;
+  description?: string;
+  isLoading?: boolean;
 }
 
-const BookDeleteDialog = ({ isOpen, onOpenChange, onConfirm }: BookDeleteDialogProps) => {
+const BookDeleteDialog = ({ 
+  isOpen, 
+  onOpenChange, 
+  onConfirm,
+  title,
+  description,
+  isLoading 
+}: BookDeleteDialogProps) => {
   const { t } = useTranslation();
 
   return (
     <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t("admin.delete")}</AlertDialogTitle>
+          <AlertDialogTitle>{title || t("admin.delete")}</AlertDialogTitle>
           <AlertDialogDescription>
-            {t("admin.deleteConfirmation")}
+            {description || t("admin.deleteConfirmation")}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -34,8 +44,13 @@ const BookDeleteDialog = ({ isOpen, onOpenChange, onConfirm }: BookDeleteDialogP
           <AlertDialogAction 
             onClick={onConfirm}
             className="bg-[#ea384c] hover:bg-[#ea384c]/90"
+            disabled={isLoading}
           >
-            {t("admin.delete")}
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              t("admin.delete")
+            )}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

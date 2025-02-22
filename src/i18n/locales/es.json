@@ -158,8 +158,8 @@
         "actions": "Acciones"
       },
       "status": {
-        "pending": "Pendiente",
-        "accepted": "Aceptada",
+        "pending": "En Revisión",
+        "accepted": "Aprobada",
         "rejected": "Rechazada"
       },
       "actions": {
@@ -186,7 +186,9 @@
         "comments": "Comentarios",
         "status": "Estado"
       }
-    }
+    },
+    "requestDeleted": "Solicitud eliminada correctamente",
+    "deleteRequestConfirmation": "¿Estás seguro de que quieres eliminar esta solicitud? Esta acción no se puede deshacer."
   },
   "requests": {
     "pageTitle": "Mis Solicitudes",
@@ -211,8 +213,8 @@
       "title": "Estado de mis solicitudes",
       "noRequests": "No has creado ninguna solicitud.",
       "requestDate": "Fecha de solicitud",
-      "accepted": "Aceptada",
-      "pending": "Pendiente",
+      "accepted": "Aprobada",
+      "pending": "En Revisión",
       "rejected": "Rechazada"
     }
   },
@@ -231,7 +233,9 @@
     "save": "Guardar",
     "cancel": "Cancelar",
     "back": "Volver",
-    "optional": "Opcional"
+    "optional": "Opcional",
+    "error": "Ha ocurrido un error",
+    "unauthorized": "No tienes permisos para realizar esta acción"
   },
   "howItWorks": {
     "title": "Cómo Funciona",

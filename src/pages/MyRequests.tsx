@@ -45,6 +45,7 @@ const MyRequests = () => {
       const { data, error } = await supabase
         .from("book_requests")
         .select("*")
+        .eq('created_by', session?.user.id)
         .order("created_at", { ascending: false });
 
       if (error) {
