@@ -18,7 +18,7 @@ const RequestsManagement = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<BookRequest | null>(null);
