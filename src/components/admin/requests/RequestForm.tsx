@@ -133,12 +133,12 @@ const RequestForm = ({ request, isOpen, onClose, onSave }: RequestFormProps) => 
                 onValueChange={(value) => setFormData({ ...formData, status: value })}
               >
                 <SelectTrigger className="bg-white">
-                  <SelectValue placeholder={t("admin.Status")} />
+                  <SelectValue placeholder={t("admin.bookRequests.table.status")} />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
-                  <SelectItem value="pending">{t("admin.Status.pending")}</SelectItem>
-                  <SelectItem value="accepted">{t("admin.Status.accepted")}</SelectItem>
-                  <SelectItem value="rejected">{t("admin.Status.rejected")}</SelectItem>
+                  <SelectItem value="pending">{t("admin.bookRequests.status.pending")}</SelectItem>
+                  <SelectItem value="accepted">{t("admin.bookRequests.status.accepted")}</SelectItem>
+                  <SelectItem value="rejected">{t("admin.bookRequests.status.rejected")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>

@@ -36,11 +36,11 @@ const BookFilters = ({ books, onFilterChange }: BookFiltersProps) => {
     building: "all",
   });
 
-  // Get unique values for each filter
+  // Get unique values for each filter and filter out empty/null values
   const uniqueValues = {
-    genre: Array.from(new Set(books.map((book) => book.genre))),
-    category: Array.from(new Set(books.map((book) => book.category))),
-    building: Array.from(new Set(books.map((book) => book.building))),
+    genre: Array.from(new Set(books.map((book) => book.genre).filter(Boolean))),
+    category: Array.from(new Set(books.map((book) => book.category).filter(Boolean))),
+    building: Array.from(new Set(books.map((book) => book.building).filter(Boolean))),
   };
 
   const handleFilterChange = (value: string, type: keyof FilterState) => {
@@ -89,8 +89,8 @@ const BookFilters = ({ books, onFilterChange }: BookFiltersProps) => {
               <SelectContent className="bg-white border shadow-lg z-50">
                 <SelectItem value="all">{t("filters.allGenres")}</SelectItem>
                 {uniqueValues.genre.map((genre) => (
-                  <SelectItem key={genre} value={genre}>
-                    {genre}
+                  <SelectItem key={genre} value={genre || "unknown"}>
+                    {genre || t("common.unknown")}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -106,8 +106,8 @@ const BookFilters = ({ books, onFilterChange }: BookFiltersProps) => {
               <SelectContent className="bg-white border shadow-lg z-50">
                 <SelectItem value="all">{t("filters.allCategories")}</SelectItem>
                 {uniqueValues.category.map((category) => (
-                  <SelectItem key={category} value={category}>
-                    {category}
+                  <SelectItem key={category} value={category || "unknown"}>
+                    {category || t("common.unknown")}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -123,8 +123,8 @@ const BookFilters = ({ books, onFilterChange }: BookFiltersProps) => {
               <SelectContent className="bg-white border shadow-lg z-50">
                 <SelectItem value="all">{t("filters.allBuildings")}</SelectItem>
                 {uniqueValues.building.map((building) => (
-                  <SelectItem key={building} value={building}>
-                    {building}
+                  <SelectItem key={building} value={building || "unknown"}>
+                    {building || t("common.unknown")}
                   </SelectItem>
                 ))}
               </SelectContent>
