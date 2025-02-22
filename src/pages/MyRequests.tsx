@@ -128,14 +128,14 @@ const MyRequests = () => {
       </div>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{t("requests.requestForm.title")}</DialogTitle>
             <DialogDescription>
               {t("requests.requestForm.description")}
             </DialogDescription>
           </DialogHeader>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4 pb-4">
             <div>
               <label className="text-sm font-medium">
                 {t("requests.requestForm.bookTitle")}
