@@ -101,7 +101,7 @@ const RequestsManagement = () => {
         <BookPagination
           currentPage={currentPage}
           totalPages={data.totalPages}
-          onPageChange={setCurrentPage}
+          onPageChange={(page: number) => setCurrentPage(page)}
         />
       )}
 
