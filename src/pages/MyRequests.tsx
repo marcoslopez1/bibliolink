@@ -200,10 +200,10 @@ const MyRequests = () => {
                 variant="outline"
                 onClick={() => setIsDialogOpen(false)}
               >
-                {t("requests.requestForm.cancel")}
+                {t("common.cancel")}
               </Button>
-              <Button type="submit" disabled={createRequest.isPending}>
-                {t("requests.requestForm.send")}
+              <Button type="submit">
+                {t("common.send")}
               </Button>
             </div>
           </form>

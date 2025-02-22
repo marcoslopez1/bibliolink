@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useTranslation } from "react-i18next";
@@ -101,7 +100,13 @@ const BookForm = ({ book, isOpen, onClose, onSave, initialData }: BookFormProps)
         const { error } = await supabase
           .from("books")
           .insert(processedData);
-        if (error) throw error;
+        if (error) {
+          // Check for duplicate book_id error
+          if (error.message?.includes('books_book_id_key')) {
+            throw new Error(t("admin.errors.duplicateBookId"));
+          }
+          throw error;
+        }
         toast({ description: t("admin.bookCreated") });
       }
       

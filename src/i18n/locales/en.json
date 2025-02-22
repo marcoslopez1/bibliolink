@@ -158,9 +158,9 @@
         "actions": "Actions"
       },
       "status": {
-        "pending": "Awaiting Review",
-        "accepted": "Approved",
-        "rejected": "Declined"
+        "pending": "Pending",
+        "accepted": "Accepted",
+        "rejected": "Rejected"
       },
       "actions": {
         "edit": "Edit",
@@ -188,12 +188,17 @@
       }
     },
     "requestDeleted": "Request deleted successfully",
-    "deleteRequestConfirmation": "Are you sure you want to delete this request? This action cannot be undone."
+    "deleteRequestConfirmation": "Are you sure you want to delete this request? This action cannot be undone.",
+    "editRequest": "Edit Request",
+    "requestUpdated": "Request updated successfully",
+    "errors": {
+      "duplicateBookId": "A book with this ID already exists"
+    }
   },
   "requests": {
     "pageTitle": "My Requests",
     "createRequest": "Create new request",
-    "requestForm": {
+    "form": {
       "title": "Send us a book request",
       "description": "If you want to suggest a book you can use the next form to send us your preferences.",
       "bookTitle": "Title",
@@ -201,35 +206,37 @@
       "author": "Author",
       "authorPlaceholder": "Write the book author",
       "editorial": "Editorial",
-      "editorialPlaceholder": "Write the book editorial",
-      "link": "Link",
-      "linkPlaceholder": "Share a link for reference",
+      "editorialPlaceholder": "Write the editorial",
+      "link": "Reference Link",
+      "linkPlaceholder": "Add a reference link",
       "comments": "Comments",
-      "commentsPlaceholder": "Anything you want to share",
-      "send": "Send",
-      "cancel": "Cancel"
+      "commentsPlaceholder": "Add any additional comments",
+      "submit": "Submit Request",
+      "success": "Book request submitted successfully"
     },
     "status": {
       "title": "Status of my requests",
       "noRequests": "You have not created yet any request.",
       "requestDate": "Requested date",
-      "accepted": "Approved",
-      "pending": "Awaiting Review",
-      "rejected": "Declined"
+      "accepted": "Accepted",
+      "pending": "Pending",
+      "rejected": "Rejected"
     }
   },
   "search": {
     "placeholder": "Search by title, author..."
   },
   "common": {
+    "error": "An error occurred",
+    "unauthorized": "You do not have permission to perform this action",
+    "unknown": "Unknown",
+    "cancel": "Cancel",
+    "send": "Send",
+    "save": "Save",
     "copyright": "{{year}} BiblioLink. All rights reserved.",
     "loading": "Loading...",
-    "save": "Save",
-    "cancel": "Cancel",
     "back": "Back",
-    "optional": "Optional",
-    "error": "An error occurred",
-    "unauthorized": "You do not have permission to perform this action"
+    "optional": "Optional"
   },
   "howItWorks": {
     "title": "How It Works",

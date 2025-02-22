@@ -158,8 +158,8 @@
         "actions": "Acciones"
       },
       "status": {
-        "pending": "En Revisión",
-        "accepted": "Aprobada",
+        "pending": "Pendiente",
+        "accepted": "Aceptada",
         "rejected": "Rechazada"
       },
       "actions": {
@@ -188,33 +188,38 @@
       }
     },
     "requestDeleted": "Solicitud eliminada correctamente",
-    "deleteRequestConfirmation": "¿Estás seguro de que quieres eliminar esta solicitud? Esta acción no se puede deshacer."
+    "deleteRequestConfirmation": "¿Estás seguro de que quieres eliminar esta solicitud? Esta acción no se puede deshacer.",
+    "editRequest": "Editar Solicitud",
+    "requestUpdated": "Solicitud actualizada correctamente",
+    "errors": {
+      "duplicateBookId": "Ya existe un libro con este ID"
+    }
   },
   "requests": {
     "pageTitle": "Mis Solicitudes",
     "createRequest": "Crear nueva solicitud",
     "requestForm": {
-      "title": "Enviar solicitud de libro",
-      "description": "Si deseas sugerir un libro, puedes usar el siguiente formulario para enviarnos tus preferencias.",
+      "title": "Envíanos una solicitud de libro",
+      "description": "Si quieres sugerir un libro puedes usar el siguiente formulario para enviarnos tus preferencias.",
       "bookTitle": "Título",
       "bookTitlePlaceholder": "Escribe el título del libro",
       "author": "Autor",
       "authorPlaceholder": "Escribe el autor del libro",
       "editorial": "Editorial",
       "editorialPlaceholder": "Escribe la editorial",
-      "link": "Enlace",
-      "linkPlaceholder": "Comparte un enlace de referencia",
+      "link": "Enlace de referencia",
+      "linkPlaceholder": "Añade un enlace de referencia",
       "comments": "Comentarios",
-      "commentsPlaceholder": "Cualquier cosa que quieras compartir",
-      "send": "Enviar",
-      "cancel": "Cancelar"
+      "commentsPlaceholder": "Añade comentarios adicionales",
+      "submit": "Enviar Solicitud",
+      "success": "Solicitud de libro enviada correctamente"
     },
     "status": {
       "title": "Estado de mis solicitudes",
       "noRequests": "No has creado ninguna solicitud.",
       "requestDate": "Fecha de solicitud",
-      "accepted": "Aprobada",
-      "pending": "En Revisión",
+      "accepted": "Aceptada",
+      "pending": "Pendiente",
       "rejected": "Rechazada"
     }
   },
@@ -235,7 +240,9 @@
     "back": "Volver",
     "optional": "Opcional",
     "error": "Ha ocurrido un error",
-    "unauthorized": "No tienes permisos para realizar esta acción"
+    "unauthorized": "No tienes permisos para realizar esta acción",
+    "unknown": "Desconocido",
+    "send": "Enviar"
   },
   "howItWorks": {
     "title": "Cómo Funciona",

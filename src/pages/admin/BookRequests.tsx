@@ -13,7 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Pencil, Trash2, Loader2, Search } from "lucide-react";
+import { Pencil, Trash2, Loader2, Search, Edit } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import BookSearch from "@/components/admin/books/BookSearch";
@@ -209,14 +209,14 @@ const BookRequests = () => {
                   <div className="flex justify-end gap-2">
                     <Button
                       variant="ghost"
-                      size="sm"
+                      size="icon"
                       onClick={() => handleEdit(request)}
                     >
-                      <Pencil className="h-4 w-4" />
+                      <Edit className="h-4 w-4" />
                     </Button>
                     <Button
                       variant="ghost"
-                      size="sm"
+                      size="icon"
                       onClick={() => onDeleteClick(request)}
                     >
                       <Trash2 className="h-4 w-4" />
