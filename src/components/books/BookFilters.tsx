@@ -46,12 +46,15 @@ const BookFilters = ({ books, onFilterChange }: BookFiltersProps) => {
   };
 
   const handleFilterChange = (value: string, type: keyof FilterState) => {
-    const newFilters = {
-      ...filters,
-      [type]: value,
-    };
-    setFilters(newFilters);
-    onFilterChange(newFilters);
+    // Add a small delay before processing the filter change
+    setTimeout(() => {
+      const newFilters = {
+        ...filters,
+        [type]: value,
+      };
+      setFilters(newFilters);
+      onFilterChange(newFilters);
+    }, 100); // Small delay to prevent double-click issue
   };
 
   const activeFiltersCount = Object.values(filters).filter(
@@ -60,20 +63,10 @@ const BookFilters = ({ books, onFilterChange }: BookFiltersProps) => {
 
   return (
     <div className="mb-6">
-      <Button
-        variant="ghost"
-        className="flex items-center justify-between md:hidden"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <span>{t("filters.title")}</span>
-        <ChevronDown className={cn("h-4 w-4 transition-all", isOpen && "rotate-180")} />
-      </Button>
-
       <div 
         className={cn(
-          "flex flex-col gap-4 w-full md:flex",
-          !isOpen && "hidden",
-          "relative z-50"
+          "flex flex-col gap-4 w-full",
+          "relative z-50" // Keep z-index
         )}
         onClick={(e) => e.stopPropagation()}
       >
