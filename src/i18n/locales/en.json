@@ -4,7 +4,8 @@
     "howItWorks": "How It Works",
     "myBooks": "My Books",
     "myRequests": "My Requests",
-    "settings": "Settings"
+    "settings": "Settings",
+    "feedback": "Feedback"
   },
   "auth": {
     "signIn": "Sign In",
@@ -267,20 +268,21 @@
     "allBuildings": "All Buildings"
   },
   "feedback": {
-    "title": "Send Feedback",
     "pageTitle": "Your Feedback",
     "rating": {
       "title": "Rate Your Experience",
       "description": "How would you rate your experience with our application?",
-      "details": "Tell us more about your rating (optional)"
+      "details": "Tell us more about your rating (optional)",
+      "submit": "Submit Rating",
+      "alreadyRated": "Thank you for rating our application!"
     },
     "feedback": {
       "title": "Share Your Thoughts",
       "placeholder": "Share your thoughts with us...",
-      "required": "Please share your feedback"
+      "required": "Please share your feedback",
+      "submit": "Send Feedback"
     },
-    "submit": "Send Feedback",
     "success": "Thank you for your feedback!",
-    "error": "Failed to submit feedback. Please try again."
+    "error": "Failed to submit. Please try again."
   }
 }

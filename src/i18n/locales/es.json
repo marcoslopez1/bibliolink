@@ -4,7 +4,8 @@
     "howItWorks": "Cómo Funciona",
     "myBooks": "Mis Libros",
     "myRequests": "Mis Solicitudes",
-    "settings": "Ajustes"
+    "settings": "Ajustes",
+    "feedback": "Feedback"
   },
   "auth": {
     "signIn": "Iniciar Sesión",
@@ -267,20 +268,21 @@
     }
   },
   "feedback": {
-    "title": "Enviar Comentarios",
     "pageTitle": "Tus Comentarios",
     "rating": {
       "title": "Califica tu Experiencia",
       "description": "¿Cómo calificarías tu experiencia con nuestra aplicación?",
-      "details": "Cuéntanos más sobre tu calificación (opcional)"
+      "details": "Cuéntanos más sobre tu calificación (opcional)",
+      "submit": "Enviar Calificación",
+      "alreadyRated": "¡Gracias por calificar nuestra aplicación!"
     },
     "feedback": {
       "title": "Comparte tu Opinión",
       "placeholder": "Comparte tu opinión con nosotros...",
-      "required": "Por favor comparte tus comentarios"
+      "required": "Por favor comparte tus comentarios",
+      "submit": "Enviar Comentarios"
     },
-    "submit": "Enviar Comentarios",
     "success": "¡Gracias por tus comentarios!",
-    "error": "Error al enviar comentarios. Por favor, inténtalo de nuevo."
+    "error": "Error al enviar. Por favor, inténtalo de nuevo."
   }
 }
