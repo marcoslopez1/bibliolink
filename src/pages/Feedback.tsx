@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/providers/AuthProvider";
 import { useToast } from "@/hooks/use-toast";
@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { StarRating } from "@/components/ui/star-rating";
 import { useQuery } from "@tanstack/react-query";
+import { subMonths, parseISO } from "date-fns";
 
 const Feedback = () => {
   const { t } = useTranslation();
@@ -20,7 +21,7 @@ const Feedback = () => {
   const [isSubmittingRating, setIsSubmittingRating] = useState(false);
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
 
-  // Fetch existing rating
+  // Fetch latest rating (if exists) and check if it's older than 3 months
   const { data: existingRating } = useQuery({
     queryKey: ['userRating', session?.user.id],
     queryFn: async () => {
@@ -28,8 +29,9 @@ const Feedback = () => {
       
       const { data, error } = await supabase
         .from('feedback')
-        .select('rating')
+        .select('rating, created_at')
         .eq('user_id', session.user.id)
+        .gt('rating', 0)
         .order('created_at', { ascending: false })
         .limit(1)
         .maybeSingle();
@@ -40,6 +42,12 @@ const Feedback = () => {
     enabled: !!session?.user.id
   });
 
+  // Check if rating should be shown (no rating or rating older than 3 months)
+  const shouldShowRating = !existingRating || (
+    existingRating && 
+    parseISO(existingRating.created_at) < subMonths(new Date(), 3)
+  );
+
   const handleRatingSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!session?.user.id || !rating) return;
@@ -49,10 +57,10 @@ const Feedback = () => {
       const { error } = await supabase
         .from('feedback')
         .insert({
+          user_id: session.user.id,
           rating,
-          feedback_text: '',
           details: details || null,
-          user_id: session.user.id
+          feedback_text: ''
         });
 
       if (error) throw error;
@@ -84,9 +92,9 @@ const Feedback = () => {
       const { error } = await supabase
         .from('feedback')
         .insert({
+          user_id: session.user.id,
           rating: 0,
-          feedback_text: feedback,
-          user_id: session.user.id
+          feedback_text: feedback
         });
 
       if (error) throw error;
@@ -113,7 +121,7 @@ const Feedback = () => {
       <h1 className="text-2xl font-bold mb-8">{t("feedback.pageTitle")}</h1>
       
       <div className="max-w-2xl mx-auto space-y-6">
-        {!existingRating && (
+        {shouldShowRating && (
           <form onSubmit={handleRatingSubmit} className="space-y-6">
             <Card>
               <CardHeader>
@@ -141,7 +149,7 @@ const Feedback = () => {
           </form>
         )}
 
-        {existingRating && (
+        {!shouldShowRating && (
           <Card>
             <CardContent className="pt-6">
               <p className="text-center text-muted-foreground">
