@@ -1,6 +1,7 @@
+
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { BookCopy, Library, BookOpenCheck, HelpCircle, Settings, FileText, Inbox } from "lucide-react";
+import { BookCopy, Library, BookOpenCheck, HelpCircle, Settings, FileText, Inbox, MessageSquare } from "lucide-react";
 
 interface NavLinksProps {
   isAdmin?: boolean;
@@ -57,6 +58,14 @@ export const NavLinks = ({ isAdmin, isMobile, onItemClick, session }: NavLinksPr
           >
             <FileText className="h-5 w-5 mr-2" />
             {t("nav.myRequests")}
+          </Link>
+          <Link
+            to="/feedback"
+            className={`${baseStyles} ${isActive("/feedback")}`}
+            onClick={handleClick}
+          >
+            <MessageSquare className="h-5 w-5 mr-2" />
+            {t("nav.feedback")}
           </Link>
         </>
       )}

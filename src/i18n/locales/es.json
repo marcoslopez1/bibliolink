@@ -265,5 +265,22 @@
         "description": "Sé parte de nuestra comunidad y ayuda a difundir el conocimiento a través de los libros"
       }
     }
+  },
+  "feedback": {
+    "title": "Enviar Comentarios",
+    "pageTitle": "Tus Comentarios",
+    "rating": {
+      "title": "Califica tu Experiencia",
+      "description": "¿Cómo calificarías tu experiencia con nuestra aplicación?",
+      "details": "Cuéntanos más sobre tu calificación (opcional)"
+    },
+    "feedback": {
+      "title": "Comparte tu Opinión",
+      "placeholder": "Comparte tu opinión con nosotros...",
+      "required": "Por favor comparte tus comentarios"
+    },
+    "submit": "Enviar Comentarios",
+    "success": "¡Gracias por tus comentarios!",
+    "error": "Error al enviar comentarios. Por favor, inténtalo de nuevo."
   }
 }
