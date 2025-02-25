@@ -289,7 +289,7 @@
   "recommendations": {
     "title": "Book Recommendations",
     "newChat": "New Conversation",
-    "inputPlaceholder": "Ask for book recommendations...",
+    "inputPlaceholder": "Type a message",
     "sendMessage": "Send",
     "newChatDialog": {
       "title": "Start New Conversation",

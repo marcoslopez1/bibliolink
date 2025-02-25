@@ -44,7 +44,7 @@ serve(async (req) => {
             Building: ${book.building}
             Pages: ${book.pages}`
         )).join('\n\n')
-      }\n\nWhen recommending books, provide specific titles from this list and include their details. Only recommend available books (status: 'available').`
+      }\n\nWhen recommending books, always provide specific titles from this list and include their ID in this exact format: "Book Title" (ID: BOOKID). This format is required for the user interface to create clickable links. Only recommend available books (status: 'available').`
     }
 
     // Prepare conversation for Mistral
