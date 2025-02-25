@@ -4,6 +4,7 @@
     "howItWorks": "How It Works",
     "myBooks": "My Books",
     "myRequests": "My Requests",
+    "recommendations": "Recommendations",
     "settings": "Settings",
     "feedback": "Feedback"
   },
@@ -284,5 +285,18 @@
     },
     "success": "Thank you for your feedback!",
     "error": "Failed to submit. Please try again."
+  },
+  "recommendations": {
+    "title": "Book Recommendations",
+    "newChat": "New Conversation",
+    "inputPlaceholder": "Ask for book recommendations...",
+    "sendMessage": "Send",
+    "newChatDialog": {
+      "title": "Start New Conversation",
+      "description": "This will delete your current conversation. Are you sure you want to continue?",
+      "confirm": "Yes, start new",
+      "cancel": "Cancel"
+    },
+    "systemMessage": "Hello! I can help you find books from our library catalog. What kind of books are you interested in?"
   }
 }

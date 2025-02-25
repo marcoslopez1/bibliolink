@@ -4,6 +4,7 @@
     "howItWorks": "Cómo Funciona",
     "myBooks": "Mis Libros",
     "myRequests": "Mis Solicitudes",
+    "recommendations": "Recomendaciones",
     "settings": "Ajustes",
     "feedback": "Feedback"
   },
@@ -284,5 +285,18 @@
     },
     "success": "¡Gracias por tus comentarios!",
     "error": "Error al enviar. Por favor, inténtalo de nuevo."
+  },
+  "recommendations": {
+    "title": "Recomendaciones de Libros",
+    "newChat": "Nueva Conversación",
+    "inputPlaceholder": "Pide recomendaciones de libros...",
+    "sendMessage": "Enviar",
+    "newChatDialog": {
+      "title": "Iniciar Nueva Conversación",
+      "description": "Esto eliminará tu conversación actual. ¿Estás seguro de que deseas continuar?",
+      "confirm": "Sí, iniciar nueva",
+      "cancel": "Cancelar"
+    },
+    "systemMessage": "¡Hola! Puedo ayudarte a encontrar libros de nuestro catálogo. ¿Qué tipo de libros te interesan?"
   }
 }

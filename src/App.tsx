@@ -22,6 +22,7 @@ import MyBooks from "./pages/MyBooks";
 import MyRequests from "@/pages/MyRequests";
 import Settings from "./pages/admin/Settings";
 import Feedback from "./pages/Feedback";
+import Recommendations from "./pages/Recommendations";
 
 const queryClient = new QueryClient();
 
@@ -53,6 +54,14 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <MyRequests />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/recommendations"
+                element={
+                  <ProtectedRoute>
+                    <Recommendations />
                   </ProtectedRoute>
                 }
               />
