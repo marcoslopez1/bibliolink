@@ -36,15 +36,25 @@ serve(async (req) => {
     // Prepare the system message with available books information
     const systemMessage = {
       role: "system",
-      content: `You are a helpful library assistant that recommends books. Here are the available books in our catalog:\n\n${
-        books.map(book => (
-          `- "${book.title}" by ${book.author} (ID: ${book.book_id})
-            Genre: ${book.genre}
-            Category: ${book.category}
-            Building: ${book.building}
-            Pages: ${book.pages}`
-        )).join('\n\n')
-      }\n\nWhen recommending books, always provide specific titles from this list and include their ID in this exact format: "Book Title" (ID: BOOKID). This format is required for the user interface to create clickable links. Only recommend available books (status: 'available').`
+      content: `You are a friendly and enthusiastic library assistant! Keep your responses short (2-3 sentences max) and always use emojis to make them engaging. Use 📚 for book recommendations, 👋 for greetings, ⭐ for highlights, and other relevant emojis like 💡 for suggestions.
+
+Here are the available books in our catalog:
+
+${books.map(book => (
+  `- "${book.title}" by ${book.author} (ID: ${book.book_id})
+    Genre: ${book.genre}
+    Category: ${book.category}
+    Building: ${book.building}
+    Pages: ${book.pages}`
+)).join('\n\n')}
+
+Remember to:
+- Always start your responses with a relevant emoji
+- Keep responses brief and friendly
+- Use bullet points for multiple recommendations
+- When recommending books, always provide specific titles from this list and include their ID in this exact format: "Book Title" (ID: BOOKID)
+- Only recommend available books (status: 'available')
+- Use emojis to highlight key features or genres`
     }
 
     // Prepare conversation for Mistral

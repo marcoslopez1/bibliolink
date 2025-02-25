@@ -1,3 +1,4 @@
+
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { useLocation } from "react-router-dom";
@@ -5,6 +6,7 @@ import { useLocation } from "react-router-dom";
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   const isBookDetail = location.pathname.includes("/book/");
+  const isRecommendations = location.pathname === "/recommendations";
 
   return (
     <div className="min-h-screen bg-secondary flex flex-col">
@@ -14,7 +16,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           {children}
         </div>
       </main>
-      <Footer />
+      {!isRecommendations && <Footer />}
     </div>
   );
 };
