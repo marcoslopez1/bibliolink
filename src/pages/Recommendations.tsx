@@ -1,5 +1,5 @@
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/providers/AuthProvider";
 import { supabase } from "@/integrations/supabase/client";
@@ -18,6 +18,18 @@ const Recommendations = () => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
 
+  // Scroll to bottom helper function
+  const scrollToBottom = () => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  };
+
+  // Auto-scroll when messages change
+  useEffect(() => {
+    scrollToBottom();
+  }, [conversation?.messages]);
+
   // Fetch current conversation
   const { data: conversation } = useQuery({
     queryKey: ["conversation", session?.user.id],
@@ -33,7 +45,7 @@ const Recommendations = () => {
         .single();
 
       if (error) throw error;
-      return data as Conversation;
+      return data as unknown as Conversation;
     },
     enabled: !!session?.user.id,
   });
@@ -44,13 +56,13 @@ const Recommendations = () => {
         .from("conversations")
         .insert({
           user_id: session?.user.id,
-          messages: messages,
+          messages: messages as any,
         })
         .select()
         .single();
 
       if (error) throw error;
-      return data as Conversation;
+      return data as unknown as Conversation;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["conversation"] });
@@ -63,7 +75,7 @@ const Recommendations = () => {
 
       const { error } = await supabase
         .from("conversations")
-        .update({ messages })
+        .update({ messages: messages as any })
         .eq("id", conversation.id);
 
       if (error) throw error;

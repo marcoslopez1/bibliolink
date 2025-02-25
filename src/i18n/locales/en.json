@@ -214,11 +214,12 @@
       "comments": "Comments",
       "commentsPlaceholder": "Add any additional comments",
       "submit": "Submit Request",
-      "success": "Book request submitted successfully"
+      "success": "Book request submitted successfully",
+      "error": "Failed to submit request"
     },
     "status": {
       "title": "Status of my requests",
-      "noRequests": "You have not created yet any request.",
+      "noRequests": "You have not created any requests yet.",
       "requestDate": "Requested date",
       "accepted": "Accepted",
       "pending": "Pending",

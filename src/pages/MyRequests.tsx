@@ -130,67 +130,67 @@ const MyRequests = () => {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{t("requests.requestForm.title")}</DialogTitle>
+            <DialogTitle>{t("requests.form.title")}</DialogTitle>
             <DialogDescription>
-              {t("requests.requestForm.description")}
+              {t("requests.form.description")}
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4 pb-4">
             <div>
               <label className="text-sm font-medium">
-                {t("requests.requestForm.bookTitle")}
+                {t("requests.form.bookTitle")}
               </label>
               <Input
                 name="title"
                 value={formData.title}
                 onChange={handleInputChange}
-                placeholder={t("requests.requestForm.bookTitlePlaceholder")}
+                placeholder={t("requests.form.bookTitlePlaceholder")}
                 required
               />
             </div>
             <div>
               <label className="text-sm font-medium">
-                {t("requests.requestForm.author")}
+                {t("requests.form.author")}
               </label>
               <Input
                 name="author"
                 value={formData.author}
                 onChange={handleInputChange}
-                placeholder={t("requests.requestForm.authorPlaceholder")}
+                placeholder={t("requests.form.authorPlaceholder")}
                 required
               />
             </div>
             <div>
               <label className="text-sm font-medium">
-                {t("requests.requestForm.editorial")}
+                {t("requests.form.editorial")}
               </label>
               <Input
                 name="editorial"
                 value={formData.editorial}
                 onChange={handleInputChange}
-                placeholder={t("requests.requestForm.editorialPlaceholder")}
+                placeholder={t("requests.form.editorialPlaceholder")}
               />
             </div>
             <div>
               <label className="text-sm font-medium">
-                {t("requests.requestForm.link")}
+                {t("requests.form.link")}
               </label>
               <Input
                 name="link"
                 value={formData.link}
                 onChange={handleInputChange}
-                placeholder={t("requests.requestForm.linkPlaceholder")}
+                placeholder={t("requests.form.linkPlaceholder")}
               />
             </div>
             <div>
               <label className="text-sm font-medium">
-                {t("requests.requestForm.comments")}
+                {t("requests.form.comments")}
               </label>
               <Textarea
                 name="comments"
                 value={formData.comments}
                 onChange={handleInputChange}
-                placeholder={t("requests.requestForm.commentsPlaceholder")}
+                placeholder={t("requests.form.commentsPlaceholder")}
                 rows={3}
               />
             </div>
