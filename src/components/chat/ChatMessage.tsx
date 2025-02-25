@@ -14,8 +14,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content }) => {
 
   // Function to parse and format message content with book links
   const formatMessageContent = (text: string) => {
-    // Regex to match book titles with IDs: "Book Title" (ID: 123)
-    const bookPattern = /"([^"]+)"\s*\(ID:\s*(\d+)\)/g;
+    // Regex to match book titles with IDs: "Book Title" (ID: BK123)
+    const bookPattern = /"([^"]+)"\s*\(ID:\s*([A-Z0-9]+)\)/g;
     const parts = [];
     let lastIndex = 0;
     let match;
@@ -32,7 +32,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content }) => {
         <Link
           key={`${bookId}-${match.index}`}
           to={`/book/${bookId}`}
-          className="text-primary hover:underline"
+          className="text-blue-600 hover:underline"
         >
           {fullMatch}
         </Link>
