@@ -25,11 +25,6 @@ const Recommendations = () => {
     }
   };
 
-  // Auto-scroll when messages change
-  useEffect(() => {
-    scrollToBottom();
-  }, [conversation?.messages]);
-
   // Fetch current conversation
   const { data: conversation } = useQuery({
     queryKey: ["conversation", session?.user.id],
@@ -49,6 +44,13 @@ const Recommendations = () => {
     },
     enabled: !!session?.user.id,
   });
+
+  // Auto-scroll when messages change
+  useEffect(() => {
+    if (conversation?.messages) {
+      scrollToBottom();
+    }
+  }, [conversation?.messages]);
 
   const createConversation = useMutation({
     mutationFn: async (messages: Message[]) => {
@@ -146,7 +148,7 @@ const Recommendations = () => {
         ref={chatContainerRef}
         className="flex-1 overflow-y-auto p-4 space-y-4"
       >
-        {conversation?.messages.map((message, index) => (
+        {conversation?.messages?.map((message, index) => (
           <ChatMessage 
             key={index}
             role={message.role}
