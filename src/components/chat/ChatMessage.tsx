@@ -22,7 +22,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ role, content }) => {
         className={cn(
           "max-w-[80%] rounded-lg p-4",
           isAssistant 
-            ? "bg-secondary text-secondary-foreground" 
+            ? "bg-white text-foreground" 
             : "bg-primary text-primary-foreground",
           "shadow-sm"
         )}
