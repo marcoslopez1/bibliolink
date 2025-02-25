@@ -11,21 +11,62 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-// Language detection helper
+// Enhanced language detection
 function detectLanguage(text: string): "es" | "en" {
-  // Common Spanish words and patterns
-  const spanishWords = ['el', 'la', 'los', 'las', 'un', 'una', 'unos', 'unas', 'y', 'que', 'en', 'de', 'por', 'con', 'para', 'está', 'este', 'esta', 'estos', 'estas', 'libro', 'autor'];
-  
-  const words = text.toLowerCase().split(/\s+/);
-  let spanishCount = 0;
-  
+  // Common Spanish words, phrases, and patterns
+  const spanishPatterns = [
+    // Common Spanish words
+    'hola', 'gracias', 'por favor', 'libro', 'autor', 'que', 'cual', 'como', 'donde',
+    // Articles
+    'el', 'la', 'los', 'las', 'un', 'una', 'unos', 'unas',
+    // Prepositions
+    'de', 'en', 'a', 'por', 'para', 'con', 'sin',
+    // Pronouns
+    'yo', 'tu', 'el', 'ella', 'nosotros', 'ellos', 'este', 'esta', 'ese', 'esa',
+    // Common verbs (conjugated forms)
+    'es', 'está', 'son', 'estar', 'ser', 'tiene', 'hay', 'quiero', 'busco',
+    // Question words
+    'qué', 'cuál', 'cómo', 'dónde', 'quién', 'cuándo',
+    // Book-related terms
+    'leer', 'libro', 'libros', 'autor', 'autora', 'novela', 'historia',
+    // Accented characters (as separate matches)
+    'á', 'é', 'í', 'ó', 'ú', 'ñ', 'ü'
+  ];
+
+  // Normalize text: remove punctuation and convert to lowercase
+  const normalizedText = text.toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
+    .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, ' '); // Remove punctuation
+
+  const words = normalizedText.split(/\s+/);
+  let spanishWordCount = 0;
+  let totalWords = words.length;
+
+  // Count Spanish words and patterns
   for (const word of words) {
-    if (spanishWords.includes(word)) {
-      spanishCount++;
+    if (spanishPatterns.some(pattern => 
+      word === pattern || 
+      word.startsWith(pattern + ' ') || 
+      word.endsWith(' ' + pattern)
+    )) {
+      spanishWordCount++;
     }
   }
+
+  // Additional checks for Spanish patterns
+  const hasSpanishPunctuation = /¿|¡/.test(text);
+  const hasSpanishConjugation = /(?:ar|er|ir)(?:é|ás|á|emos|éis|án|ía|ías|íamos|íais|ían)(?:\s|$)/.test(text);
   
-  return spanishCount / words.length > 0.15 ? "es" : "en";
+  // Weight different factors
+  const wordRatio = spanishWordCount / totalWords;
+  const patternScore = (hasSpanishPunctuation ? 0.3 : 0) + (hasSpanishConjugation ? 0.3 : 0);
+  
+  // Use a lower threshold for short phrases
+  const threshold = totalWords < 5 ? 0.2 : 0.15;
+  
+  // Combine word ratio with pattern score
+  return (wordRatio + patternScore > threshold) ? "es" : "en";
 }
 
 // System messages by language
@@ -44,7 +85,8 @@ const systemMessages = {
 5. Always start responses with a relevant emoji
 6. Keep responses brief and friendly
 7. Use bullet points for multiple recommendations
-8. ALWAYS respond in English`,
+8. ALWAYS respond in English
+9. For short user messages, pay extra attention to maintain English responses`,
   },
   es: {
     greeting: "¡Soy un asistente de biblioteca amigable y entusiasta! Mantendré mis respuestas cortas (2-3 oraciones máximo) y siempre usaré emojis para hacerlas más atractivas. Uso 📚 para recomendaciones, 👋 para saludos, ⭐ para destacados, y otros emojis relevantes.",
@@ -60,7 +102,8 @@ const systemMessages = {
 5. Siempre comenzar las respuestas con un emoji relevante
 6. Mantener las respuestas breves y amigables
 7. Usar viñetas para múltiples recomendaciones
-8. SIEMPRE responder en Español`,
+8. SIEMPRE responder en Español
+9. Para mensajes cortos del usuario, prestar especial atención a mantener respuestas en Español`,
   }
 };
 
